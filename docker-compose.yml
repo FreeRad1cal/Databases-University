@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  personnel.api:
+    build:
+      context: .
+      dockerfile: Services/Personnel/PersonnelApi/Dockerfile
+
+  angularspa:
+    build:
+      context: .
+      dockerfile: WebApps/AngularSPA/Dockerfile
+
+  nginx:
+    image: nginx
+    restart: always
+
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: "12345"
+        MYSQL_USER: user
+        MYSQL_PASSWORD: "12345"
+        MYSQL_DATABASE: db
+    ports:
+        - "3306"

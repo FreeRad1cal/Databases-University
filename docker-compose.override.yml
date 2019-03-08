@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+  personnel.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionString="Server=mysql; Database=db; Uid=user; Pwd=12345"
+  
+  angularspa:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - SpaClient=http://angularspa.development:4200
+
+  angularspa.development:
+    build:
+      context: .
+      dockerfile: WebApps/AngularSPA.Development/Dockerfile
+    volumes:
+      - ./WebApps/AngularSPA/Client:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '4200:4200'
+      - '9876:9876'
+
+  nginx:
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - personnel.api
+      - angularspa
+    ports:
+      - "5001:5001"
+      - "5002:5002"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+        - mysql
+    ports:
+        - "8080:80"
+    environment:
+        MYSQL_USERNAME: root
+        MYSQL_ROOT_PASSWORD: "12345"
+        PMA_HOST: mysql
