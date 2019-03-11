@@ -6,6 +6,11 @@ services:
       context: .
       dockerfile: Services/Personnel/PersonnelApi/Dockerfile
 
+  registrar.api:
+    build:
+      context: .
+      dockerfile: Services/Registrar/RegistrarApi/Dockerfile
+
   angularspa:
     build:
       context: .

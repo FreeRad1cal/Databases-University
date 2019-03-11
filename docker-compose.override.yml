@@ -3,18 +3,28 @@ version: '3.4'
 services:
   personnel.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionString="Server=mysql; Database=db; Uid=user; Pwd=12345"
+        ASPNETCORE_ENVIRONMENT: Development
+        ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
+        EventBusConnection: rabbitmq
+        EventBusUserName: ${EVENT_BUS_USERNAME}
+        EventBusPassword: ${EVENT_BUS_PASSWORD}     
   
+  registrar.api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
+
   angularspa:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - SpaClient=http://angularspa.development:4200
+        ASPNETCORE_ENVIRONMENT: Development
+        AngularSpaDevClient: http://angularspa.development:4200
 
   angularspa.development:
     build:
       context: .
       dockerfile: WebApps/AngularSPA.Development/Dockerfile
+    environment:
+        PersonnelApi: http://personnel.api
     volumes:
       - ./WebApps/AngularSPA/Client:/usr/src/app
       - /usr/src/app/node_modules
@@ -31,6 +41,7 @@ services:
     ports:
       - "5001:5001"
       - "5002:5002"
+      - "5003:5003"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin

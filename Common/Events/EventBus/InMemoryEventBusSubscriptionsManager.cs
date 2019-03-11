@@ -6,10 +6,8 @@ using SecureChat.Common.Events.EventBus.Events;
 
 namespace SecureChat.Common.Events.EventBus
 {
-    public partial class InMemoryEventBusSubscriptionsManager : IEventBusSubscriptionsManager
+    public class InMemoryEventBusSubscriptionsManager : IEventBusSubscriptionsManager
     {
-
-
         private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
         private readonly List<Type> _eventTypes;
 

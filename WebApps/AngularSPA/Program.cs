@@ -31,7 +31,6 @@ namespace AngularSPA
                     builder.AddConsole();
                     builder.AddDebug();
                 })
-                .UseApplicationInsights()
                 .Build();
     }
 }

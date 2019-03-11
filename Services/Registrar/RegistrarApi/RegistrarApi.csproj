@@ -4,27 +4,12 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Client\**" />
-    <Content Remove="Client\**" />
-    <EmbeddedResource Remove="Client\**" />
-    <None Remove="Client\**" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.2105168" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Server\" />
   </ItemGroup>
 
 </Project>

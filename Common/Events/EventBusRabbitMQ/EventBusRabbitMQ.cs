@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Polly;
@@ -20,30 +21,28 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
 {
     public class EventBusRabbitMQ : IEventBus, IDisposable
     {
-        const string BROKER_NAME = "securechat_event_bus";
-        private const int RETRY_COUNT = 5;
+        private const string BrokerName = "event_bus";
 
         private readonly IRabbitMQPersistentConnection _persistentConnection;
         private readonly ILogger<EventBusRabbitMQ> _logger;
-        private readonly IConfiguration _configuration;
         private readonly IServiceProvider _serviceProvider;
+        private readonly EventBusOptions _options;
         private readonly IEventBusSubscriptionsManager _subsManager;
 
         private IModel _consumerChannel;
-        private string _queueName;
 
         public EventBusRabbitMQ(
             IRabbitMQPersistentConnection persistentConnection, 
             ILogger<EventBusRabbitMQ> logger,
             IEventBusSubscriptionsManager subsManager,
-            IConfiguration configuration,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            IOptions<EventBusOptions> options)
         {
-            _persistentConnection = persistentConnection ?? throw new ArgumentNullException(nameof(persistentConnection));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _configuration = configuration;
+            _persistentConnection = persistentConnection;
+            _logger = logger;
             _serviceProvider = serviceProvider;
-            _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
+            _options = options.Value;
+            _subsManager = subsManager;
             _consumerChannel = CreateConsumerChannel();
             _subsManager.OnEventRemoved += SubsManager_OnEventRemoved;
         }
@@ -57,13 +56,12 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
 
             using (var channel = _persistentConnection.CreateModel())
             {
-                channel.QueueUnbind(queue: _queueName,
-                    exchange: BROKER_NAME,
+                channel.QueueUnbind(queue: _options.QueueName,
+                    exchange: BrokerName,
                     routingKey: eventName);
 
                 if (_subsManager.IsEmpty)
                 {
-                    _queueName = string.Empty;
                     _consumerChannel.Close();
                 }
             }
@@ -78,7 +76,7 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
 
             var policy = RetryPolicy.Handle<BrokerUnreachableException>()
                 .Or<SocketException>()
-                .WaitAndRetry(RETRY_COUNT, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                .WaitAndRetry(_options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                 {
                     _logger.LogWarning(ex.ToString());
                 });
@@ -88,7 +86,7 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
                 var eventName = @event.GetType()
                     .Name;
 
-                channel.ExchangeDeclare(exchange: BROKER_NAME,
+                channel.ExchangeDeclare(exchange: BrokerName,
                                     type: "direct");
 
                 var message = JsonConvert.SerializeObject(@event);
@@ -99,7 +97,7 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
                     var properties = channel.CreateBasicProperties();
                     properties.DeliveryMode = 2; // persistent
 
-                    channel.BasicPublish(exchange: BROKER_NAME,
+                    channel.BasicPublish(exchange: BrokerName,
                                      routingKey: eventName,
                                      mandatory:true,
                                      basicProperties: properties,
@@ -136,8 +134,8 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
 
                 using (var channel = _persistentConnection.CreateModel())
                 {
-                    channel.QueueBind(queue: _queueName,
-                                      exchange: BROKER_NAME,
+                    channel.QueueBind(queue: _options.QueueName,
+                                      exchange: BrokerName,
                                       routingKey: eventName);
                 }
             }
@@ -175,10 +173,10 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
 
             var channel = _persistentConnection.CreateModel();
 
-            channel.ExchangeDeclare(exchange: BROKER_NAME,
+            channel.ExchangeDeclare(exchange: BrokerName,
                                  type: "direct");
 
-            channel.QueueDeclare(queue: _queueName,
+            channel.QueueDeclare(queue: _options.QueueName,
                                  durable: true,
                                  exclusive: false,
                                  autoDelete: false,
@@ -196,7 +194,7 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
                 channel.BasicAck(ea.DeliveryTag,multiple:false);
             };
 
-            channel.BasicConsume(queue: _queueName,
+            channel.BasicConsume(queue: _options.QueueName,
                                  autoAck: false,
                                  consumer: consumer);
 

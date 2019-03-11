@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --poll 1000 --disableHostCheck",
-    "build": "ng build",
+    "config-dev": "node ./set-env.js",
+    "config-prod": "node ./set-env.js --environment=prod",
+    "start": "npm run config-dev && ng serve --host 0.0.0.0 --poll 1000 --disableHostCheck",
+    "build": "npm run config-prod && ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

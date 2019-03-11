@@ -7,25 +7,27 @@ using RabbitMQ.Client.Exceptions;
 using System;
 using System.IO;
 using System.Net.Sockets;
+using Microsoft.Extensions.Options;
+using SecureChat.Common.Events.EventBus;
 
 namespace SecureChat.Common.Events.EventBusRabbitMQ
 {
-    public class DefaultRabbitMqPersistentConnection
+    public class DefaultRabbitMQPersistentConnection
        : IRabbitMQPersistentConnection
     {
         private readonly IConnectionFactory _connectionFactory;
-        private readonly ILogger<DefaultRabbitMqPersistentConnection> _logger;
-        private readonly int _retryCount;
-        IConnection _connection;
-        bool _disposed;
+        private readonly ILogger<DefaultRabbitMQPersistentConnection> _logger;
+        private IConnection _connection;
+        private bool _disposed;
 
-        object sync_root = new object();
+        private object _syncRoot = new object();
+        private EventBusOptions _options;
 
-        public DefaultRabbitMqPersistentConnection(IConnectionFactory connectionFactory, ILogger<DefaultRabbitMqPersistentConnection> logger, int retryCount = 5)
+        public DefaultRabbitMQPersistentConnection(ILogger<DefaultRabbitMQPersistentConnection> logger, IOptions<EventBusOptions> options)
         {
-            _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _retryCount = retryCount;
+            _logger = logger;
+            _options = options.Value;
+            _connectionFactory = CreateConnectionFactory();
         }
 
         public bool IsConnected 
@@ -61,11 +63,11 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
         {
             _logger.LogInformation("RabbitMQ Client is trying to connect");
 
-            lock (sync_root)
+            lock (_syncRoot)
             {
                 var policy = RetryPolicy.Handle<SocketException>()
                     .Or<BrokerUnreachableException>()
-                    .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    .WaitAndRetry(_options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                     {
                         _logger.LogWarning(ex.ToString());
                     }
@@ -94,6 +96,26 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
                     return false;
                 }
             }
+        }
+
+        private IConnectionFactory CreateConnectionFactory()
+        {
+            var factory = new ConnectionFactory()
+            {
+                HostName = _options.HostName
+            };
+
+            if (!string.IsNullOrEmpty(_options.UserName))
+            {
+                factory.UserName = _options.UserName;
+            }
+
+            if (!string.IsNullOrEmpty(_options.Password))
+            {
+                factory.Password = _options.Password;
+            }
+
+            return factory;
         }
 
         private void OnConnectionBlocked(object sender, ConnectionBlockedEventArgs e)
