@@ -34,7 +34,6 @@
     "lodash": "^4.17.11",
     "ngrx-store-freeze": "^0.2.4",
     "npm": "^6.5.0",
-    "oidc-client": "^1.6.1",
     "rxjs": "^6.3.3",
     "tslib": "^1.9.3",
     "zone.js": "^0.8.26"

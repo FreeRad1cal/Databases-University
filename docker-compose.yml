@@ -16,6 +16,9 @@ services:
       context: .
       dockerfile: WebApps/AngularSPA/Dockerfile
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
   nginx:
     image: nginx
     restart: always

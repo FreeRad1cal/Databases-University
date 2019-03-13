@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Person } from '../models/Person';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TokenPersisterService {
+export class JwtPersisterService {
 
   private readonly key = 'auth_token';
   

@@ -6,10 +6,10 @@ import { StoreModule } from '@ngrx/store';
 import { reducers } from './reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './effects/auth.effects';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AccessTokenInterceptorService } from './services/access-token-interceptor.service';
-import { AuthorizationErrorResponseInterceptorService } from './services/authorization-error-response-interceptor.service';
-import { TokenPersisterService } from './services/token-persister.service';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { JwtInterceptorService } from './services/jwt-interceptor.service';
+import { AuthErrorResponseInterceptorService } from './services/auth-error-response-interceptor.service';
+import { JwtPersisterService } from './services/jwt-persister.service';
 
 @NgModule({
   declarations: [LoginPageComponent],
@@ -25,15 +25,15 @@ export class AuthModule {
     return {
       ngModule: AuthModule, 
       providers: [
-        TokenPersisterService,
+        JwtPersisterService,
         {
           provide: HTTP_INTERCEPTORS,
-          useClass: AccessTokenInterceptorService,
+          useClass: JwtInterceptorService,
           multi: true
         },
         {
           provide: HTTP_INTERCEPTORS,
-          useClass: AuthorizationErrorResponseInterceptorService,
+          useClass: AuthErrorResponseInterceptorService,
           multi: true
         }
       ]

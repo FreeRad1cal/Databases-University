@@ -9,13 +9,13 @@ import { tap, catchError } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthorizationErrorResponseInterceptorService {
+export class AuthErrorResponseInterceptorService {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError(event => {
         if (event instanceof HttpErrorResponse && (event.status == 401 || event.status == 403)) {
-          this.store.dispatch(new fromAuthActions.AuthFailure());
+          this.store.dispatch(new fromAuthActions.SignOut());
         }
         return throwError(event);
       })

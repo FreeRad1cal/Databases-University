@@ -18,10 +18,16 @@ export function reducer(state = initialState, action: AuthActionsUnion): State {
         case AuthActionTypes.SignInSuccess: {
           return {
             ...state,
-            signedInUser: action.payload.user,
-            expires: action.payload.expires,
-            token: action.payload.token
+            signedInUser: action.payload.user
           };
+        }
+
+        case AuthActionTypes.SetToken: {
+          return {
+            ...state,
+            token: action.payload.token,
+            expires: action.payload.expires
+          }
         }
         
         case AuthActionTypes.SignOut: {

@@ -1,95 +1,41 @@
 import { Injectable } from "@angular/core";
-import { Actions, Effect, ofType } from "@ngrx/effects";
-import { Router } from "@angular/router";
-import * as fromActions from "../actions/auth.actions";
-import * as fromAuth from '../reducers';
-import { exhaustMap, map, tap, withLatestFrom } from 'rxjs/operators';
-import { from } from 'rxjs';
-import { Store } from "@ngrx/store";
-import { TokenPersisterService } from '../services/token-persister.service';
-import * as jwt_decode from "jwt-decode";
+import { Actions, Effect, ofType, OnInitEffects } from "@ngrx/effects";
+import { map, tap, switchMap } from 'rxjs/operators';
+import { Store, Action } from "@ngrx/store";
+import { JwtPersisterService } from '../services/jwt-persister.service';
+import { SetToken, InitUser, AuthActionTypes, SignInSuccess, SignOut } from '../actions/auth.actions';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class AuthEffects {
-
-    @Effect({dispatch: false})
-    signIn$ = this.actions$.pipe(
-        ofType<fromActions.SignIn>(fromActions.AuthActionTypes.SignIn),
-        tap(() => this.userManager.signinRedirect())
-    );
-
-    @Effect({dispatch: false})
-    signInSuccess$ = this.actions$.pipe(
-        ofType<fromActions.SignInSuccess>(fromActions.AuthActionTypes.SignInSuccess),
-        tap(() => this.router.navigate(['chat'])),
-        tap(() => this.userManager.events.addUserSignedOut(() => 
-            this.store.dispatch(new fromActions.SignOutSuccess({ fromCallback: false })
-        )))
-    );
+export class AuthEffects implements OnInitEffects {
 
     @Effect()
-    completeSignIn$ = this.actions$.pipe(
-        ofType<fromActions.CompleteSignIn>(fromActions.AuthActionTypes.CompleteSignIn),
-        exhaustMap(() => from(this.userManager.signinRedirectCallback())),
-        map(user => new fromActions.SignInSuccess({user: user}))
-    );
-
-    @Effect({dispatch: false})
-    signOut$ = this.actions$.pipe(
-        ofType<fromActions.SignOut>(fromActions.AuthActionTypes.SignOut),
-        tap(() => this.userManager.signoutRedirect())
-    );
-
-    @Effect()
-    completeSignOut$ = this.actions$.pipe(
-        ofType<fromActions.CompleteSignOut>(fromActions.AuthActionTypes.CompleteSignOut),
-        exhaustMap(() => from(this.userManager.signoutRedirectCallback())),
-        map(() => new fromActions.SignOutSuccess({ fromCallback: true }))
-    );
-
-    @Effect({dispatch: false})
-    signOutSuccess$ = this.actions$.pipe(
-        ofType<fromActions.SignOutSuccess>(fromActions.AuthActionTypes.SignOutSuccess),
-        tap(async action => {
-            if (!action.payload.fromCallback) {
-                await this.userManager.removeUser();
+    initUser$ = this.actions$.pipe(
+        ofType<InitUser>(AuthActionTypes.InitUser),
+        tap(() => {
+            const rawJwt = this.tokenPersister.getToken();
+            if (this.authService.validateJwt(rawJwt)) {
+                this.store.dispatch(new SetToken({token: rawJwt, expires: this.authService.getExpiration(rawJwt) }));
             }
-            this.router.navigate(['auth', 'login'])
-        })
-    )
-
-    @Effect()
-    authenticationFailure = this.actions$.pipe(
-        ofType<fromActions.AuthenticationFailure>(fromActions.AuthActionTypes.AuthenticationFailure),
-        tap(action => {
-            this.router.navigate(['auth', 'login']);
-        })
+        }),
+        switchMap(() => this.authService.getMe().pipe(
+            map(res => {
+                if (res instanceof HttpErrorResponse) {
+                    return new SignOut();
+                }
+                return new SignInSuccess({user: res.body});
+            })
+        ))
     );
 
     constructor(
         private actions$: Actions,
-        private router: Router,
-        private tokenPersister: TokenPersisterService,
-        private store: Store<fromAuth.State>,
-    ) {
-        this.initUserIfLoggedIn();
-    }
+        private tokenPersister: JwtPersisterService,
+        private authService: AuthService,
+        private store: Store<any>    ) {}
 
-    initUserIfLoggedIn() {
-        const token = this.tokenPersister.getToken();
-        if (!token) {
-            return;
-        }
-        const decodedToken: { exp: number } = jwt_decode(token);
-        if ((decodedToken.exp * 1000) > Date.now()) {
-            this.store.dispatch(new fromActions.SignInSuccess())
-        }
-
-        this.userManager.getUser()
-            .then(user => {
-                if (user && !user.expired) {
-                    this.store.dispatch(new fromActions.SignInSuccess({user: user}));
-                }
-            })
+    ngrxOnInitEffects(): Action {
+        return new InitUser();
     }
 }

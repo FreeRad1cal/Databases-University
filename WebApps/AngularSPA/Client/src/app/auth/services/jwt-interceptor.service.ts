@@ -5,12 +5,11 @@ import { environment } from '../../../environments/environment';
 import * as fromAuth from '../reducers';
 import { Store, select } from '@ngrx/store';
 import { take, map, mergeMap, filter } from 'rxjs/operators';
-import { User } from 'oidc-client';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AccessTokenInterceptorService implements HttpInterceptor {
+export class JwtInterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.url.startsWith(environment.personnelApi)) {
