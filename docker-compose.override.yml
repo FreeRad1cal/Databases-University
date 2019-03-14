@@ -14,6 +14,12 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
 
+  auth.api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
+      Secret: 12345
+
   angularspa:
     environment:
         ASPNETCORE_ENVIRONMENT: Development
@@ -37,11 +43,14 @@ services:
       - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf
     depends_on:
       - personnel.api
+      - registrar.api
+      - auth.api
       - angularspa
     ports:
       - "5001:5001"
       - "5002:5002"
       - "5003:5003"
+      - "5004:5004"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin

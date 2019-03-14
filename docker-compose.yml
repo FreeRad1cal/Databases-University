@@ -11,6 +11,11 @@ services:
       context: .
       dockerfile: Services/Registrar/RegistrarApi/Dockerfile
 
+  auth.api:
+    build:
+      context: .
+      dockerfile: Services/Auth/AuthApi/Dockerfile
+
   angularspa:
     build:
       context: .

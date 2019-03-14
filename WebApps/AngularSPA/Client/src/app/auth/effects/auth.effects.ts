@@ -6,6 +6,7 @@ import { JwtPersisterService } from '../services/jwt-persister.service';
 import { SetToken, InitUser, AuthActionTypes, SignInSuccess, SignOut } from '../actions/auth.actions';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { JwtHelper } from '../helpers/JwtHelper';
 
 @Injectable()
 export class AuthEffects implements OnInitEffects {
@@ -14,9 +15,9 @@ export class AuthEffects implements OnInitEffects {
     initUser$ = this.actions$.pipe(
         ofType<InitUser>(AuthActionTypes.InitUser),
         tap(() => {
-            const rawJwt = this.tokenPersister.getToken();
-            if (this.authService.validateJwt(rawJwt)) {
-                this.store.dispatch(new SetToken({token: rawJwt, expires: this.authService.getExpiration(rawJwt) }));
+            const rawJwt = this.jwtPersister.getToken();
+            if (JwtHelper.validateJwt(rawJwt)) {
+                this.store.dispatch(new SetToken({token: rawJwt, expires: JwtHelper.getExpiration(rawJwt) }));
             }
         }),
         switchMap(() => this.authService.getMe().pipe(
@@ -29,9 +30,14 @@ export class AuthEffects implements OnInitEffects {
         ))
     );
 
+    @Effect({ dispatch: false })
+    signOut$ = this.actions$.pipe(
+        tap(() => this.jwtPersister.clearToken())
+    );
+
     constructor(
         private actions$: Actions,
-        private tokenPersister: JwtPersisterService,
+        private jwtPersister: JwtPersisterService,
         private authService: AuthService,
         private store: Store<any>    ) {}
 
