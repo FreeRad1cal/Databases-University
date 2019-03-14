@@ -8,36 +8,42 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AuthApi.Entities;
-using AuthApi.Models;
+using AuthApi.Infrastructure.Exceptions;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using Dapper;
+using Helpers;
 using Microsoft.IdentityModel.Tokens;
-using CustomClaim = AuthApi.Entities.CustomClaim;
+using Claim = AuthApi.Entities.Claim;
 
 namespace AuthApi.Infrastructure.Services
 {
     public class DefaultTokenService : ITokenService
     {
-        private AuthApiSettings _authApiSettings;
+        private readonly AuthApiSettings _authApiSettings;
 
         public DefaultTokenService(IOptions<AuthApiSettings> authApiSettings)
         {
             _authApiSettings = authApiSettings.Value;
         }
 
-        public async Task<string> Authenticate(string userName, string password)
+        public async Task<string> AuthorizeAndGetTokenAsync(string userName, string password)
         {
-            const string personSql = @"SELECT Id, FirstName, LastName, UserName FROM People WHERE UserName = @UserName AND Password = @Password";
+            const string personSql = @"SELECT Id, Hash, Salt FROM People WHERE UserName = @UserName";
             const string claimsSql = @"SELECT Type, Value FROM Claims WHERE PersonId = @Id";
 
-            using (var conn = await GetConnection())
+            using (var conn = await GetDbConnectionAsync())
             {
-                var person = await conn.QueryFirstOrDefaultAsync<Person>(personSql, new {UserName = userName, Password = password}) 
-                             ?? throw new ApiException();
-                var claims = (await conn.QueryAsync<CustomClaim>(claimsSql, new {PersonId = person.Id}))
-                    .Select(claim => new Claim(claim.Type, claim.Value))
-                    .Concat(new [] { new Claim("sub", person.Id) });
+                var person = await conn.QueryFirstOrDefaultAsync<Person>(personSql, new {UserName = userName});
+                if (person == null ||
+                    !SaltedHashHelper.VerifyPasswordAgainstSaltedHash(password, person.Hash, person.Salt))
+                {
+                    throw new AuthException();
+                }
+
+                var claims = (await conn.QueryAsync<Claim>(claimsSql, new {PersonId = person.Id}))
+                    .Select(claim => new System.Security.Claims.Claim(claim.Type, claim.Value))
+                    .Concat(new [] { new System.Security.Claims.Claim("sub", person.Id) });
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_authApiSettings.Secret);
@@ -52,7 +58,7 @@ namespace AuthApi.Infrastructure.Services
             }
         }
 
-        private async Task<IDbConnection> GetConnection()
+        private async Task<IDbConnection> GetDbConnectionAsync()
         {
             var connection = new MySqlConnection(_authApiSettings.ConnectionString);
             await connection.OpenAsync();

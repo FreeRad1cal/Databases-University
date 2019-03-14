@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace AuthApi.Models
+namespace AuthApi.Infrastructure.Exceptions
 {
-    public class ApiException : Exception
+    public class AuthException : Exception
     {
         public IEnumerable<string> Errors { get; set; } = Enumerable.Empty<string>();
     }

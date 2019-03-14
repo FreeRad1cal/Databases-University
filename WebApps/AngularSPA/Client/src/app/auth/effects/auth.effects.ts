@@ -7,6 +7,7 @@ import { SetToken, InitUser, AuthActionTypes, SignInSuccess, SignOut } from '../
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { JwtHelper } from '../helpers/JwtHelper';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthEffects implements OnInitEffects {
@@ -15,7 +16,7 @@ export class AuthEffects implements OnInitEffects {
     initUser$ = this.actions$.pipe(
         ofType<InitUser>(AuthActionTypes.InitUser),
         tap(() => {
-            const rawJwt = this.jwtPersister.getToken();
+            const rawJwt = this.jwtPersister.getPersistedToken();
             if (JwtHelper.validateJwt(rawJwt)) {
                 this.store.dispatch(new SetToken({token: rawJwt, expires: JwtHelper.getExpiration(rawJwt) }));
             }
@@ -32,14 +33,16 @@ export class AuthEffects implements OnInitEffects {
 
     @Effect({ dispatch: false })
     signOut$ = this.actions$.pipe(
-        tap(() => this.jwtPersister.clearToken())
+        tap(() => this.jwtPersister.clearPersistedToken()),
+        tap(() => this.router.navigate(['auth', 'login']))
     );
 
     constructor(
         private actions$: Actions,
         private jwtPersister: JwtPersisterService,
         private authService: AuthService,
-        private store: Store<any>    ) {}
+        private store: Store<any>,
+        private router: Router) {}
 
     ngrxOnInitEffects(): Action {
         return new InitUser();

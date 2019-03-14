@@ -14,11 +14,11 @@ export class JwtPersisterService {
     localStorage.setItem(this.key, token);
   }
 
-  getToken() {
+  getPersistedToken() {
     return localStorage.getItem(this.key);
   }
 
-  clearToken() {
+  clearPersistedToken() {
     localStorage.removeItem(this.key);
   }
 }

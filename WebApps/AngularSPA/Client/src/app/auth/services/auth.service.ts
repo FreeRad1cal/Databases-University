@@ -14,10 +14,9 @@ export class AuthService {
   private hrApi = environment.personnelApi;
 
   constructor(
-    private jwtPersister: JwtPersisterService,
     private httpClient: HttpClient) { }
 
-  getToken(userName: string, password: string): Observable<HttpResponse<string>> {
+  authenticate(userName: string, password: string): Observable<HttpResponse<string>> {
     const tokenUrl = `${this.authApi}/authenticate`;
     return this.httpClient.post<string>(tokenUrl, {userName, password}, { observe: 'response'});
   }

@@ -31,6 +31,7 @@ services:
       dockerfile: WebApps/AngularSPA.Development/Dockerfile
     environment:
         PersonnelApi: http://personnel.api
+        AuthApi: http://auth.api
     volumes:
       - ./WebApps/AngularSPA/Client:/usr/src/app
       - /usr/src/app/node_modules

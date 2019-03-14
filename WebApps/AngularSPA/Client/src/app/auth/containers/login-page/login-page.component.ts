@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { LoginCredentials } from '../../models/LoginCredentials';
+import { Store } from '@ngrx/store';
+import { SignIn } from '../../actions/auth.actions';
 
 @Component({
   selector: 'app-login-page',
@@ -7,9 +10,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private store: Store<any>) { }
 
   ngOnInit() {
   }
 
+  onLogin(loginCredentials: LoginCredentials) {
+    this.store.dispatch(new SignIn({credentials: loginCredentials}));
+  }
 }

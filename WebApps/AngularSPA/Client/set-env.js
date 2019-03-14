@@ -7,7 +7,8 @@ const targetPath = environment ? `./src/environments/environment.${environment}.
 
 const envFile = `export const environment = {
   production: ${isProduction},
-  personnelApi: "${process.env.PersonnelApi}"
+  personnelApi: "${process.env.PersonnelApi}",
+  authApi: "${process.env.AuthApi}",
 }`
 
 fs.writeFileSync(targetPath, envFile);

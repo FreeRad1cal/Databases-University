@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AuthApi.Entities
 {
-    public class CustomClaim
+    public class Claim
     {
         public string Type { get; set; }
 

@@ -10,12 +10,15 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptorService } from './services/jwt-interceptor.service';
 import { AuthErrorResponseInterceptorService } from './services/auth-error-response-interceptor.service';
 import { JwtPersisterService } from './services/jwt-persister.service';
+import { LoginFormComponent } from './components/login-form/login-form.component';
+import { MaterialModule } from '../material/material.module';
 
 @NgModule({
-  declarations: [LoginPageComponent],
+  declarations: [LoginPageComponent, LoginFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MaterialModule,
     StoreModule.forFeature('auth', reducers),
     EffectsModule.forFeature([AuthEffects]),
   ]

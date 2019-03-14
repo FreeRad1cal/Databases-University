@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthApi.Infrastructure.HealthChecks;
+using AuthApi.Infrastructure.Services;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -35,6 +36,8 @@ namespace AuthApi
             services.AddHealthChecks()
                 .AddCheck("self-check", () => HealthCheckResult.Healthy())
                 .AddCheck("db-check", new SqlConnectionHealthCheck(Configuration["ConnectionString"]));
+
+            services.AddTransient<ITokenService, DefaultTokenService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
