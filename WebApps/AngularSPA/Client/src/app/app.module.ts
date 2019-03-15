@@ -25,14 +25,11 @@ import { EffectsModule } from '@ngrx/effects';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     HttpClientModule,
     MaterialModule,
-    StoreModule.forRoot(reducers, { metaReducers }),
-    StoreRouterConnectingModule.forRoot({
-      stateKey: 'router'
-    }),
     AuthModule.forRoot(),
+    AppRoutingModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([])
   ],
   providers: [],

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthApi.Infrastructure.Exceptions;
 using AuthApi.Infrastructure.Services;
+using AuthApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthApi.Controllers
@@ -20,7 +21,7 @@ namespace AuthApi.Controllers
         }
 
         [HttpPost("authenticate", Name = nameof(Authenticate))]
-        public async Task<IActionResult> Authenticate([Required] string userName, [Required] string password)
+        public async Task<IActionResult> Authenticate([Required] LoginCredentials credentials)
         {
             if (!ModelState.IsValid)
             {
@@ -29,7 +30,7 @@ namespace AuthApi.Controllers
 
             try
             {
-                var jwt = await _tokenService.AuthorizeAndGetTokenAsync(userName, password);
+                var jwt = await _tokenService.AuthorizeAndGetTokenAsync(credentials.UserName, credentials.Password);
                 return Ok(jwt);
             }
             catch (AuthException)

@@ -1,19 +1,24 @@
-<form class="d-flex flex-column justify-content-center align-items-center w-50" [formGroup]="loginForm">
+<form class="d-flex flex-column align-items-center" [formGroup]="loginForm">
   <mat-form-field class="w-100">
     <input matInput placeholder="Username" formControlName="userName">
-    <mat-error *ngIf="myForm.hasError('required', 'userName')">
+    <mat-error *ngIf="loginForm.hasError('required', 'userName')">
       Username is required
     </mat-error>
   </mat-form-field>
   <mat-form-field class="w-100">
     <input matInput placeholder="Password" type="password" formControlName="password">
-    <mat-error *ngIf="myForm.hasError('required', 'password')">
+    <mat-error *ngIf="loginForm.hasError('required', 'password')">
       Password is required
     </mat-error>
   </mat-form-field>
   <div class="d-flex flex-row justify-content-center mt-4 w-100">
-    <button mat-raised-button type="button" [disabled]="!loginForm.valid" class="w-50" (click)="onLogin()">Log In</button>
+    <button mat-raised-button type="button" [disabled]="!loginForm.valid || busy" class="w-50" (click)="onLoginClicked()">Log In</button>
   </div>
+  <mat-card-footer class="mt-4">
+    <mat-error>
+      {{error}}
+    </mat-error>
+  </mat-card-footer>
 </form>
 
 <!-- https://stackoverflow.com/questions/51605737/confirm-password-validation-in-angular-6 -->

@@ -35,3 +35,13 @@ export const getToken = createSelector(
     selectAuthStatusState,
     fromAuth.selectToken
 );
+
+export const getBusy = createSelector(
+  selectAuthStatusState,
+  fromAuth.selectBusy  
+);
+
+export const getError = createSelector(
+    selectAuthStatusState,
+    fromAuth.selectError
+)

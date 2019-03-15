@@ -7,7 +7,7 @@ services:
         ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
         EventBusConnection: rabbitmq
         EventBusUserName: ${EVENT_BUS_USERNAME}
-        EventBusPassword: ${EVENT_BUS_PASSWORD}     
+        EventBusPassword: ${EVENT_BUS_PASSWORD}  
   
   registrar.api:
     environment:
@@ -18,7 +18,8 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
-      Secret: 12345
+      Secret: "12345"
+      AngularSpa: http://localhost:5002
 
   angularspa:
     environment:
@@ -30,8 +31,8 @@ services:
       context: .
       dockerfile: WebApps/AngularSPA.Development/Dockerfile
     environment:
-        PersonnelApi: http://personnel.api
-        AuthApi: http://auth.api
+        PersonnelApi: http://localhost:5001
+        AuthApi: http://localhost:5004
     volumes:
       - ./WebApps/AngularSPA/Client:/usr/src/app
       - /usr/src/app/node_modules

@@ -14,7 +14,7 @@ export class AuthErrorResponseInterceptorService {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError(event => {
-        if (event instanceof HttpErrorResponse && (event.status == 401 || event.status == 403)) {
+        if (event instanceof HttpErrorResponse && event.status == 401) {
           this.store.dispatch(new fromAuthActions.SignOut());
         }
         return throwError(event);

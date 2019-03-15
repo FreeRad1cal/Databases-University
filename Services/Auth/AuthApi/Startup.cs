@@ -37,6 +37,15 @@ namespace AuthApi
                 .AddCheck("self-check", () => HealthCheckResult.Healthy())
                 .AddCheck("db-check", new SqlConnectionHealthCheck(Configuration["ConnectionString"]));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .WithOrigins(Configuration["AngularSpa"])
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
             services.AddTransient<ITokenService, DefaultTokenService>();
         }
 
@@ -58,6 +67,8 @@ namespace AuthApi
                 Predicate = r => r.Name.Contains("db-check"),
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
+
+            app.UseCors("CorsPolicy");
 
             app.UseMvc();
         }

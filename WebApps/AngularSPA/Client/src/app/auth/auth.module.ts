@@ -12,6 +12,8 @@ import { AuthErrorResponseInterceptorService } from './services/auth-error-respo
 import { JwtPersisterService } from './services/jwt-persister.service';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { MaterialModule } from '../material/material.module';
+import { AuthRoutingModule } from './auth-routing.module';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [LoginPageComponent, LoginFormComponent],
@@ -19,6 +21,7 @@ import { MaterialModule } from '../material/material.module';
     CommonModule,
     ReactiveFormsModule,
     MaterialModule,
+    AuthRoutingModule,
     StoreModule.forFeature('auth', reducers),
     EffectsModule.forFeature([AuthEffects]),
   ]
@@ -29,6 +32,7 @@ export class AuthModule {
       ngModule: AuthModule, 
       providers: [
         JwtPersisterService,
+        AuthService,
         {
           provide: HTTP_INTERCEPTORS,
           useClass: JwtInterceptorService,

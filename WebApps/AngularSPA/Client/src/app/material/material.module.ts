@@ -14,6 +14,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import {MatTableModule} from '@angular/material/table';
 import {MatSelectModule} from '@angular/material/select';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatCardModule} from '@angular/material/card';
 
 const materialModules = [
   MatTabsModule,
@@ -28,7 +29,8 @@ const materialModules = [
   MatDialogModule,
   MatTableModule,
   MatSelectModule,
-  MatChipsModule
+  MatChipsModule,
+  MatCardModule
 ];
 
 @NgModule({

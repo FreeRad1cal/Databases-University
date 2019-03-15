@@ -10,11 +10,11 @@ import * as fromRouter from '@ngrx/router-store';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 export interface State {
-    router: fromRouter.RouterReducerState;
+    // router: fromRouter.RouterReducerState;
 }
 
 export const reducers: ActionReducerMap<State> = {
-    router: fromRouter.routerReducer,
+    // router: fromRouter.routerReducer,
 };
 
 export function logger(reducer: ActionReducer<State>): ActionReducer<State> {

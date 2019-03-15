@@ -7,8 +7,8 @@ export enum AuthActionTypes {
     SignOut = '[Auth] SignOut',
     SignInSuccess = '[Auth] SignIn Success',
     SignInFailure = '[Auth] SignIn Failure',
-    SetToken = '[Auth] Set Token',
-    InitUser = '[Auth] Init User'
+    InitUser = '[Auth] Init User',
+    CompleteSignIn = '[Auth] Complete SignIn'
 }
 
 export class SignIn implements Action {
@@ -26,27 +26,27 @@ export class SignInSuccess implements Action {
 export class SignInFailure implements Action {
     readonly type = AuthActionTypes.SignInFailure;
 
-    constructor(public payload: { errors: string[] }) {}
+    constructor(public payload: { error: string }) {}
 }
 
 export class SignOut implements Action {
     readonly type = AuthActionTypes.SignOut;
 }
 
-export class SetToken implements Action {
-    readonly type = AuthActionTypes.SetToken;
-
-    constructor(public payload: {token: string, expires: Date}) {}
-}
-
 export class InitUser implements Action {
     readonly type = AuthActionTypes.InitUser;
+}
+
+export class CompleteSignIn implements Action {
+    readonly type = AuthActionTypes.CompleteSignIn;
+
+    constructor(public payload: { token: string }) {}
 }
 
 export type AuthActionsUnion =
   | SignIn
   | SignInSuccess
   | SignInFailure
-  | SetToken
   | SignOut
-  | InitUser;
+  | InitUser
+  | CompleteSignIn;

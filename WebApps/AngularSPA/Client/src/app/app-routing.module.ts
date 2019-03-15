@@ -3,13 +3,18 @@ import { Routes, RouterModule } from '@angular/router';
 import { SignedInGuard } from './auth/services/signed-in-guard.service';
 import { HomeComponent } from './containers/home/home.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 const routes: Routes = [
   {
-    path: '', 
+    path: 'home', 
     component: HomeComponent, 
-    pathMatch: 'full',
     canActivate: [SignedInGuard]
+  },
+  {
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full'
   },
   {
     path: '**',
@@ -18,7 +23,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      enableTracing: true
+    }),
+    // StoreRouterConnectingModule.forRoot({
+    //   stateKey: 'router'
+    // })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
