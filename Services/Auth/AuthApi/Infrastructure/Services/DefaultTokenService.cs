@@ -27,7 +27,7 @@ namespace AuthApi.Infrastructure.Services
             _authApiSettings = authApiSettings.Value;
         }
 
-        public async Task<string> AuthorizeAndGetTokenAsync(string userName, string password)
+        public async Task<string> GetTokenFromLoginCredentialsAsync(string userName, string password)
         {
             const string personSql = @"SELECT Id, Hash, Salt FROM People WHERE UserName = @UserName";
             const string claimsSql = @"SELECT Type, Value FROM Claims WHERE PersonId = @Id";

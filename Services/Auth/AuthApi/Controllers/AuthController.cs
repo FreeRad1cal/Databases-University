@@ -30,7 +30,7 @@ namespace AuthApi.Controllers
 
             try
             {
-                var jwt = await _tokenService.AuthorizeAndGetTokenAsync(credentials.UserName, credentials.Password);
+                var jwt = await _tokenService.GetTokenFromLoginCredentialsAsync(credentials.UserName, credentials.Password);
                 return Ok(jwt);
             }
             catch (AuthException)

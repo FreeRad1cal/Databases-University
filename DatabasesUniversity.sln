@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Personnel", "Personnel", "{455AD8A1-E971-474D-B436-6395359650F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonnelApi", "Services\Personnel\PersonnelApi\PersonnelApi.csproj", "{0DC0F3EE-089D-471B-9444-9E0EE95C9861}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Personnel.Api", "Services\Personnel\Personnel.Api\Personnel.Api.csproj", "{0DC0F3EE-089D-471B-9444-9E0EE95C9861}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C4BB4C68-7A24-4ADC-926C-8EE5BEC04743}"
 EndProject
@@ -31,7 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegistrarApi", "Services\Re
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth", "Auth", "{D313DCB1-485A-4D3C-B0EB-44F07EFDF60A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthApi", "Services\Auth\AuthApi\AuthApi.csproj", "{0F8ACE11-CE04-4B62-B1F4-C891D140FE8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthApi", "Services\Auth\AuthApi\AuthApi.csproj", "{0F8ACE11-CE04-4B62-B1F4-C891D140FE8C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Personnel.Domain", "Services\Personnel\Personnel.Domain\Personnel.Domain.csproj", "{85B9C9FE-B55F-4EB4-AB7F-502D9C172484}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Personnel.Infrastructure", "Services\Personnel\Personnel.Infrastructure\Personnel.Infrastructure.csproj", "{87F80100-7639-4BD4-B958-7827DFC7F8CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +75,14 @@ Global
 		{0F8ACE11-CE04-4B62-B1F4-C891D140FE8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F8ACE11-CE04-4B62-B1F4-C891D140FE8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F8ACE11-CE04-4B62-B1F4-C891D140FE8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85B9C9FE-B55F-4EB4-AB7F-502D9C172484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85B9C9FE-B55F-4EB4-AB7F-502D9C172484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85B9C9FE-B55F-4EB4-AB7F-502D9C172484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85B9C9FE-B55F-4EB4-AB7F-502D9C172484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87F80100-7639-4BD4-B958-7827DFC7F8CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87F80100-7639-4BD4-B958-7827DFC7F8CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87F80100-7639-4BD4-B958-7827DFC7F8CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87F80100-7639-4BD4-B958-7827DFC7F8CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +99,8 @@ Global
 		{60E31F19-09EF-4DD7-B131-DD7F0ED41EC8} = {1CA54738-2612-4EB4-9ED3-E8CFA72395A8}
 		{D313DCB1-485A-4D3C-B0EB-44F07EFDF60A} = {C7010452-AB22-4F87-8EC0-005384125A70}
 		{0F8ACE11-CE04-4B62-B1F4-C891D140FE8C} = {D313DCB1-485A-4D3C-B0EB-44F07EFDF60A}
+		{85B9C9FE-B55F-4EB4-AB7F-502D9C172484} = {455AD8A1-E971-474D-B436-6395359650F8}
+		{87F80100-7639-4BD4-B958-7827DFC7F8CE} = {455AD8A1-E971-474D-B436-6395359650F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {864D41BC-2613-454F-A41E-DCD78BAD5583}

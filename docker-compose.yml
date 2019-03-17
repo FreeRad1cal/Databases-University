@@ -4,7 +4,7 @@ services:
   personnel.api:
     build:
       context: .
-      dockerfile: Services/Personnel/PersonnelApi/Dockerfile
+      dockerfile: Services/Personnel/Personnel.Api/Dockerfile
 
   registrar.api:
     build:

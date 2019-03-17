@@ -6,7 +6,7 @@ ENV ASPNETCORE_URLS http://*:80
 FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY . .
-WORKDIR /src/Services/Personnel/PersonnelApi
+WORKDIR /src/Services/Personnel/Personnel.Api
 RUN dotnet build PersonnelApi.csproj -c Release -o /app
 
 FROM build AS publish

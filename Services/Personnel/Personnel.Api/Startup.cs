@@ -1,4 +1,5 @@
-﻿using HealthChecks.UI.Client;
+﻿using FluentValidation.AspNetCore;
+using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -36,7 +37,8 @@ namespace PersonnelApi
                     .RequireAuthenticatedUser()
                     .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
-            });
+            })
+            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.Configure<PersonnelApiSettings>(Configuration);
 

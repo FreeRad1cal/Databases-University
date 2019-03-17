@@ -8,6 +8,6 @@ namespace AuthApi.Infrastructure.Services
 {
     public interface ITokenService
     {
-        Task<string> AuthorizeAndGetTokenAsync(string userName, string password);
+        Task<string> GetTokenFromLoginCredentialsAsync(string userName, string password);
     }
 }
