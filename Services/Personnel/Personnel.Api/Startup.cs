@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using AutoMapper;
+using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -10,11 +11,14 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Personnel.Domain.PersonAggregate;
+using Personnel.Infrastructure.Repositories;
 using PersonnelApi.Infrastructure.HealthChecks;
 using PersonnelApi.Infrastructure.Services;
-using SecureChat.Common.Events.EventBus;
-using SecureChat.Common.Events.EventBus.Abstractions;
-using SecureChat.Common.Events.EventBusRabbitMQ;
+using DatabasesUniversity.Common.Events.EventBus;
+using DatabasesUniversity.Common.Events.EventBus.Abstractions;
+using DatabasesUniversity.Common.Events.EventBusRabbitMQ;
+using Personnel.Api.Dtos;
 
 namespace PersonnelApi
 {
@@ -46,6 +50,14 @@ namespace PersonnelApi
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IIdentityService, IdentityService>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.CreateMap<AddressDto, Address>();
+                cfg.CreateMap<Address, AddressDto>();
+                cfg.CreateMap<Person, PersonDto>();
+            });
 
             services.AddEventBus(Configuration);
 

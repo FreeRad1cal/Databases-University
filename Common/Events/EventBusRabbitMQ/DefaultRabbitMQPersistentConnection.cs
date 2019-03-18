@@ -7,10 +7,10 @@ using RabbitMQ.Client.Exceptions;
 using System;
 using System.IO;
 using System.Net.Sockets;
+using DatabasesUniversity.Common.Events.EventBus;
 using Microsoft.Extensions.Options;
-using SecureChat.Common.Events.EventBus;
 
-namespace SecureChat.Common.Events.EventBusRabbitMQ
+namespace DatabasesUniversity.Common.Events.EventBusRabbitMQ
 {
     public class DefaultRabbitMQPersistentConnection
        : IRabbitMQPersistentConnection

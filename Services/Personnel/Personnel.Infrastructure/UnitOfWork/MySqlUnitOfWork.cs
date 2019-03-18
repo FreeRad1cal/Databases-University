@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,16 +14,36 @@ using Personnel.Infrastructure.Repositories;
 
 namespace Personnel.Infrastructure.UnitOfWork
 {
+    class OperationDescriptor
+    {
+        public Guid Id { get; } = new Guid();
+        public object Entity { get; }
+        public Func<IDbConnection, Task> Operation { get; }
+
+        public bool IsDispatching =>
+            Entity.GetType() == typeof(Entity);
+
+        public OperationDescriptor(object entity, Func<IDbConnection, Task> operation)
+        {
+            Entity = entity;
+            Operation = operation;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+    }
+
+    // Not thread-safe
     public class MySqlUnitOfWork : IUnitOfWork
     {
         private readonly IMediator _mediator;
         private readonly string _connectionString;
 
-        private readonly Dictionary<(Guid, Entity), Func<IDbConnection, Entity, Task>> _dispatchingOperations =
-            new Dictionary<(Guid, Entity), Func<IDbConnection, Entity, Task>>();
+        private readonly object _syncRoot = new object();
 
-        private readonly Dictionary<(Guid, ValueObject), Func<IDbConnection, ValueObject, Task>> _nondispatchingOperations =
-            new Dictionary<(Guid, ValueObject), Func<IDbConnection, ValueObject, Task>>();
+        private List<OperationDescriptor> _operations = new List<OperationDescriptor>();
 
         public MySqlUnitOfWork(IMediator mediator, string connectionString)
         {
@@ -35,35 +56,25 @@ namespace Personnel.Infrastructure.UnitOfWork
             using (var conn = await GetDbConnectionAsync())
             using (var transaction = conn.BeginTransaction())
             {
-                foreach (var kvp in _dispatchingOperations)
+                foreach (var operation in _operations)
                 {
-                    var (_, entity) = kvp.Key;
-                    var operation = kvp.Value;
+                    await operation.Operation(conn);
+                    if (operation.IsDispatching)
+                    {
+                        await DispatchDomainEventsAsync(operation.Entity as Entity);
+                    }
 
-                    await operation(conn, entity);
-                    await DispatchDomainEventsAsync(entity);
-                }
-
-                foreach (var kvp in _nondispatchingOperations)
-                {
-                    var (_, valueObject) = kvp.Key;
-                    var operation = kvp.Value;
-
-                    await operation(conn, valueObject);
+                    _operations.Remove(operation);
                 }
 
                 transaction.Commit();
             }
-
-            _dispatchingOperations.Clear();
-            _nondispatchingOperations.Clear();
         }
 
-        public void AddDispatchingOperation(Entity entity, Func<IDbConnection, Entity, Task> operation) 
-            => _dispatchingOperations.Add((new Guid(), entity), operation);
-
-        public void AddNondispatchingOperation(ValueObject valueObject, Func<IDbConnection, ValueObject, Task> operation)
-            => _nondispatchingOperations.Add((new Guid(), valueObject), operation);
+        public void AddOperation(object entity, Func<IDbConnection, Task> operation)
+        {
+            _operations.Add(new OperationDescriptor(entity, operation));
+        }
 
         private async Task DispatchDomainEventsAsync(Entity entity)
         {

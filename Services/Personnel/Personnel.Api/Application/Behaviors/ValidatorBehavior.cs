@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using SecureChat.Common.Events.EventBus.Extensions;
+using DatabasesUniversity.Common.Events.EventBus.Extensions;
 
 namespace Personnel.Api.Application.Behaviors
 {

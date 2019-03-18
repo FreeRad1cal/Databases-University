@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SecureChat.Common.Events.EventBus.Extensions
+namespace DatabasesUniversity.Common.Events.EventBus.Extensions
 {
     public static class GenericTypeExtensions
     {

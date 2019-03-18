@@ -8,7 +8,7 @@ namespace Personnel.Domain.PersonAggregate
 {
     public interface IPersonRepository : IRepository<Person>
     {
-        Person Add(Person person);
+        Person Add(Person person, string salt, string hash);
 
         void Update(Person person);
 

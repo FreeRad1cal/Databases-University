@@ -7,6 +7,8 @@ namespace Personnel.Domain.Common
 {
     public abstract class ValueObject
     {
+        public int Id { get; set; }
+
         protected static bool EqualOperator(ValueObject left, ValueObject right)
         {
             if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))

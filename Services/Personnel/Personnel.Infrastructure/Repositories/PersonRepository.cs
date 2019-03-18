@@ -23,23 +23,41 @@ namespace Personnel.Infrastructure.Repositories
             UnitOfWork = new MySqlUnitOfWork(mediator, connInfo.Value.ConnectionString);
         }
 
-        public Person Add(Person person)
+        public Person Add(Person person, string salt, string hash)
         {
-            var sql = $@"INSERT INTO People (username, email)
-                        VALUES (@{nameof(person.UserName)}, @{nameof(person.Email)});
+            var personSql = $@"INSERT INTO People (Username, Email, PasswordSalt, PasswordHash)
+                        VALUES (@{nameof(person.UserName)}, @{nameof(person.Email)}, @PasswordSalt, @PasswordHash);
                         SELECT LAST_INSERT_ID();";
-            UnitOfWork.AddDispatchingOperation(person, async (connection, entity) =>
+            UnitOfWork.AddOperation(person, async connection =>
             {
-                var id = await connection.QueryFirstAsync<int>(sql, person);
+                var id = await connection.QueryFirstAsync<int>(personSql, person);
                 person.Id = id;
             });
 
-            foreach (var address in new[] {person.HomeAddress, person.MailingAddress})
+            foreach (var (address, type) in new[] { (person.HomeAddress, "Home"), (person.MailingAddress, "Mailing") })
             {
-                var sql2 = $@"INSERT IGNORE INTO Addresses (street, city, state, country, zipcode)
-                            VALUES (@{nameof(address.Street)}, @{nameof(address.City)}, @{nameof(address.State)}, @{nameof(address.Country)}, @{nameof(address.ZipCode)} );";
-                UnitOfWork.AddNondispatchingOperation(address,
-                    async (connection, valueObject) => await connection.QueryAsync(sql2, valueObject));
+                var addressSql = $@"INSERT INTO Addresses (Street, City, State, Country, Zipcode)
+                            VALUES (@{nameof(address.Street)}, @{nameof(address.City)}, @{nameof(address.State)}, @{nameof(address.Country)}, @{nameof(address.ZipCode)} )
+                            ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
+                            SELECT LAST_INSERT_ID()";
+                UnitOfWork.AddOperation(address,
+                    async connection =>
+                    {
+                        var id = await connection.QueryFirstAsync<int>(addressSql, address);
+                        address.Id = id;
+                    });
+
+                var personAddressMapSql = $@"INSERT INTO PersonAddressMap (PersonId, AddressId, Type)
+                                            VALUES (@PersonId, @AddressId, @Type);";
+                UnitOfWork.AddOperation(new object(), async connection =>
+                {
+                    await connection.ExecuteAsync(personAddressMapSql, new
+                    {
+                        PersonId = person.Id,
+                        AddressId = address.Id,
+                        Type = type
+                    });
+                });
             }
 
             return person;

@@ -35,7 +35,7 @@ namespace Personnel.Domain.Common
 
         public bool IsTransient()
         {
-            return this.Id == default(string);
+            return this.Id == default(int);
         }
 
         public override bool Equals(object obj)

@@ -13,6 +13,8 @@ namespace Personnel.Api.Dtos
 
         public string Email { get; set; }
 
-        public int Address { get; set; }
+        public AddressDto HomeAddress { get; set; }
+
+        public AddressDto MailingAddress { get; set; }
     }
 }

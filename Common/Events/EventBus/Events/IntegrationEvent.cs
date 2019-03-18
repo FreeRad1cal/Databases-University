@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace SecureChat.Common.Events.EventBus.Events
+namespace DatabasesUniversity.Common.Events.EventBus.Events
 {
     public class IntegrationEvent
     {

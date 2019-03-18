@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SecureChat.Common.Events.EventBus
+namespace DatabasesUniversity.Common.Events.EventBus
 {
     public class SubscriptionInfo
     {
