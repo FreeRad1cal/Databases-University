@@ -34,8 +34,11 @@ namespace Personnel.Infrastructure.Repositories
                 person.Id = id;
             });
 
-            foreach (var (address, type) in new[] { (person.HomeAddress, "Home"), (person.MailingAddress, "Mailing") })
+            var addresses = new Dictionary<Address, string>() { {person.HomeAddress, "Home"}, {person.MailingAddress, "Mailing"} };
+            foreach (var kvp in addresses)
             {
+                var address = kvp.Key;
+                var type = kvp.Value;
                 var addressSql = $@"INSERT INTO Addresses (Street, City, State, Country, Zipcode)
                             VALUES (@{nameof(address.Street)}, @{nameof(address.City)}, @{nameof(address.State)}, @{nameof(address.Country)}, @{nameof(address.ZipCode)} )
                             ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);

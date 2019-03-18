@@ -40,6 +40,11 @@ services:
       - '4200:4200'
       - '9876:9876'
 
+  mysql:
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
   nginx:
     volumes:
       - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf
@@ -53,6 +58,11 @@ services:
       - "5002:5002"
       - "5003:5003"
       - "5004:5004"
+
+  rabbitmq:
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq 
+      RABBITMQ_DEFAULT_PASS: "12345"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin

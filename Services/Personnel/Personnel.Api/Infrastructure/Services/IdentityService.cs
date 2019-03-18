@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace PersonnelApi.Infrastructure.Services
+namespace Personnel.Api.Infrastructure.Services
 {
     public class IdentityService : IIdentityService
     {

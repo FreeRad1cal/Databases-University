@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Personnel.Api.Dtos;
-using Personnel.Api.Entities;
 
 namespace Personnel.Api.Application.Commands
 {
