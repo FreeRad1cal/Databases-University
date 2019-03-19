@@ -17,8 +17,8 @@ namespace Personnel.Api
 
             using (var scope = webHost.Services.CreateScope())
             {
-                var dbInitializer = scope.ServiceProvider.GetRequiredService<DatabaseSeed>();
-                dbInitializer.SeedAsync().Wait();
+                var databaseSeed = scope.ServiceProvider.GetRequiredService<DatabaseSeed>();
+                databaseSeed.SeedAsync().Wait();
             }
 
             webHost.Run();

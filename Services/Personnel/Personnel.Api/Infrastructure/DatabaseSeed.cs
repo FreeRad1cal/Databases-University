@@ -36,7 +36,8 @@ namespace Personnel.Api.Infrastructure
                         City = "New York",
                         Country = "US",
                         Street = "160 Convent Ave.",
-                        ZipCode = "18064"
+                        ZipCode = "18064",
+                        State = "New York"
                     }
                 };
 

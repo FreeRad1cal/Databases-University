@@ -14,5 +14,7 @@ namespace Personnel.Api.Dtos
         public string Country { get; set; }
 
         public string ZipCode { get; set; }
+
+        public string State { get; set; }
     }
 }

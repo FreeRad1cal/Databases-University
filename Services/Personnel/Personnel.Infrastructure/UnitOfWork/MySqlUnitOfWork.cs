@@ -16,7 +16,7 @@ namespace Personnel.Infrastructure.UnitOfWork
 {
     class OperationDescriptor
     {
-        public Guid Id { get; } = new Guid();
+        public Guid Id { get; } = Guid.NewGuid();
         public object Entity { get; }
         public Func<IDbConnection, Task> Operation { get; }
 
@@ -53,21 +53,26 @@ namespace Personnel.Infrastructure.UnitOfWork
 
         public virtual async Task SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (var conn = await GetDbConnectionAsync())
-            using (var transaction = conn.BeginTransaction())
+            try
             {
-                foreach (var operation in _operations)
+                using (var conn = await GetDbConnectionAsync())
+                using (var transaction = conn.BeginTransaction())
                 {
-                    await operation.Operation(conn);
-                    if (operation.IsDispatching)
+                    foreach (var operation in _operations)
                     {
-                        await DispatchDomainEventsAsync(operation.Entity as Entity);
+                        await operation.Operation(conn);
+                        if (operation.IsDispatching)
+                        {
+                            await DispatchDomainEventsAsync(operation.Entity as Entity);
+                        }
                     }
 
-                    _operations.Remove(operation);
+                    transaction.Commit();
                 }
-
-                transaction.Commit();
+            }
+            finally
+            {
+                _operations.Clear();
             }
         }
 

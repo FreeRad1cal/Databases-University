@@ -47,7 +47,7 @@ namespace Personnel.Api.Application.Commands
                 _mapper.Map<Address>(request.HomeAddress),
                 _mapper.Map<Address>(request.MailingAddress));
 
-            var saltHash = SaltedHashHelper.GenerateSaltedHash(4, request.Password);
+            var saltHash = SaltedHashHelper.GenerateSaltedHash(8, request.Password);
             var result = _personRepository.Add(person, saltHash.Salt, saltHash.Hash);
             await _personRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 

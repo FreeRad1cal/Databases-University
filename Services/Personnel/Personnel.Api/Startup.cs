@@ -49,6 +49,7 @@ namespace Personnel.Api
             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.Configure<PersonnelApiSettings>(Configuration);
+            services.Configure<DbConnectionInfo>(Configuration);
 
             services.AddMediatR(typeof(Startup).Assembly);
 

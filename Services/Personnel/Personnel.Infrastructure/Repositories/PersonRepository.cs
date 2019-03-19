@@ -30,11 +30,19 @@ namespace Personnel.Infrastructure.Repositories
                         SELECT LAST_INSERT_ID();";
             UnitOfWork.AddOperation(person, async connection =>
             {
-                var id = await connection.QueryFirstAsync<int>(personSql, person);
+                var id = await connection.QueryFirstAsync<int>(personSql, new
+                {
+                    person.UserName,
+                    person.Email,
+                    PasswordSalt = salt,
+                    PasswordHash = hash
+                });
                 person.Id = id;
             });
 
-            var addresses = new Dictionary<Address, string>() { {person.HomeAddress, "Home"}, {person.MailingAddress, "Mailing"} };
+            var addresses = new Dictionary<Address, string>();
+            addresses[person.MailingAddress] = "Mailing";
+            addresses[person.HomeAddress] = "Home";
             foreach (var kvp in addresses)
             {
                 var address = kvp.Key;

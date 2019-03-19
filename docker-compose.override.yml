@@ -43,7 +43,7 @@ services:
   mysql:
     volumes:
       - ./mysql/data:/var/lib/mysql
-      - ./mysql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./mysql/init:/docker-entrypoint-initdb.d
 
   nginx:
     volumes:
