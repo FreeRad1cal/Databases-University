@@ -18,7 +18,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
-      Secret: "12345"
+      Secret: "SuperSecretSecret12345!!!!"
       AngularSpa: http://localhost:5002
 
   angularspa:

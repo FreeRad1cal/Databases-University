@@ -31,7 +31,7 @@ namespace AuthApi.Controllers
             try
             {
                 var jwt = await _tokenService.GetTokenFromLoginCredentialsAsync(credentials.UserName, credentials.Password);
-                return Ok(jwt);
+                return new JsonResult(jwt);
             }
             catch (AuthException)
             {

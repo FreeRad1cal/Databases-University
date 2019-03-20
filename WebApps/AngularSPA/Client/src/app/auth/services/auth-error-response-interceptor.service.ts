@@ -10,8 +10,13 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthErrorResponseInterceptorService {
+   static readonly InterceptorSkipHeader = "X-AuthErrorResponseInterceptorSkip"
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (req.headers.has(AuthErrorResponseInterceptorService.InterceptorSkipHeader)) {
+      const headers = req.headers.delete(AuthErrorResponseInterceptorService.InterceptorSkipHeader);
+      return next.handle(req.clone({ headers }));
+    }
     return next.handle(req).pipe(
       catchError(event => {
         if (event instanceof HttpErrorResponse && event.status == 401) {

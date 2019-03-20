@@ -3,9 +3,10 @@ import { environment } from '../../../environments/environment';
 import { JwtPersisterService } from './jwt-persister.service';
 import { Observable } from 'rxjs';
 import { Person } from '../models/Person';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { LoginCredentials } from '../models/LoginCredentials';
+import { AuthErrorResponseInterceptorService } from './auth-error-response-interceptor.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class AuthService {
 
   authenticate(credentials: LoginCredentials): Observable<HttpResponse<string>> {
     const tokenUrl = `${this.authApi}/authenticate`;
-    return this.httpClient.post<string>(tokenUrl, credentials, { observe: 'response'});
+    const headers = new HttpHeaders().set(AuthErrorResponseInterceptorService.InterceptorSkipHeader, '');
+    return this.httpClient.post<string>(tokenUrl, credentials, { observe: 'response', headers: headers});
   }
 
   getMe(): Observable<HttpResponse<Person>> {

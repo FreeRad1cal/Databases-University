@@ -29,14 +29,14 @@ namespace AuthApi.Infrastructure.Services
 
         public async Task<string> GetTokenFromLoginCredentialsAsync(string userName, string password)
         {
-            const string personSql = @"SELECT Id, Hash, Salt FROM People WHERE UserName = @UserName";
-            const string claimsSql = @"SELECT Type, Value FROM Claims WHERE PersonId = @Id";
+            const string personSql = @"SELECT Id, PasswordHash, PasswordSalt FROM People WHERE UserName = @UserName";
+            const string claimsSql = @"SELECT Type, Value FROM Claims WHERE PersonId = @PersonId";
 
             using (var conn = await GetDbConnectionAsync())
             {
                 var person = await conn.QueryFirstOrDefaultAsync<Person>(personSql, new {UserName = userName});
                 if (person == null ||
-                    !SaltedHashHelper.VerifyPasswordAgainstSaltedHash(password, person.Hash, person.Salt))
+                    !SaltedHashHelper.VerifyPasswordAgainstSaltedHash(password, person.PasswordHash, person.PasswordSalt))
                 {
                     throw new AuthException();
                 }

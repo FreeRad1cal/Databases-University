@@ -32,7 +32,10 @@ export class AuthEffects implements OnInitEffects {
             catchError(res => of(res)),
             map(res => {
                 if (res instanceof HttpErrorResponse) {
-                    return new SignInFailure({ error: "Authentication error. Please log in again." })
+                    let msg = res.status == 401 || res.status == 403 ? 
+                    "Authentication error. Please log in again." :
+                    "An error occured while communicating with the server";
+                    return new SignInFailure({ error: msg })
                 }
                 return new SignInSuccess({user: res.body});
             })
@@ -48,6 +51,9 @@ export class AuthEffects implements OnInitEffects {
                 catchError(res => of(res)),
                 map(res => {
                     if (res instanceof HttpErrorResponse) {
+                        if (res.status == 401){
+                            return new SignInFailure({ error: "Invalid username or password" });
+                        }
                         return new SignInFailure({ error: "An error occured while communicating with the server" })
                     }
                     return new CompleteSignIn({ token: res.body });

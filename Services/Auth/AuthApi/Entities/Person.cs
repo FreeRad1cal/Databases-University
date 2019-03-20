@@ -4,8 +4,8 @@
     {
         public string Id { get; set; }
 
-        public string Hash { get; set; }
+        public string PasswordHash { get; set; }
 
-        public string Salt { get; set; }
+        public string PasswordSalt { get; set; }
     }
 }
