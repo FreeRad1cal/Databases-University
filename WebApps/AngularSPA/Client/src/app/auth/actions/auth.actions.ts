@@ -26,7 +26,7 @@ export class SignInSuccess implements Action {
 export class SignInFailure implements Action {
     readonly type = AuthActionTypes.SignInFailure;
 
-    constructor(public payload: { error: string }) {}
+    constructor(public payload: { errors: string[] }) {}
 }
 
 export class SignOut implements Action {

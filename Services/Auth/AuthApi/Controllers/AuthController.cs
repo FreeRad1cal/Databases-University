@@ -35,7 +35,10 @@ namespace AuthApi.Controllers
             }
             catch (AuthException)
             {
-                return Unauthorized();
+                return Unauthorized(new ErrorResponse()
+                {
+                    Errors = new [] {"Invalid username or password"}
+                });
             }
         }
     }

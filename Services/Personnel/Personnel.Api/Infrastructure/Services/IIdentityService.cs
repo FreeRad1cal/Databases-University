@@ -2,6 +2,6 @@
 {
     public interface IIdentityService
     {
-        string GetUserIdentity();
+        int GetUserIdentity();
     }
 }

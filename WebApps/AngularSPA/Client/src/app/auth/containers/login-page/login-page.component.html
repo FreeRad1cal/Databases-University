@@ -1,7 +1,7 @@
 <div class="d-flex flex-column align-items-center align-self-center justify-self-center w-50">
   <mat-card class="w-75">
     <mat-card-content>
-        <app-login-form [busy]="busy$ | async" [error]="error$ | async" (login)="onLogin($event)"></app-login-form>
+        <app-login-form [busy]="busy$ | async" [errors]="errors$ | async" (login)="onLogin($event)"></app-login-form>
     </mat-card-content>
   </mat-card>
 </div>

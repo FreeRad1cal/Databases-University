@@ -12,9 +12,9 @@ namespace Personnel.Api.Infrastructure.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public string GetUserIdentity()
+        public int GetUserIdentity()
         {
-            return _context.HttpContext.User.FindFirst("sub").Value;
+            return int.Parse(_context.HttpContext.User.FindFirst("sub").Value);
         }
 
         public string GetUserName()

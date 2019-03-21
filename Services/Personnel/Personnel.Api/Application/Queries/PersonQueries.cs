@@ -7,15 +7,18 @@ using Dapper;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using Personnel.Api.Dtos;
+using Personnel.Infrastructure;
 
 namespace Personnel.Api.Application.Queries
 {
     public class PersonQueries : IPersonQueries
     {
+        private readonly IDbConnectionFactory _dbConnectionFactory;
         private PersonnelApiSettings _settings;
 
-        public PersonQueries(IOptions<PersonnelApiSettings> settings)
+        public PersonQueries(IOptions<PersonnelApiSettings> settings, IDbConnectionFactory dbConnectionFactory)
         {
+            _dbConnectionFactory = dbConnectionFactory;
             _settings = settings.Value;
         }
 
@@ -25,18 +28,24 @@ namespace Personnel.Api.Application.Queries
                         WHERE UserName = @{nameof(userName)} OR Email = @{nameof(email)}
                         LIMIT 1";
 
-            using (var conn = await GetDbConnectionAsync())
+            using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
                 var person = await conn.QueryFirstOrDefaultAsync(sql, new { userName, email });
                 return person != null;
             }
         }
 
-        private async Task<IDbConnection> GetDbConnectionAsync()
+        public async Task<PersonDto> GetPersonById(int id)
         {
-            var connection = new MySqlConnection(_settings.ConnectionString);
-            await connection.OpenAsync();
-            return connection;
+            var sql = $@"SELECT * FROM People
+                        WHERE Id = @Id
+                        LIMIT 1";
+
+            using (var conn = await _dbConnectionFactory.GetConnectionAsync())
+            {
+                var person = await conn.QueryFirstOrDefaultAsync(sql, new { Id = id });
+                return person != null;
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using Personnel.Api.Dtos;
 using Personnel.Domain.PersonAggregate;
 using DatabasesUniversity.Common.Events.EventBus.Abstractions;
 using Helpers;
+using Microsoft.Extensions.Logging;
 using Personnel.Api.Application.Queries;
 using Personnel.Domain.Exceptions;
 
@@ -21,19 +22,22 @@ namespace Personnel.Api.Application.Commands
         private readonly IEventBus _eventBus;
         private readonly IMapper _mapper;
         private readonly IPersonQueries _personQueries;
+        private readonly ILogger<RegisterPersonCommandHandler> _logger;
 
         public RegisterPersonCommandHandler(
             IPersonRepository personRepository,
             IMediator mediator,
             IEventBus eventBus,
             IMapper mapper,
-            IPersonQueries personQueries)
+            IPersonQueries personQueries,
+            ILogger<RegisterPersonCommandHandler> logger)
         {
             _personRepository = personRepository;
             _mediator = mediator;
             _eventBus = eventBus;
             _mapper = mapper;
             _personQueries = personQueries;
+            _logger = logger;
         }
 
         public async Task<PersonDto> Handle(RegisterPersonCommand request, CancellationToken cancellationToken)
@@ -49,7 +53,7 @@ namespace Personnel.Api.Application.Commands
 
             var saltHash = SaltedHashHelper.GenerateSaltedHash(8, request.Password);
             var result = _personRepository.Add(person, saltHash.Salt, saltHash.Hash);
-            await _personRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _personRepository.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<PersonDto>(result);
         }

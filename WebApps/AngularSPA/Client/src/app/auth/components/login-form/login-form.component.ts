@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoginCredentials } from '../../models/LoginCredentials';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormGroupDirective } from '@angular/forms';
 
 @Component({
   selector: 'app-login-form',
@@ -13,7 +13,7 @@ export class LoginFormComponent implements OnInit {
   @Input()
   busy: boolean;
   @Input()
-  error: string;
+  errors: string[];
 
   @Output()
   login = new EventEmitter<LoginCredentials>();
@@ -28,8 +28,9 @@ export class LoginFormComponent implements OnInit {
     });
   }
 
-  onLoginClicked() {
+  onLoginClicked(form: FormGroup, formDirective: FormGroupDirective) {
     this.login.emit(this.loginForm.value);
-    this.loginForm.reset();
+    form.reset();
+    formDirective.reset();
   }
 }

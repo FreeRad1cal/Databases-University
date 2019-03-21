@@ -36,26 +36,26 @@ namespace Personnel.Infrastructure.UnitOfWork
     }
 
     // Not thread-safe
-    public class MySqlUnitOfWork : IUnitOfWork
+    public abstract class SqlUnitOfWork : IUnitOfWork
     {
         private readonly IMediator _mediator;
-        private readonly string _connectionString;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         private readonly object _syncRoot = new object();
 
         private List<OperationDescriptor> _operations = new List<OperationDescriptor>();
 
-        public MySqlUnitOfWork(IMediator mediator, string connectionString)
+        public SqlUnitOfWork(IMediator mediator, IDbConnectionFactory dbConnectionFactory)
         {
             _mediator = mediator;
-            _connectionString = connectionString;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         public virtual async Task SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
-                using (var conn = await GetDbConnectionAsync())
+                using (var conn = await _dbConnectionFactory.GetConnectionAsync())
                 using (var transaction = conn.BeginTransaction())
                 {
                     foreach (var operation in _operations)
@@ -91,13 +91,6 @@ namespace Personnel.Infrastructure.UnitOfWork
                 await Task.WhenAll(tasks);
                 entity.ClearDomainEvents();
             }
-        }
-
-        private async Task<IDbConnection> GetDbConnectionAsync()
-        {
-            var connection = new MySqlConnection(_connectionString);
-            await connection.OpenAsync();
-            return connection;
         }
     }
 }

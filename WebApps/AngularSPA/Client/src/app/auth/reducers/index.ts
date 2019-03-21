@@ -41,7 +41,7 @@ export const getBusy = createSelector(
   fromAuth.selectBusy  
 );
 
-export const getError = createSelector(
+export const getErrors = createSelector(
     selectAuthStatusState,
-    fromAuth.selectError
+    fromAuth.selectErrors
 )

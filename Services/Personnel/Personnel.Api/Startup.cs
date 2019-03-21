@@ -22,7 +22,12 @@ using Personnel.Api.Infrastructure.Services;
 using Personnel.Domain.PersonAggregate;
 using Personnel.Infrastructure.Repositories;
 using Helpers.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Personnel.Api.Application.Queries;
+using Personnel.Api.Infrastructure.Filters;
+using Personnel.Infrastructure;
 
 namespace Personnel.Api
 {
@@ -45,13 +50,29 @@ namespace Personnel.Api
                     .RequireAuthenticatedUser()
                     .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+                options.Filters.Add(typeof(GlobalExceptionFilter));
             })
-            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
+            .AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            }); ;
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    //options.ClaimsIssuer = Configuration["AUTHORITY_URL"];
+                    //options.Audience = Configuration["API_NAME"];
+                    //options.RequireHttpsMetadata = false;
+                });
 
             services.Configure<PersonnelApiSettings>(Configuration);
             services.Configure<DbConnectionInfo>(Configuration);
 
             services.AddMediatR(typeof(Startup).Assembly);
+
+            services.AddScoped<IDbConnectionFactory, MySqlConnectionFactory>();
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IIdentityService, IdentityService>();

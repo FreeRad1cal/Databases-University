@@ -4,7 +4,7 @@ import { map, tap, switchMap, filter, debounceTime, catchError } from 'rxjs/oper
 import { Store, Action } from "@ngrx/store";
 import { JwtPersisterService } from '../services/jwt-persister.service';
 import { InitUser, AuthActionTypes, SignInSuccess, SignOut, SignIn, CompleteSignIn, SignInFailure } from '../actions/auth.actions';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { JwtHelper } from '../helpers/JwtHelper';
 import { Router } from '@angular/router';
@@ -32,10 +32,8 @@ export class AuthEffects implements OnInitEffects {
             catchError(res => of(res)),
             map(res => {
                 if (res instanceof HttpErrorResponse) {
-                    let msg = res.status == 401 || res.status == 403 ? 
-                    "Authentication error. Please log in again." :
-                    "An error occured while communicating with the server";
-                    return new SignInFailure({ error: msg })
+                    const errors = res.error.errors ? res.error.errors : ["An error has occured"];
+                    return new SignInFailure({ errors: errors })
                 }
                 return new SignInSuccess({user: res.body});
             })
@@ -51,10 +49,8 @@ export class AuthEffects implements OnInitEffects {
                 catchError(res => of(res)),
                 map(res => {
                     if (res instanceof HttpErrorResponse) {
-                        if (res.status == 401){
-                            return new SignInFailure({ error: "Invalid username or password" });
-                        }
-                        return new SignInFailure({ error: "An error occured while communicating with the server" })
+                        const errors = res.error.errors ? res.error.errors : ["An error has occured"];
+                            return new SignInFailure({ errors: errors });
                     }
                     return new CompleteSignIn({ token: res.body });
                 })

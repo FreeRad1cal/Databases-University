@@ -7,7 +7,7 @@ export interface State {
     expires: Date;
     token: string;
     busy: boolean;
-    error: string;
+    errors: string[];
 }
 
 export const initialState: State = {
@@ -15,7 +15,7 @@ export const initialState: State = {
     expires: new Date(),
     token: null,
     busy: false,
-    error: null
+    errors: []
 }
 
 export function reducer(state = initialState, action: AuthActionsUnion): State {
@@ -50,7 +50,7 @@ export function reducer(state = initialState, action: AuthActionsUnion): State {
         case AuthActionTypes.SignInFailure: {
           return {
             ...initialState,
-            error: action.payload.error
+            errors: action.payload.errors
           }
         }
 
@@ -64,4 +64,4 @@ export const selectIsSignedIn = (state: State) => state.signedInUser != null && 
 export const selectSignedInUser = (state: State) => state.signedInUser;
 export const selectToken = (state: State) => state.token;
 export const selectBusy = (state: State) => state.busy
-export const selectError = (state: State) => state.error;
+export const selectErrors = (state: State) => state.errors;
