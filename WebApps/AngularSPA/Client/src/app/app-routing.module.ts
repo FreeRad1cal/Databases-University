@@ -7,14 +7,14 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 const routes: Routes = [
   {
-    path: 'home', 
-    component: HomeComponent, 
-    canActivate: [SignedInGuard]
-  },
-  {
     path: '',
     redirectTo: '/home',
     pathMatch: 'full'
+  },
+  {
+    path: 'home', 
+    component: HomeComponent, 
+    canActivate: [SignedInGuard]
   },
   {
     path: '**',

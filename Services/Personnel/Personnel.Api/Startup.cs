@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text;
 using AutoMapper;
 using DatabasesUniversity.Common.Events.EventBus;
 using DatabasesUniversity.Common.Events.EventBus.Abstractions;
@@ -23,6 +25,7 @@ using Personnel.Domain.PersonAggregate;
 using Personnel.Infrastructure.Repositories;
 using Helpers.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Personnel.Api.Application.Queries;
@@ -45,11 +48,6 @@ namespace Personnel.Api
         {
             services.AddMvc(options =>
             {
-                // Require authentication by default
-                var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
                 options.Filters.Add(typeof(GlobalExceptionFilter));
             })
             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
@@ -59,13 +57,16 @@ namespace Personnel.Api
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             }); ;
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    //options.ClaimsIssuer = Configuration["AUTHORITY_URL"];
-                    //options.Audience = Configuration["API_NAME"];
-                    //options.RequireHttpsMetadata = false;
-                });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .WithOrigins(Configuration["AngularSpa"])
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
+            services.AddAuthentication(Configuration);
 
             services.Configure<PersonnelApiSettings>(Configuration);
             services.Configure<DbConnectionInfo>(Configuration);
@@ -116,6 +117,10 @@ namespace Personnel.Api
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
 
+            app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
+
             app.UseMvc();
         }    
     }
@@ -136,6 +141,28 @@ namespace Personnel.Api
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ>();
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddAuthentication(this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            var tokenValidationParameters = new TokenValidationParameters()
+            {
+                RequireExpirationTime = false,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Secret"])),
+            };
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = tokenValidationParameters;
+                    options.SaveToken = true;
+                });
 
             return services;
         }

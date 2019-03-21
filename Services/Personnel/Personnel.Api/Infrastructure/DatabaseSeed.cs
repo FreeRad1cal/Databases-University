@@ -38,6 +38,14 @@ namespace Personnel.Api.Infrastructure
                         Street = "160 Convent Ave.",
                         ZipCode = "18064",
                         State = "New York"
+                    },
+                    MailingAddress = new AddressDto()
+                    {
+                        City = "New York",
+                        Country = "US",
+                        Street = "161 Convent Ave.",
+                        ZipCode = "18064",
+                        State = "New York"
                     }
                 };
 

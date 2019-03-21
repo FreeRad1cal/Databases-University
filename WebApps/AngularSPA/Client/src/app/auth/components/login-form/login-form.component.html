@@ -1,13 +1,13 @@
-<form class="d-flex flex-column align-items-center" [formGroup]="loginForm" (ngSubmit)="onLoginClicked(loginForm, formDirective)" #formDirective="ngForm">
+<form class="d-flex flex-column align-items-center" [formGroup]="loginForm" (ngSubmit)="onLoginClicked(loginForm)">
   <mat-form-field class="w-100">
     <input matInput placeholder="Username" formControlName="userName">
-    <mat-error *ngIf="loginForm.touched && loginForm.hasError('required', 'userName')">
+    <mat-error *ngIf="loginForm.hasError('required', 'userName')">
       Username is required
     </mat-error>
   </mat-form-field>
   <mat-form-field class="w-100">
     <input matInput placeholder="Password" type="password" formControlName="password">
-    <mat-error *ngIf="loginForm.touched && loginForm.hasError('required', 'password')">
+    <mat-error *ngIf="loginForm.hasError('required', 'password')">
       Password is required
     </mat-error>
   </mat-form-field>

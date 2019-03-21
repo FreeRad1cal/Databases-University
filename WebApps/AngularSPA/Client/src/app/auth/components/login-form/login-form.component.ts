@@ -28,9 +28,8 @@ export class LoginFormComponent implements OnInit {
     });
   }
 
-  onLoginClicked(form: FormGroup, formDirective: FormGroupDirective) {
+  onLoginClicked(form: FormGroup) {
     this.login.emit(this.loginForm.value);
     form.reset();
-    formDirective.reset();
   }
 }

@@ -6,6 +6,6 @@ namespace Personnel.Api.Application.Queries
     public interface IPersonQueries
     {
         Task<bool> UserNameOrEmailExists(string userName, string email);
-        Task<PersonDto> GetPersonById(int id);
+        Task<PersonDto> GetPersonByIdAsync(int id);
     }
 }

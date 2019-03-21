@@ -38,9 +38,10 @@ namespace Personnel.Infrastructure.Repositories
                 person.Id = id;
             });
 
-            var addresses = new Dictionary<Address, string>();
-            addresses[person.MailingAddress] = "Mailing";
-            addresses[person.HomeAddress] = "Home";
+            var addresses = new Dictionary<Address, string>
+            {
+                [person.MailingAddress] = "Mailing", [person.HomeAddress] = "Home"
+            };
             foreach (var kvp in addresses)
             {
                 var address = kvp.Key;

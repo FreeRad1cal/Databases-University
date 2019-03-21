@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
 namespace Personnel.Api.Infrastructure.Services
@@ -14,7 +15,7 @@ namespace Personnel.Api.Infrastructure.Services
 
         public int GetUserIdentity()
         {
-            return int.Parse(_context.HttpContext.User.FindFirst("sub").Value);
+            return int.Parse(_context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
 
         public string GetUserName()

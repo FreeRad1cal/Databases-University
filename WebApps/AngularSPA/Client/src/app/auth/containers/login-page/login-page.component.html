@@ -1,4 +1,5 @@
 <div class="d-flex flex-column align-items-center align-self-center justify-self-center w-50">
+  <h3>Welcome to DBUFirst!</h3>
   <mat-card class="w-75">
     <mat-card-content>
         <app-login-form [busy]="busy$ | async" [errors]="errors$ | async" (login)="onLogin($event)"></app-login-form>

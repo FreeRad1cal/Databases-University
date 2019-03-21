@@ -7,7 +7,9 @@ services:
         ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
         EventBusConnection: rabbitmq
         EventBusUserName: ${EVENT_BUS_USERNAME}
-        EventBusPassword: ${EVENT_BUS_PASSWORD}  
+        EventBusPassword: ${EVENT_BUS_PASSWORD}
+        Secret: ${SHARED_SECRET}
+        AngularSpa: http://localhost:5002
   
   registrar.api:
     environment:
@@ -18,7 +20,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
-      Secret: "SuperSecretSecret12345!!!!"
+      Secret: ${SHARED_SECRET}
       AngularSpa: http://localhost:5002
 
   angularspa:

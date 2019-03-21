@@ -10,6 +10,7 @@ using Personnel.Api.Infrastructure.Services;
 namespace Personnel.Api.Controllers
 {
     [Route("people")]
+    [Authorize]
     [ApiController]
     public class PeopleController : ControllerBase
     {
@@ -27,7 +28,9 @@ namespace Personnel.Api.Controllers
             _personQueries = personQueries;
         }
 
-        public async Task<IActionResult> GetMeAsync(CancellationToken ct = default(CancellationToken))
+        [Route("me")]
+        [HttpGet(Name = nameof(GetMeAsync))]
+        public async Task<IActionResult> GetMeAsync()
         {
             var id = _identityService.GetUserIdentity();
             var person = await _personQueries.GetPersonByIdAsync(id);

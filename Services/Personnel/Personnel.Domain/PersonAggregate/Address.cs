@@ -24,6 +24,15 @@ namespace Personnel.Domain.PersonAggregate
             ZipCode = zipcode;
         }
 
+        public Address(dynamic address)
+        {
+            Street = address.Street;
+            City = address.City;
+            State = address.State;
+            Country = address.Country;
+            ZipCode = address.Zipcode;
+        }
+
         protected override IEnumerable<object> GetAtomicValues()
         {
             yield return Street;
