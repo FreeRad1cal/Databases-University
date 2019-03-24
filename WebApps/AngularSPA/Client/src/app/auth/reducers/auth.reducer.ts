@@ -7,7 +7,8 @@ export interface State {
     expires: Date;
     token: string;
     busy: boolean;
-    errors: string[];
+    loginErrors: string[];
+    registrationErrors: string[];
 }
 
 export const initialState: State = {
@@ -15,7 +16,8 @@ export const initialState: State = {
     expires: new Date(),
     token: null,
     busy: false,
-    errors: []
+    loginErrors: [],
+    registrationErrors: []
 }
 
 export function reducer(state = initialState, action: AuthActionsUnion): State {
@@ -50,7 +52,30 @@ export function reducer(state = initialState, action: AuthActionsUnion): State {
         case AuthActionTypes.SignInFailure: {
           return {
             ...initialState,
-            errors: action.payload.errors
+            loginErrors: action.payload.errors
+          }
+        }
+        
+        case AuthActionTypes.Register: {
+          return {
+            ...state,
+            busy: true
+          }
+        }
+
+        case AuthActionTypes.RegistrationFailure: {
+          return {
+            ...state,
+            busy: false,
+            registrationErrors: action.payload.errors
+          }
+        }
+
+        case AuthActionTypes.RegistrationSuccess: {
+          return {
+            ...state,
+            busy: false,
+            registrationErrors: []
           }
         }
 
@@ -64,4 +89,5 @@ export const selectIsSignedIn = (state: State) => state.signedInUser != null && 
 export const selectSignedInUser = (state: State) => state.signedInUser;
 export const selectToken = (state: State) => state.token;
 export const selectBusy = (state: State) => state.busy
-export const selectErrors = (state: State) => state.errors;
+export const selectLoginErrors = (state: State) => state.loginErrors;
+export const selectRegistrationErrors = (state: State) => state.registrationErrors;

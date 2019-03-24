@@ -12,8 +12,6 @@ export class LoginFormComponent implements OnInit {
 
   @Input()
   busy: boolean;
-  @Input()
-  errors: string[];
 
   @Output()
   login = new EventEmitter<LoginCredentials>();

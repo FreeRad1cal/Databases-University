@@ -9,7 +9,7 @@ namespace Personnel.Domain.Common
 {
     public interface IUnitOfWork
     {
-        Task SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task SaveChangesAsync();
         void AddOperation(object entity, Func<IDbConnection, Task> operation);
     }
 }

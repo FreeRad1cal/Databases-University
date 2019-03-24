@@ -12,9 +12,9 @@ export class JwtHelper {
     }
 
     static getExpiration(jwt: string): Date {
-        const utcMsExp = jwt_decode<{exp: number}>(jwt).exp;
+        const exp = jwt_decode<{exp: number}>(jwt).exp;
         const expires = new Date(0);
-        expires.setUTCMilliseconds(utcMsExp);
+        expires.setUTCSeconds(exp);
         return expires;
     }
 }

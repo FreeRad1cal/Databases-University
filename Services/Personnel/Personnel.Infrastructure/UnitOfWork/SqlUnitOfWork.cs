@@ -51,7 +51,7 @@ namespace Personnel.Infrastructure.UnitOfWork
             _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public virtual async Task SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task SaveChangesAsync()
         {
             try
             {

@@ -8,7 +8,10 @@ export enum AuthActionTypes {
     SignInSuccess = '[Auth] SignIn Success',
     SignInFailure = '[Auth] SignIn Failure',
     InitUser = '[Auth] Init User',
-    CompleteSignIn = '[Auth] Complete SignIn'
+    CompleteSignIn = '[Auth] Complete SignIn',
+    Register = '[Auth] Register',
+    RegistrationSuccess = '[Auth] Registration Success',
+    RegistrationFailure = '[Auth] Registration Failure'
 }
 
 export class SignIn implements Action {
@@ -43,10 +46,29 @@ export class CompleteSignIn implements Action {
     constructor(public payload: { token: string }) {}
 }
 
+export class Register implements Action {
+    readonly type = AuthActionTypes.Register;
+
+    constructor(public payload: { registrationInfo: Person }) {}
+}
+
+export class RegistrationSuccess implements Action {
+    readonly type = AuthActionTypes.RegistrationSuccess;
+}
+
+export class RegistrationFailure implements Action {
+    readonly type = AuthActionTypes.RegistrationFailure;
+
+    constructor(public payload: { errors: string[] }) {}
+}
+
 export type AuthActionsUnion =
   | SignIn
   | SignInSuccess
   | SignInFailure
   | SignOut
   | InitUser
-  | CompleteSignIn;
+  | CompleteSignIn
+  | Register
+  | RegistrationSuccess
+  | RegistrationFailure;

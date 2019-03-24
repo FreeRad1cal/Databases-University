@@ -1,24 +1,17 @@
 <form class="d-flex flex-column align-items-center" [formGroup]="loginForm" (ngSubmit)="onLoginClicked(loginForm)">
-  <mat-form-field class="w-100">
-    <input matInput placeholder="Username" formControlName="userName">
-    <mat-error *ngIf="loginForm.hasError('required', 'userName')">
-      Username is required
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="w-100">
-    <input matInput placeholder="Password" type="password" formControlName="password">
-    <mat-error *ngIf="loginForm.hasError('required', 'password')">
-      Password is required
-    </mat-error>
-  </mat-form-field>
-  <div class="d-flex flex-row justify-content-center mt-4 w-100">
-    <button mat-raised-button type="submit" [disabled]="!loginForm.valid || busy" class="w-50">Log In</button>
+  <div class="ui-inputgroup">
+      <input type="text" pInputText placeholder="Username" formControlName="userName">
   </div>
-  <mat-card-footer class="mt-4">
-    <mat-error *ngFor="let error of errors">
-      {{error}}
-    </mat-error>
-  </mat-card-footer>
+  <span *ngIf="loginForm.hasError('required', 'userName')" class="text-danger">
+    Username is required
+  </span>
+  <div class="ui-inputgroup">
+      <input type="text" pInputText placeholder="Password" formControlName="password">
+  </div>
+  <span *ngIf="loginForm.hasError('required', 'password')" class="text-danger">
+    Password is required
+  </span>
+  <button pButton type="submit" label="Log In" [disabled]="!loginForm.valid || busy" class="w-50"></button>
 </form>
 
 <!-- https://stackoverflow.com/questions/51605737/confirm-password-validation-in-angular-6 -->

@@ -15,9 +15,9 @@ export class SignedInGuard implements CanActivate {
   canActivate(): Observable<boolean> {
     return this.store.pipe(
       select(getIsSignedIn),
-      tap(signedIn => {
-        if (!signedIn) this.router.navigate(['login'])
-      })
+      // tap(signedIn => {
+      //   if (!signedIn) this.router.navigate(['login'])
+      // })
     );
   }
 }

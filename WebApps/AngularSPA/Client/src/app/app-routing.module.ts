@@ -7,14 +7,14 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: '/home',
-    pathMatch: 'full'
-  },
-  {
     path: 'home', 
     component: HomeComponent, 
     canActivate: [SignedInGuard]
+  },
+  {
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full'
   },
   {
     path: '**',
@@ -24,12 +24,10 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, {
-      enableTracing: true
-    }),
-    // StoreRouterConnectingModule.forRoot({
-    //   stateKey: 'router'
-    // })
+    RouterModule.forRoot(routes),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: 'router'
+    })
   ],
   exports: [RouterModule]
 })

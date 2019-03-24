@@ -53,7 +53,7 @@ namespace Personnel.Api.Application.Commands
 
             var saltHash = SaltedHashHelper.GenerateSaltedHash(8, request.Password);
             var result = _personRepository.Add(person, saltHash.Salt, saltHash.Hash);
-            await _personRepository.SaveChangesAsync(cancellationToken);
+            await _personRepository.SaveChangesAsync();
 
             return _mapper.Map<PersonDto>(result);
         }

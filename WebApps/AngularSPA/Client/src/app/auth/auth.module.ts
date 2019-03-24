@@ -11,19 +11,23 @@ import { JwtInterceptorService } from './services/jwt-interceptor.service';
 import { AuthErrorResponseInterceptorService } from './services/auth-error-response-interceptor.service';
 import { JwtPersisterService } from './services/jwt-persister.service';
 import { LoginFormComponent } from './components/login-form/login-form.component';
-import { MaterialModule } from '../material/material.module';
 import { AuthRoutingModule } from './auth-routing.module';
 import { AuthService } from './services/auth.service';
+import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
+import { RegistrationPageComponent } from './containers/registration-page/registration-page.component';
+import { SharedModule } from '../shared/shared.module';
+import { PrimengModule } from '../primeng/primeng.module';
 
 @NgModule({
-  declarations: [LoginPageComponent, LoginFormComponent],
+  declarations: [LoginPageComponent, LoginFormComponent, RegistrationPageComponent, RegistrationFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MaterialModule,
+    PrimengModule,
     AuthRoutingModule,
     StoreModule.forFeature('auth', reducers),
     EffectsModule.forFeature([AuthEffects]),
+    SharedModule
   ]
 })
 export class AuthModule { 

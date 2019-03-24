@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using Personnel.Api.Infrastructure;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Personnel.Api
 {
@@ -29,7 +32,8 @@ namespace Personnel.Api
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureAppConfiguration(ConfigureConfiguration)
                 .ConfigureLogging(ConfigureLogger)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseApplicationInsights();
 
         private static void ConfigureConfiguration(WebHostBuilderContext ctx, IConfigurationBuilder config)
         {
@@ -41,9 +45,19 @@ namespace Personnel.Api
 
         private static void ConfigureLogger(WebHostBuilderContext ctx, ILoggingBuilder logging)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("System", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Literate)
+                .CreateLogger();
+
             logging.AddConfiguration(ctx.Configuration.GetSection("Logging"));
             logging.AddConsole();
             logging.AddDebug();
+            logging.AddSerilog();
         }
     }
 }
