@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginPageComponent } from './containers/login-page/login-page.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './reducers';
 import { EffectsModule } from '@ngrx/effects';
@@ -17,9 +17,10 @@ import { RegistrationFormComponent } from './components/registration-form/regist
 import { RegistrationPageComponent } from './containers/registration-page/registration-page.component';
 import { SharedModule } from '../shared/shared.module';
 import { PrimengModule } from '../primeng/primeng.module';
+import { AddressComponent } from './components/address/address.component';
 
 @NgModule({
-  declarations: [LoginPageComponent, LoginFormComponent, RegistrationPageComponent, RegistrationFormComponent],
+  declarations: [LoginPageComponent, LoginFormComponent, RegistrationPageComponent, RegistrationFormComponent, AddressComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -27,7 +28,8 @@ import { PrimengModule } from '../primeng/primeng.module';
     AuthRoutingModule,
     StoreModule.forFeature('auth', reducers),
     EffectsModule.forFeature([AuthEffects]),
-    SharedModule
+    SharedModule,
+    FormsModule
   ]
 })
 export class AuthModule { 

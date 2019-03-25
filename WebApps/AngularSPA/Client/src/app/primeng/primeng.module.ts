@@ -6,13 +6,15 @@ import {CardModule} from 'primeng/card';
 import {ButtonModule} from 'primeng/button';
 import {StepsModule} from 'primeng/steps';
 import {CheckboxModule} from 'primeng/checkbox';
+import {DropdownModule} from 'primeng/dropdown';
 
 const primengModules = [
   ToolbarModule,
   CardModule,
   ButtonModule,
   StepsModule,
-  CheckboxModule
+  CheckboxModule,
+  DropdownModule
 ];
 
 @NgModule({

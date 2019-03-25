@@ -11,7 +11,7 @@ export class ConfirmationState implements StepFormState {
     }
 
     next(wrapper: StepForm) {
-        wrapper.setState(new BasicInfoState(this.menuItems, this.index + 1, this.formGroup));
+        return;
     }
 
     back(wrapper: StepForm) {

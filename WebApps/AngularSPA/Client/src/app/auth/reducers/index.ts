@@ -50,3 +50,8 @@ export const getRegistrationErrors = createSelector(
     selectAuthStatusState,
     fromAuth.selectRegistrationErrors
 )
+
+export const getRegistrationSuccess = createSelector(
+    selectAuthStatusState,
+    fromAuth.selectRegistrationSuccess
+)

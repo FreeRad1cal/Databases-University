@@ -29,4 +29,9 @@ export class AuthService {
     const headers = new HttpHeaders().set(AuthErrorResponseInterceptorService.InterceptorSkipHeader, '');
     return this.httpClient.get<Person>(meUrl, { observe: 'response', headers: headers});
   }
+
+  register(person: Person): Observable<HttpResponse<Person>> {
+    const registerUrl = `${this.personnelApi}/people`;
+    return this.httpClient.post<Person>(registerUrl, person, {observe: 'response'});
+  }
 }

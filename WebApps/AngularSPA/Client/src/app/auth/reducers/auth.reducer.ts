@@ -9,6 +9,7 @@ export interface State {
     busy: boolean;
     loginErrors: string[];
     registrationErrors: string[];
+    registrationSuccess: boolean;
 }
 
 export const initialState: State = {
@@ -17,7 +18,8 @@ export const initialState: State = {
     token: null,
     busy: false,
     loginErrors: [],
-    registrationErrors: []
+    registrationErrors: [],
+    registrationSuccess: false
 }
 
 export function reducer(state = initialState, action: AuthActionsUnion): State {
@@ -59,7 +61,8 @@ export function reducer(state = initialState, action: AuthActionsUnion): State {
         case AuthActionTypes.Register: {
           return {
             ...state,
-            busy: true
+            busy: true,
+            registrationSuccess: false
           }
         }
 
@@ -75,7 +78,8 @@ export function reducer(state = initialState, action: AuthActionsUnion): State {
           return {
             ...state,
             busy: false,
-            registrationErrors: []
+            registrationErrors: [],
+            registrationSuccess: true
           }
         }
 
@@ -91,3 +95,4 @@ export const selectToken = (state: State) => state.token;
 export const selectBusy = (state: State) => state.busy
 export const selectLoginErrors = (state: State) => state.loginErrors;
 export const selectRegistrationErrors = (state: State) => state.registrationErrors;
+export const selectRegistrationSuccess = (state: State) => state.registrationSuccess;

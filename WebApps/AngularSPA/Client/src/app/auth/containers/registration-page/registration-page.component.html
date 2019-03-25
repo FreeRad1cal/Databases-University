@@ -1,6 +1,14 @@
-<div class="mr-5 ml-5">
-  <app-registration-form 
-  [busy]="busy$ | async" 
-  (register)="onRegister($event)"></app-registration-form>
-</div>
+<p-card class="w-75">
+    <app-registration-form 
+    [busy]="busy$ | async" 
+    (register)="onRegister($event)"></app-registration-form>
+</p-card>
+<p-footer>
+  <span *ngFor="let error of errors$ | async" class="text-danger">
+    {{error}}
+  </span>
+  <span class="text-success">
+    {{successMessage$ | async}}
+  </span>
+</p-footer>
 

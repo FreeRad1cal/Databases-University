@@ -4,7 +4,7 @@
     <app-login-form [busy]="busy$ | async" (login)="onLogin($event)"></app-login-form>
   </p-card>
   <p-footer>
-    <span *ngFor="let error of errors$ | async">
+    <span *ngFor="let error of errors$ | async" class="text-danger">
       {{error}}
     </span>
   </p-footer>

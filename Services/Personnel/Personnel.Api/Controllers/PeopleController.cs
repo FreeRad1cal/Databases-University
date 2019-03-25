@@ -16,8 +16,7 @@ namespace Personnel.Api.Controllers
 {
     [Route("people")]
     [Authorize]
-    [ApiController]
-    public class PeopleController : ControllerBase
+    public class PeopleController : Controller
     {
         private readonly IIdentityService _identityService;
         private readonly ILogger<PeopleController> _logger;

@@ -49,7 +49,7 @@ export class CompleteSignIn implements Action {
 export class Register implements Action {
     readonly type = AuthActionTypes.Register;
 
-    constructor(public payload: { registrationInfo: Person }) {}
+    constructor(public payload: { person: Person }) {}
 }
 
 export class RegistrationSuccess implements Action {

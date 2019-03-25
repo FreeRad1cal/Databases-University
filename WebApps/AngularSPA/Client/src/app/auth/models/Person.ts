@@ -3,7 +3,7 @@ import { Address } from './Address';
 export class Person {
     id: string;
     userName: string;
-    email: string;
+    emailAddress: string;
     homeAddress: Address;
     mailingAddress: Address;
 }

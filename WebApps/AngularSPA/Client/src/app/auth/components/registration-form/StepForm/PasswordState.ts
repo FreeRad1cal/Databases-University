@@ -4,7 +4,6 @@ import { FormGroup } from '@angular/forms';
 import { StepForm } from './StepForm';
 import { BasicInfoState } from './BasicInfoState';
 import { AddressState } from './AddressState';
-import { ConfirmPasswordValidatorKey } from 'src/app/shared/validators/confirmPasswordValidator';
 import { checkValidity } from './checkValidity';
 import { ConfirmationState } from './ConfirmationState';
 
@@ -30,7 +29,7 @@ export class PasswordState implements StepFormState {
     }
 
     canGoNext(): boolean {
-        return checkValidity(this.formGroup, ['password', 'confirmPassword']) && !this.formGroup.hasError(ConfirmPasswordValidatorKey);
+        return checkValidity(this.formGroup, ['password', 'confirmPassword']) && !this.formGroup.hasError('confirmPassword');
     }
 
     get nextButtonLabel(): NextButtonLabel {

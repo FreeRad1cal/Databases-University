@@ -1,7 +1,5 @@
 import { ValidatorFn, FormGroup, ValidationErrors, FormControl } from "@angular/forms";
 
-export const ConfirmPasswordValidatorKey = 'confirmPassword';
-
 export const confirmPasswordValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     const password = formGroup.get('password');
     const confirmPassword = formGroup.get('confirmPassword');
@@ -11,7 +9,7 @@ export const confirmPasswordValidator: ValidatorFn = (formGroup: FormGroup): Val
     
     if (password.value !== confirmPassword.value) {
       confirmPassword.setErrors({doesNotMatchPassword: true});
-      return { ConfirmPasswordValidatorKey: true };
+      return { confirmPassword: true };
     }
     
     return null;

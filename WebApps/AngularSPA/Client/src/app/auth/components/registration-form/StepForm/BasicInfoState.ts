@@ -25,7 +25,7 @@ export class BasicInfoState implements StepFormState {
     }
 
     canGoNext(): boolean {
-        return checkValidity(this.formGroup, ['userName', 'email']);
+        return checkValidity(this.formGroup, ['userName', 'emailAddress']);
     }
 
     get nextButtonLabel(): NextButtonLabel {

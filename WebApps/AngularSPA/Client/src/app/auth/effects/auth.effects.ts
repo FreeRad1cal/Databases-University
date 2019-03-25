@@ -3,7 +3,7 @@ import { Actions, Effect, ofType, OnInitEffects } from "@ngrx/effects";
 import { map, tap, switchMap, filter, debounceTime, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store, Action } from "@ngrx/store";
 import { JwtPersisterService } from '../services/jwt-persister.service';
-import { InitUser, AuthActionTypes, SignInSuccess, SignOut, SignIn, CompleteSignIn, SignInFailure } from '../actions/auth.actions';
+import { InitUser, AuthActionTypes, SignInSuccess, SignOut, SignIn, CompleteSignIn, SignInFailure, Register, RegistrationFailure, RegistrationSuccess } from '../actions/auth.actions';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { JwtHelper } from '../helpers/JwtHelper';
@@ -73,6 +73,20 @@ export class AuthEffects implements OnInitEffects {
         tap(([_, token]) => this.jwtPersister.persistToken(token)),
         tap(() => this.router.navigate(['home']))
     );
+
+    @Effect()
+    register$ = this.actions$.pipe(
+        ofType<Register>(AuthActionTypes.Register),
+        switchMap(action => this.authService.register(action.payload.person)),
+        catchError(res => of(res)),
+        map(res => {
+            if (res instanceof HttpErrorResponse) {
+                const errors = res.error.errors && res.error.errors? res.error.errors : ["An error has occured"];
+                    return new RegistrationFailure({ errors: errors });
+            }
+            return new RegistrationSuccess();
+        })
+    )
 
     constructor(
         private actions$: Actions,

@@ -1,10 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { LoginCredentials } from '../../models/LoginCredentials';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, Validator, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Person } from '../../models/Person';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { StepForm } from './StepForm/StepForm';
 import { BasicInfoState } from './StepForm/BasicInfoState';
+import { usStates } from 'src/app/shared/usStates';
+import { SelectItem } from 'primeng/components/common/selectitem';
+import { Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { confirmPasswordValidator } from 'src/app/shared/validators/confirmPasswordValidator';
+import { NextButtonLabel } from './StepForm/StepFormState';
 
 type Step = 'basicInfo' | 'address' | 'password';
 
@@ -13,17 +19,19 @@ type Step = 'basicInfo' | 'address' | 'password';
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.css']
 })
-export class RegistrationFormComponent implements OnInit {
-
+export class RegistrationFormComponent implements OnInit, OnDestroy {
   @Input()
   busy: boolean;
 
   @Output()
   register = new EventEmitter<Person>();
+
   registrationForm: FormGroup;
   errorDictionary: {};
-
   stepForm: StepForm;
+  usStates = usStates;
+  states: SelectItem[];
+  addressesSame: boolean = false;
 
   constructor() { }
 
@@ -38,7 +46,10 @@ export class RegistrationFormComponent implements OnInit {
         email: "Email is invalid"
       },
       password: {
-        required: "Email is required"
+        required: "Password is required"
+      },
+      confirmPassword: {
+        required: "Confirm password is required"
       },
       address: {
         city: {
@@ -67,11 +78,55 @@ export class RegistrationFormComponent implements OnInit {
     ];
 
     this.stepForm = new StepForm(new BasicInfoState(menuItems, 0, this.registrationForm));
+
+    this.states = Object.entries(usStates).map(kvp => {
+      return {label: kvp[1], value: kvp[0]};
+    });
   }
 
-  onRegisterClicked() {
-    this.register.emit(this.registrationForm.value);
-    this.registrationForm.reset();
+  ngOnDestroy(): void {
+    this.addressSubscription.unsubscribe();
+  }
+
+  next(label: NextButtonLabel) {
+    if (label == "Next") {
+      this.stepForm.next();
+    }
+    else {
+      this.register.emit(this.formValueToPerson());
+    }
+  }
+
+  private formValueToPerson(): Person {
+    let formValue = this.registrationForm.getRawValue();
+    let person: Person = formValue;
+    person.homeAddress = formValue.address.homeAddress;
+    person.mailingAddress = formValue.address.mailingAddress;
+    return person;
+  }
+
+  private addressSubscription: Subscription;  
+  onAddressCheckBoxChanged(checked: boolean) {
+    let homeAddress = this.registrationForm.get('address').get('homeAddress');
+    let mailingAddress = this.registrationForm.get('address').get('mailingAddress');
+    if (checked) {
+      mailingAddress.setValue({... homeAddress.value});
+      this.setValidators(mailingAddress as FormGroup, []);
+      mailingAddress.disable();
+      this.addressSubscription = homeAddress.valueChanges.pipe(
+        tap(value => mailingAddress.setValue(value))).subscribe();
+    }
+    else {
+      this.setValidators(mailingAddress as FormGroup, [Validators.required]);
+      this.addressSubscription.unsubscribe();
+      mailingAddress.enable();
+    }
+  }
+
+  private setValidators(formGroup: FormGroup, validators: ValidatorFn[]) {
+    for (let control of Object.values(formGroup.controls)) {
+      control.setValidators(validators);
+    }
   }
 
   private createAddressForm(isRequired: boolean) {
@@ -88,13 +143,13 @@ export class RegistrationFormComponent implements OnInit {
   private createRegistrationForm() {
     return new FormGroup({
       userName: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      emailAddress: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
       confirmPassword: new FormControl('', [Validators.required]),
       address: new FormGroup({
         homeAddress: this.createAddressForm(true),
-        mailingAddress: this.createAddressForm(false)
+        mailingAddress: this.createAddressForm(true)
       })
-    });
+    }, [confirmPasswordValidator]);
   }
 }

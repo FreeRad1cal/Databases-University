@@ -1,36 +1,42 @@
 <div class="d-flex flex-column align-items-center">
   <p-steps [model]="stepForm.menuItems" [activeIndex]="stepForm.activeIndex"></p-steps>
-  <form [formGroup]="registrationForm" class="d-flex flex-column align-items-center">
+  <form [formGroup]="registrationForm" class="d-flex flex-column align-items-center w-50">
     <div *ngIf="stepForm.currentStateName == 'BasicInfoState'">
       <div class="p-2">
         <div class="ui-inputgroup">
             <input type="text" pInputText placeholder="Username" formControlName="userName">
         </div>
         <span *ngFor="let key of registrationForm.controls.userName.errors | objToKeys" class="text-danger">
-          {{errorDictionary.userName[key]}}
+          <div *ngIf="registrationForm.touched">
+            {{errorDictionary.userName[key]}}
+          </div> 
         </span>
       </div>
       <div class="p-2">
         <div class="ui-inputgroup">
-            <input type="text" pInputText placeholder="Email" formControlName="email">
+            <input type="text" pInputText placeholder="Email" formControlName="emailAddress">
         </div>
-        <span *ngFor="let key of registrationForm.controls.email.errors | objToKeys" class="text-danger">
-          {{errorDictionary.email[key]}}
+        <span *ngFor="let key of registrationForm.controls.emailAddress.errors | objToKeys" class="text-danger">
+          <div *ngIf="registrationForm.touched">
+            {{errorDictionary.emailAddress[key]}}
+          </div> 
         </span>
       </div>
     </div>
     <div *ngIf="stepForm.currentStateName == 'AddressState'" formGroupName="address" class="d-flex flex-column align-items-center">
       <div [formGroupName]="addrType" *ngFor="let addrType of registrationForm.controls.address.controls | objToKeys" class="d-flex flex-column align-items-center">
-        {{addrType == 'homeAddress' ? "Home Address" : "Mailing Address"}}
+        <span>{{addrType == 'homeAddress' ? "Home Address" : "Mailing Address"}}</span>  
         <div class="p-2" *ngIf="addrType == 'mailingAddress'">
-          <p-checkbox name="groupname" value="val1" label="Same as home address"></p-checkbox>
+          <p-checkbox [(value)]="addressesSame" label="Same as home address" binary="true" (onChange)="onAddressCheckBoxChanged($event)"></p-checkbox>
         </div>
         <div class="p-2">
           <div class="ui-inputgroup">
               <input type="text" pInputText placeholder="Street" formControlName="street">
           </div>
           <span *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.street.errors | objToKeys" class="text-danger">
-            {{errorDictionary.address.street[key]}}
+            <div *ngIf="registrationForm.controls.address.controls[addrType].controls.street.touched">
+              {{errorDictionary.address.street[key]}}
+            </div> 
           </span>
         </div>
         <div class="p-2">
@@ -38,23 +44,29 @@
               <input type="text" pInputText placeholder="City" formControlName="city">
           </div>
           <span *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.city.errors | objToKeys" class="text-danger">
-            {{errorDictionary.address.city[key]}}
+            <div *ngIf="registrationForm.controls.address.controls[addrType].controls.city.touched">
+              {{errorDictionary.address.city[key]}}
+            </div> 
           </span>
         </div>
         <div class="p-2">
           <div class="ui-inputgroup">
-              <input type="text" pInputText placeholder="State" formControlName="state">
+              <p-dropdown [options]="states" [filter]="true" formControlName="state" placeholder="State"></p-dropdown>
           </div>
           <span *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.state.errors | objToKeys" class="text-danger">
-            {{errorDictionary.address.state[key]}}
-          </span>
+            <div *ngIf="registrationForm.controls.address.controls[addrType].controls.state.touched">
+              {{errorDictionary.address.state[key]}}
+            </div> 
+        </span>
         </div>
         <div class="p-2">
           <div class="ui-inputgroup">
               <input type="text" pInputText placeholder="Zip code" formControlName="zipCode">
           </div>
           <span *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.zipCode.errors | objToKeys" class="text-danger">
-            {{errorDictionary.address.zipCode[key]}}
+            <div *ngIf="registrationForm.controls.address.controls[addrType].controls.zipCode.touched">
+                {{errorDictionary.address.zipCode[key]}}
+              </div> 
           </span>
         </div>
         <div class="p-2">
@@ -62,93 +74,56 @@
               <input type="text" pInputText placeholder="Country" formControlName="country">
           </div>
           <span *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.country.errors | objToKeys" class="text-danger">
-            {{errorDictionary.address.country[key]}}
+            <div *ngIf="registrationForm.controls.address.controls[addrType].controls.zipCode.touched">
+              {{errorDictionary.address.country[key]}}
+            </div> 
           </span>
         </div>
       </div>
     </div>
-  
+    <div *ngIf="stepForm.currentStateName == 'PasswordState'">
+      <div class="p-2">
+        <div class="ui-inputgroup">
+            <input type="password" pInputText placeholder="Password" formControlName="password">
+        </div>
+        <div *ngFor="let key of registrationForm.controls.password.errors | objToKeys" class="text-danger">
+          <span *ngIf="registrationForm.controls.password.touched">
+            {{errorDictionary.password[key]}}
+          </span> 
+        </div>
+      </div>
+      <div class="p-2">
+        <div class="ui-inputgroup">
+            <input type="password" pInputText placeholder="Confirm password" formControlName="confirmPassword">
+        </div>
+        <div *ngFor="let key of registrationForm.controls.confirmPassword.errors | objToKeys" class="text-danger">
+          <span *ngIf="registrationForm.controls.confirmPassword.touched">
+            {{errorDictionary.confirmPassword[key]}}
+          </span> 
+        </div>
+        <span *ngIf="registrationForm.hasError('confirmPassword')" class="text-danger">
+          Passwords do not match
+        </span> 
+      </div>      
+    </div>
+    <div *ngIf="stepForm.currentStateName == 'ConfirmationState'" class="d-flex flex-column align-items-center">
+      <div>
+        <b class="mr-2">Username: </b>
+        <span>{{registrationForm.controls.userName.value}}</span>
+      </div>
+      <div>
+        <b class="mr-2">Email: </b>
+        <span>{{registrationForm.controls.emailAddress.value}}</span>
+      </div>
+      <div *ngFor="let addrType of registrationForm.controls.address.controls | objToKeys" class="d-flex flex-column align-items-center w-100">
+        <b>{{addrType == 'homeAddress' ? "Home Address" : "Mailing Address"}}</b>
+        <app-address [address]="registrationForm.controls.address.controls[addrType].value"></app-address>
+      </div>
+    </div>
     <div class="d-flex justify-content-between w-100 p-2">
       <button pButton type="button" label="Back" [disabled]="!stepForm.canGoBack()" (click)="stepForm.back()"></button>
-      <button pButton type="button" [label]="stepForm.nextButtonLabel" [disabled]="!stepForm.canGoNext()" (click)="stepForm.next()"></button>
+      <button pButton type="button" [label]="stepForm.nextButtonLabel" [disabled]="busy || !stepForm.canGoNext()" (click)="next(stepForm.nextButtonLabel)"></button>
     </div>
     
   </form>
 </div>
-<!-- <form [formGroup]="registrationForm">
-  <mat-horizontal-stepper linear>
-    <mat-step [completed]="isStepCompleted('basicInfo')">
-      <mat-form-field>
-        <input matInput placeholder="Username" formControlName="userName">
-        <mat-error *ngFor="let key of registrationForm.controls['userName'].errors | objToKeys">
-          {{errorDictionary.userName[key]}}
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field >
-        <input matInput placeholder="Email" formControlName="email">
-        <mat-error *ngFor="let key of registrationForm.controls.email.errors | objToKeys">
-          {{errorDictionary.email[key]}}
-        </mat-error>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperNext type="button">Next</button>
-      </div>
-    </mat-step>
-    <mat-step formGroupName="address" [completed]="isStepCompleted('address')" class="d-flex flex-row">
-      <div [formGroupName]="addrType" *ngFor="let addrType of registrationForm.controls.address.controls | objToKeys">
-        {{addrType}}
-        <mat-form-field>
-          <input matInput placeholder="Street" formControlName="street">
-          <mat-error *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.street.errors | objToKeys">
-            {{errorDictionary.address.street[key]}}
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="City" formControlName="city">
-          <mat-error *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.city.errors | objToKeys">
-            {{errorDictionary.address.city[key]}}
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="State" formControlName="state">
-          <mat-error *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.state.errors | objToKeys">
-            {{errorDictionary.address.state[key]}}
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Zip code" formControlName="zipCode">
-          <mat-error *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.zipCode.errors | objToKeys">
-            {{errorDictionary.address.zipCode[key]}}
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Country" formControlName="country">
-          <mat-error *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.country.errors | objToKeys">
-            {{errorDictionary.address.country[key]}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div>
-        <button mat-button matStepperPrevious type="button">Back</button>
-        <button mat-button matStepperNext type="button">Next</button>
-      </div>
-    </mat-step>
-    <mat-step [completed]="isStepCompleted('password')">
-      <mat-form-field>
-        <input matInput placeholder="Password" formControlName="password">
-        <mat-error *ngFor="let key of registrationForm.controls.password.errors | objToKeys">
-          {{errorDictionary.password[key]}}
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="Confirm Password" formControlName="confirmPassword">
-        <mat-error *ngFor="let key of registrationForm.controls.confirmPassword.errors | objToKeys">
-          {{errorDictionary.password[key]}}
-        </mat-error>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperNext type="button">Next</button>
-      </div>
-    </mat-step>
-  </mat-horizontal-stepper>
-</form> -->
