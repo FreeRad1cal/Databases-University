@@ -30,13 +30,10 @@ export class AuthEffects implements OnInitEffects {
     completeSignIn$ = this.actions$.pipe(
         ofType<CompleteSignIn>(AuthActionTypes.CompleteSignIn),
         switchMap(() => this.authService.getMe().pipe(
-            catchError(res => of(res)),
-            map(res => {
-                if (res instanceof HttpErrorResponse) {
-                    const errors = res.error && res.error.errors ? res.error.errors : ["An error has occured"];
-                    return new SignInFailure({ errors: errors })
-                }
-                return new SignInSuccess({user: res.body});
+            map(res => new SignInSuccess({user: res.body})),
+            catchError(res => {
+                const errors = res.error && res.error.errors ? res.error.errors : ["An error has occured"];
+                return of(new SignInFailure({ errors: errors }));
             })
         ))
     )
@@ -47,17 +44,13 @@ export class AuthEffects implements OnInitEffects {
         debounceTime(1000),
         switchMap(action => 
             this.authService.authenticate(action.payload.credentials).pipe(
-                catchError(res => of(res)),
-                map(res => {
-                    if (res instanceof HttpErrorResponse) {
-                        const errors = res.error.errors && res.error.errors? res.error.errors : ["An error has occured"];
-                            return new SignInFailure({ errors: errors });
-                    }
-                    return new CompleteSignIn({ token: res.body });
+                map(res => new CompleteSignIn({ token: res.body })),
+                catchError(res => {
+                    const errors = res.error.errors && res.error.errors? res.error.errors : ["An error has occured"];
+                    return of(new SignInFailure({ errors: errors }));
                 })
             ))
-        
-    )
+        )
 
     @Effect({ dispatch: false })
     signOut$ = this.actions$.pipe(
@@ -77,14 +70,12 @@ export class AuthEffects implements OnInitEffects {
     @Effect()
     register$ = this.actions$.pipe(
         ofType<Register>(AuthActionTypes.Register),
-        switchMap(action => this.authService.register(action.payload.person)),
-        catchError(res => of(res)),
-        map(res => {
-            if (res instanceof HttpErrorResponse) {
-                const errors = res.error.errors && res.error.errors? res.error.errors : ["An error has occured"];
-                    return new RegistrationFailure({ errors: errors });
-            }
-            return new RegistrationSuccess();
+        switchMap(action => this.authService.register(action.payload.person).pipe(
+            map(res => new RegistrationSuccess())
+        )),
+        catchError(res => {
+            const errors = res.error.errors && res.error.errors? res.error.errors : ["An error has occured"];
+            return of(new RegistrationFailure({ errors: errors }));
         })
     )
 
