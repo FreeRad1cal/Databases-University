@@ -29,19 +29,26 @@ namespace AuthApi.Infrastructure.Services
 
         public async Task<string> GetTokenFromLoginCredentialsAsync(string userName, string password)
         {
-            const string personSql = @"SELECT Id, PasswordHash, PasswordSalt FROM People WHERE UserName = @UserName";
-            const string claimsSql = @"SELECT Type, Value FROM Claims WHERE PersonId = @PersonId";
+            const string sql = @"SELECT People.Id, PasswordHash, PasswordSalt, Type, Value FROM People
+                                JOIN Claims ON People.Id = Claims.PersonId
+                                WHERE PersonId = @PersonId;";
 
             using (var conn = await GetDbConnectionAsync())
             {
-                var person = await conn.QueryFirstOrDefaultAsync<Person>(personSql, new {UserName = userName});
+                var customClaims = new List<Claim>();
+                var person = (await conn.QueryAsync<Person, Claim, Person>(sql, (p, c) =>
+                    {
+                        customClaims.Add(c);
+                        return p;
+                    }, param: new {UserName = userName}, splitOn: "Type"))
+                    .FirstOrDefault();
                 if (person == null ||
                     !SaltedHashHelper.VerifyPasswordAgainstSaltedHash(password, person.PasswordHash, person.PasswordSalt))
                 {
                     throw new AuthException();
                 }
 
-                var claims = (await conn.QueryAsync<Claim>(claimsSql, new {PersonId = person.Id}))
+                var claims = customClaims
                     .Select(claim => new System.Security.Claims.Claim(claim.Type, claim.Value))
                     .Concat(new [] { new System.Security.Claims.Claim("sub", person.Id) });
 

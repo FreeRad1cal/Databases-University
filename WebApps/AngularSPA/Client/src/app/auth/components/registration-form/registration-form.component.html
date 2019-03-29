@@ -4,7 +4,7 @@
     <div *ngIf="stepForm.currentStateName == 'BasicInfoState'">
       <div class="p-2">
         <div class="ui-inputgroup">
-            <input type="text" pInputText placeholder="Username" formControlName="userName">
+            <input type="text" pInputText placeholder="Username" formControlName="userName" class="w-100">
         </div>
         <span *ngFor="let key of registrationForm.controls.userName.errors | objToKeys" class="text-danger">
           <div *ngIf="registrationForm.touched">
@@ -14,7 +14,7 @@
       </div>
       <div class="p-2">
         <div class="ui-inputgroup">
-            <input type="text" pInputText placeholder="Email" formControlName="emailAddress">
+            <input type="text" pInputText placeholder="Email" formControlName="emailAddress" class="w-100">
         </div>
         <span *ngFor="let key of registrationForm.controls.emailAddress.errors | objToKeys" class="text-danger">
           <div *ngIf="registrationForm.touched">
@@ -24,14 +24,14 @@
       </div>
     </div>
     <div *ngIf="stepForm.currentStateName == 'AddressState'" formGroupName="address" class="d-flex flex-column align-items-center">
-      <div [formGroupName]="addrType" *ngFor="let addrType of registrationForm.controls.address.controls | objToKeys" class="d-flex flex-column align-items-center">
-        <span>{{addrType == 'homeAddress' ? "Home Address" : "Mailing Address"}}</span>  
+      <div [formGroupName]="addrType" *ngFor="let addrType of registrationForm.controls.address.controls | objToKeys" class="d-flex flex-column">
+        <span class="text-center">{{addrType == 'homeAddress' ? "Home Address" : "Mailing Address"}}</span>  
         <div class="p-2" *ngIf="addrType == 'mailingAddress'">
-          <p-checkbox [(value)]="addressesSame" label="Same as home address" binary="true" (onChange)="onAddressCheckBoxChanged($event)"></p-checkbox>
+          <p-checkbox [(value)]="addressesSame" label="Same as home address" binary="true" (onChange)="onAddressCheckBoxChanged($event)" class="w-100"></p-checkbox>
         </div>
         <div class="p-2">
           <div class="ui-inputgroup">
-              <input type="text" pInputText placeholder="Street" formControlName="street">
+              <input type="text" pInputText placeholder="Street" formControlName="street" class="w-100">
           </div>
           <span *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.street.errors | objToKeys" class="text-danger">
             <div *ngIf="registrationForm.controls.address.controls[addrType].controls.street.touched">
@@ -41,7 +41,7 @@
         </div>
         <div class="p-2">
           <div class="ui-inputgroup">
-              <input type="text" pInputText placeholder="City" formControlName="city">
+              <input type="text" pInputText placeholder="City" formControlName="city" class="w-100">
           </div>
           <span *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.city.errors | objToKeys" class="text-danger">
             <div *ngIf="registrationForm.controls.address.controls[addrType].controls.city.touched">
@@ -61,7 +61,7 @@
         </div>
         <div class="p-2">
           <div class="ui-inputgroup">
-              <input type="text" pInputText placeholder="Zip code" formControlName="zipCode">
+              <input type="text" pInputText placeholder="Zip code" formControlName="zipCode" class="w-100">
           </div>
           <span *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.zipCode.errors | objToKeys" class="text-danger">
             <div *ngIf="registrationForm.controls.address.controls[addrType].controls.zipCode.touched">
@@ -71,10 +71,10 @@
         </div>
         <div class="p-2">
           <div class="ui-inputgroup">
-              <input type="text" pInputText placeholder="Country" formControlName="country">
+              <input type="text" pInputText placeholder="Country" formControlName="country" class="w-100">
           </div>
           <span *ngFor="let key of registrationForm.controls.address.controls[addrType].controls.country.errors | objToKeys" class="text-danger">
-            <div *ngIf="registrationForm.controls.address.controls[addrType].controls.zipCode.touched">
+            <div *ngIf="registrationForm.controls.address.controls[addrType].controls.country.touched">
               {{errorDictionary.address.country[key]}}
             </div> 
           </span>
@@ -106,7 +106,7 @@
         </span> 
       </div>      
     </div>
-    <div *ngIf="stepForm.currentStateName == 'ConfirmationState'" class="d-flex flex-column align-items-center">
+    <div *ngIf="stepForm.currentStateName == 'ConfirmationState'" class="d-flex flex-column">
       <div>
         <b class="mr-2">Username: </b>
         <span>{{registrationForm.controls.userName.value}}</span>
@@ -115,7 +115,7 @@
         <b class="mr-2">Email: </b>
         <span>{{registrationForm.controls.emailAddress.value}}</span>
       </div>
-      <div *ngFor="let addrType of registrationForm.controls.address.controls | objToKeys" class="d-flex flex-column align-items-center w-100">
+      <div *ngFor="let addrType of registrationForm.controls.address.controls | objToKeys" class="d-flex flex-column w-100">
         <b>{{addrType == 'homeAddress' ? "Home Address" : "Mailing Address"}}</b>
         <app-address [address]="registrationForm.controls.address.controls[addrType].value"></app-address>
       </div>

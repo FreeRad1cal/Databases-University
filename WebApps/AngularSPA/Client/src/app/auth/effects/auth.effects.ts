@@ -68,6 +68,12 @@ export class AuthEffects implements OnInitEffects {
     );
 
     @Effect()
+    signInFailure$ = this.actions$.pipe(
+        ofType<SignInFailure>(AuthActionTypes.SignInFailure),
+        map(action => new SignOut())
+    )
+
+    @Effect()
     register$ = this.actions$.pipe(
         ofType<Register>(AuthActionTypes.Register),
         switchMap(action => this.authService.register(action.payload.person).pipe(

@@ -41,7 +41,7 @@ export class RegistrationFormComponent implements OnInit, OnDestroy {
       userName: {
         required: "Username is required"
       },
-      email: {
+      emailAddress: {
         required: "Email is required",
         email: "Email is invalid"
       },
@@ -85,7 +85,9 @@ export class RegistrationFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.addressSubscription.unsubscribe();
+    if (this.addressSubscription) {
+      this.addressSubscription.unsubscribe();
+    }    
   }
 
   next(label: NextButtonLabel) {

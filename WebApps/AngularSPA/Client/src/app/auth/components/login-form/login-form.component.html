@@ -1,21 +1,23 @@
 <form class="d-flex flex-column align-items-center" [formGroup]="loginForm" (ngSubmit)="onLoginClicked(loginForm)">
-  <div class="p-2">
-    <div class="ui-inputgroup">
-      <input type="text" pInputText placeholder="Username" formControlName="userName">
-    </div>
+  <div class="p-2">   
+    <span class="ui-float-label">
+      <input id="float-input" type="text" pInputText formControlName="userName"> 
+      <label for="float-input">Username</label>
+    </span>
     <span *ngIf="loginForm.touched && loginForm.hasError('required', 'userName')" class="text-danger">
       Username is required
     </span>
   </div>
-  <div class="p-2">
-    <div class="ui-inputgroup">
-      <input type="text" pInputText placeholder="Password" formControlName="password">
-    </div>
+  <div class="p-2">   
+    <span class="ui-float-label">
+      <input id="float-input" type="text" pInputText formControlName="password"> 
+      <label for="float-input">Password</label>
+    </span>
     <span *ngIf="loginForm.touched && loginForm.hasError('required', 'password')" class="text-danger">
       Password is required
     </span>
   </div>
-    <button pButton type="submit" label="Log In" [disabled]="!loginForm.valid || busy"></button>
+  <button pButton type="submit" label="Log In" [disabled]="!loginForm.valid || busy"></button>
 </form>
 
 <!-- https://stackoverflow.com/questions/51605737/confirm-password-validation-in-angular-6 -->

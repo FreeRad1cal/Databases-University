@@ -24,6 +24,7 @@ import { AddressComponent } from './components/address/address.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     PrimengModule,
     AuthRoutingModule,
     StoreModule.forFeature('auth', reducers),

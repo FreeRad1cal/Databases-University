@@ -7,6 +7,7 @@ import {ButtonModule} from 'primeng/button';
 import {StepsModule} from 'primeng/steps';
 import {CheckboxModule} from 'primeng/checkbox';
 import {DropdownModule} from 'primeng/dropdown';
+import {TieredMenuModule} from 'primeng/tieredmenu';
 
 const primengModules = [
   ToolbarModule,
@@ -14,7 +15,8 @@ const primengModules = [
   ButtonModule,
   StepsModule,
   CheckboxModule,
-  DropdownModule
+  DropdownModule,
+  TieredMenuModule
 ];
 
 @NgModule({

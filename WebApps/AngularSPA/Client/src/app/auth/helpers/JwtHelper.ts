@@ -17,4 +17,12 @@ export class JwtHelper {
         expires.setUTCSeconds(exp);
         return expires;
     }
+
+    static getRoles(jwt: string) : string[] {
+        return jwt_decode<any>(jwt).rol;
+    }
+
+    static getPermissions(jwt: string): string[] {
+        return jwt_decode<any>(jwt).perm;
+    }
 }

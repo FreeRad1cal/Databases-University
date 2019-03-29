@@ -1,14 +1,17 @@
-<p-card class="w-75">
+<div class="d-flex flex-column align-items-center w-75">
+  <p-card class="w-100">
     <app-registration-form 
     [busy]="busy$ | async" 
     (register)="onRegister($event)"></app-registration-form>
-</p-card>
-<p-footer class="d-flex flex-column align-items-center">
-  <span *ngFor="let error of errors$ | async" class="text-danger">
-    {{error}}
-  </span>
-  <span class="text-success">
-    {{successMessage$ | async}}
-  </span>
-</p-footer>
+  </p-card>
+  <p-footer class="d-flex flex-column align-items-center w-100">
+    <span *ngFor="let error of errors$ | async" class="text-danger">
+      {{error}}
+    </span>
+    <span class="text-success">
+      {{successMessage$ | async}}
+    </span>
+  </p-footer>
+</div>
+
 

@@ -30,7 +30,7 @@ export class RegistrationPageComponent implements OnInit {
       switchMap((success, i) => {
         if (success) {
           return timer(0, 1000).pipe(
-            takeUntil(timer(5000)),
+            takeUntil(timer(5500)),
             tap(i => {
               if (i == 5) {
                 this.router.navigate(['/login']);

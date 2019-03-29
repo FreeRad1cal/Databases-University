@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import url("../node_modules/primeicons/primeicons.css");
+@import url("../node_modules/primeng/resources/primeng.min.css");
+@import url("../node_modules/primeng/resources/themes/nova-colored/theme.css");
+
 .width-10 {
     width: 10%
 }
@@ -18,29 +22,4 @@
 
 .width-50 {
     width: 50%
-}
-
-.mat-tab-body-wrapper {
-    flex-grow: 1;
-}
-
-.mat-tab-body-content {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-.scrollable {
-    word-wrap: break-word;
-    overflow-y: scroll;
-}
-
-::-webkit-scrollbar { 
-    display: none; 
-}
-
-.clickable {
-    cursor: pointer;
 }
