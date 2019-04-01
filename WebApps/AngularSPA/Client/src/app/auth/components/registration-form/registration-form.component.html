@@ -22,6 +22,26 @@
           </div> 
         </span>
       </div>
+      <div class="p-2">
+        <div class="ui-inputgroup">
+            <input type="text" pInputText placeholder="First Name" formControlName="firstName" class="w-100">
+        </div>
+        <span *ngFor="let key of registrationForm.controls.firstName.errors | objToKeys" class="text-danger">
+          <div *ngIf="registrationForm.touched">
+            {{errorDictionary.firstName[key]}}
+          </div> 
+        </span>
+      </div>
+      <div class="p-2">
+        <div class="ui-inputgroup">
+            <input type="text" pInputText placeholder="Last Name" formControlName="lastName" class="w-100">
+        </div>
+        <span *ngFor="let key of registrationForm.controls.lastName.errors | objToKeys" class="text-danger">
+          <div *ngIf="registrationForm.touched">
+            {{errorDictionary.lastName[key]}}
+          </div> 
+        </span>
+      </div>
     </div>
     <div *ngIf="stepForm.currentStateName == 'AddressState'" formGroupName="address" class="d-flex flex-column align-items-center">
       <div [formGroupName]="addrType" *ngFor="let addrType of registrationForm.controls.address.controls | objToKeys" class="d-flex flex-column">
@@ -114,6 +134,14 @@
       <div>
         <b class="mr-2">Email: </b>
         <span>{{registrationForm.controls.emailAddress.value}}</span>
+      </div>
+      <div>
+        <b class="mr-2">First Name: </b>
+        <span>{{registrationForm.controls.firstName.value}}</span>
+      </div>
+      <div>
+        <b class="mr-2">Last Name: </b>
+        <span>{{registrationForm.controls.lastName.value}}</span>
       </div>
       <div *ngFor="let addrType of registrationForm.controls.address.controls | objToKeys" class="d-flex flex-column w-100">
         <b>{{addrType == 'homeAddress' ? "Home Address" : "Mailing Address"}}</b>

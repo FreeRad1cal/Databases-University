@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace DatabasesUniversity.Common.Events.EventBus.Abstractions
+namespace SecureChat.Common.Events.EventBus.Abstractions
 {
     public interface IDynamicIntegrationEventHandler
     {

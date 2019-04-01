@@ -14,13 +14,15 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { AuthModule } from './auth/auth.module';
 import { EffectsModule } from '@ngrx/effects';
 import { PrimengModule } from './primeng/primeng.module';
+import { HeaderComponent } from './containers/header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     NotFoundPageComponent,
-    FooterComponent
+    FooterComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

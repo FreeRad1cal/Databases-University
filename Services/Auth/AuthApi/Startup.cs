@@ -4,7 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthApi.Infrastructure.HealthChecks;
 using AuthApi.Infrastructure.Services;
+using AuthApi.IntegrationEvents.EventHandling;
+using AuthApi.IntegrationEvents.Events;
 using HealthChecks.UI.Client;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +17,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SecureChat.Common.Events.EventBus;
+using SecureChat.Common.Events.EventBus.Abstractions;
+using SecureChat.Common.Events.EventBusRabbitMQ;
 
 namespace AuthApi
 {
@@ -47,6 +53,7 @@ namespace AuthApi
             });
 
             services.AddTransient<ITokenService, DefaultTokenService>();
+            services.AddTransient<IClaimService, DefaultClaimService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -71,6 +78,39 @@ namespace AuthApi
             app.UseCors("CorsPolicy");
 
             app.UseMvc();
+        }
+    }
+
+    internal static class CustomExtensionMethods
+    {
+        public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<IRabbitMQPersistentConnection, DefaultRabbitMQPersistentConnection>();
+            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+            services.Configure<EventBusOptions>(options =>
+            {
+                options.HostName = configuration["EventBusConnection"];
+                options.UserName = configuration["EventBusUserName"];
+                options.Password = configuration["EventBusPassword"];
+                options.QueueName = typeof(Startup).Assembly.GetName().Name;
+            });
+
+            services.AddSingleton<IEventBus, EventBusRabbitMQ>();
+            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+
+            return services;
+        }
+
+        public static IApplicationBuilder ConfigureEventBus(this IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
+                eventBus.Subscribe<PermissionsAddedIntegrationEvent, PermissionsAddedIntegrationEventHandler>();
+                eventBus.Subscribe<PermissionsRemovedIntegrationEvent, PermissionsRemovedIntegrationEventHandler>();
+            }
+
+            return app;
         }
     }
 }

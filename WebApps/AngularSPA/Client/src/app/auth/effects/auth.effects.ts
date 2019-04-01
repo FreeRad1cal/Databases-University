@@ -64,26 +64,26 @@ export class AuthEffects implements OnInitEffects {
         ofType<SignInSuccess>(AuthActionTypes.SignInSuccess),
         withLatestFrom(this.store.select(getToken)),
         tap(([_, token]) => this.jwtPersister.persistToken(token)),
-        tap(() => this.router.navigate(['home']))
+        tap(() => this.router.navigate(['']))
     );
 
     @Effect()
     signInFailure$ = this.actions$.pipe(
         ofType<SignInFailure>(AuthActionTypes.SignInFailure),
         map(action => new SignOut())
-    )
+    );
 
     @Effect()
     register$ = this.actions$.pipe(
         ofType<Register>(AuthActionTypes.Register),
         switchMap(action => this.authService.register(action.payload.person).pipe(
-            map(res => new RegistrationSuccess())
-        )),
-        catchError(res => {
-            const errors = res.error.errors && res.error.errors? res.error.errors : ["An error has occured"];
-            return of(new RegistrationFailure({ errors: errors }));
-        })
-    )
+            map(res => new RegistrationSuccess()),
+            catchError(res => {
+                const errors = res.error.errors && res.error.errors? res.error.errors : ["An error has occured"];
+                return of(new RegistrationFailure({ errors: errors }));
+            })
+        ))
+    );
 
     constructor(
         private actions$: Actions,

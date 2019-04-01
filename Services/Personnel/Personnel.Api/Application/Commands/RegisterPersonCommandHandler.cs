@@ -7,11 +7,11 @@ using AutoMapper;
 using MediatR;
 using Personnel.Api.Dtos;
 using Personnel.Domain.PersonAggregate;
-using DatabasesUniversity.Common.Events.EventBus.Abstractions;
 using Helpers;
 using Microsoft.Extensions.Logging;
 using Personnel.Api.Application.Queries;
 using Personnel.Domain.Exceptions;
+using SecureChat.Common.Events.EventBus.Abstractions;
 
 namespace Personnel.Api.Application.Commands
 {
@@ -47,7 +47,7 @@ namespace Personnel.Api.Application.Commands
                 throw new PersonnelDomainException(ErrorTypes.RegistrationError, new[] { "A user with this username or email address already exists" });
             }
 
-            var person = new Person(request.UserName, request.EmailAddress,
+            var person = new Person(request.UserName, request.EmailAddress, request.FirstName, request.LastName,
                 _mapper.Map<Address>(request.HomeAddress),
                 _mapper.Map<Address>(request.MailingAddress));
 

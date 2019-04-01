@@ -30,8 +30,8 @@ namespace AuthApi.Infrastructure.Services
         public async Task<string> GetTokenFromLoginCredentialsAsync(string userName, string password)
         {
             const string sql = @"SELECT People.Id, PasswordHash, PasswordSalt, Type, Value FROM People
-                                JOIN Claims ON People.Id = Claims.PersonId
-                                WHERE PersonId = @PersonId;";
+                                LEFT JOIN Claims ON People.Id = Claims.PersonId
+                                WHERE People.UserName = @UserName;";
 
             using (var conn = await GetDbConnectionAsync())
             {
@@ -49,6 +49,7 @@ namespace AuthApi.Infrastructure.Services
                 }
 
                 var claims = customClaims
+                    .Where(claim => claim != null && !string.IsNullOrEmpty(claim.Value) && !string.IsNullOrEmpty(claim.Type))
                     .Select(claim => new System.Security.Claims.Claim(claim.Type, claim.Value))
                     .Concat(new [] { new System.Security.Claims.Claim("sub", person.Id) });
 

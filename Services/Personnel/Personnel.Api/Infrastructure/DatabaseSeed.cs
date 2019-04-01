@@ -28,9 +28,11 @@ namespace Personnel.Api.Infrastructure
             {
                 var command = new RegisterPersonCommand()
                 {
-                    UserName = "SiteAdmin",
-                    Password = "SiteAdmin12345",
+                    UserName = "superuser",
+                    Password = "superuser12345",
                     EmailAddress = "email@email.com",
+                    FirstName = "John",
+                    LastName = "Doe",
                     HomeAddress = new AddressDto()
                     {
                         City = "New York",

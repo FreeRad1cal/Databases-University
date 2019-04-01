@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using DatabasesUniversity.Common.Events.EventBus.Extensions;
+using SecureChat.Common.Events.EventBus.Extensions;
 
 namespace Personnel.Api.Application.Behaviors
 {

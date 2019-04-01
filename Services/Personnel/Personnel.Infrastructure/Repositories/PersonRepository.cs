@@ -23,8 +23,8 @@ namespace Personnel.Infrastructure.Repositories
 
         public Person Add(Person person, string salt, string hash)
         {
-            var personSql = $@"INSERT INTO People (Username, Email, PasswordSalt, PasswordHash)
-                        VALUES (@{nameof(person.UserName)}, @{nameof(person.Email)}, @PasswordSalt, @PasswordHash);
+            var personSql = $@"INSERT INTO People (Username, FirstName, LastName, Email, PasswordSalt, PasswordHash)
+                        VALUES (@{nameof(person.UserName)}, @{nameof(person.FirstName)}, @{nameof(person.LastName)}, @{nameof(person.Email)}, @PasswordSalt, @PasswordHash);
                         SELECT LAST_INSERT_ID();";
             AddOperation(person, async connection =>
             {
@@ -32,6 +32,8 @@ namespace Personnel.Infrastructure.Repositories
                 {
                     person.UserName,
                     person.Email,
+                    person.FirstName,
+                    person.LastName,
                     PasswordSalt = salt,
                     PasswordHash = hash
                 });

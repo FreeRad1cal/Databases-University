@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.IO;
+using System.Net.Sockets;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Retry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
-using System;
-using System.IO;
-using System.Net.Sockets;
-using DatabasesUniversity.Common.Events.EventBus;
-using Microsoft.Extensions.Options;
+using SecureChat.Common.Events.EventBus;
 
-namespace DatabasesUniversity.Common.Events.EventBusRabbitMQ
+namespace SecureChat.Common.Events.EventBusRabbitMQ
 {
     public class DefaultRabbitMQPersistentConnection
        : IRabbitMQPersistentConnection

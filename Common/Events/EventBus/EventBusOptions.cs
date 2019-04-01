@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DatabasesUniversity.Common.Events.EventBus
+﻿namespace SecureChat.Common.Events.EventBus
 {
     public class EventBusOptions
     {

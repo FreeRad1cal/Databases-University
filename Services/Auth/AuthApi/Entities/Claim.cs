@@ -7,8 +7,19 @@ namespace AuthApi.Entities
 {
     public class Claim
     {
-        public string Type { get; set; }
+        public string PersonId { get; private set; }
 
-        public string Value { get; set; }
+        public string Type { get; private set; }
+
+        public string Value { get; private set; }
+
+        public Claim() { }
+
+        public Claim(string personId, string type, string value)
+        {
+            PersonId = personId;
+            Type = type;
+            Value = value;
+        }
     }
 }

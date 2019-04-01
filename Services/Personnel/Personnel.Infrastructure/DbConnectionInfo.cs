@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Personnel.Infrastructure.Repositories
+﻿namespace Personnel.Infrastructure
 {
     public class DbConnectionInfo
     {

@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ObjToKeysPipe } from './pipes/ObjToKeysPipe';
 
 @NgModule({
   declarations: [ObjToKeysPipe],
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
-  exports: [CommonModule, ReactiveFormsModule, ObjToKeysPipe]
+  exports: [CommonModule, ReactiveFormsModule, FormsModule, ObjToKeysPipe]
 })
 export class SharedModule { }

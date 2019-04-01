@@ -41,6 +41,12 @@ export class RegistrationFormComponent implements OnInit, OnDestroy {
       userName: {
         required: "Username is required"
       },
+      firstName: {
+        required: "First Name is required"
+      },
+      lastName: {
+        required: "Last Name is required"
+      },
       emailAddress: {
         required: "Email is required",
         email: "Email is invalid"
@@ -145,6 +151,8 @@ export class RegistrationFormComponent implements OnInit, OnDestroy {
   private createRegistrationForm() {
     return new FormGroup({
       userName: new FormControl('', [Validators.required]),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
       emailAddress: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
       confirmPassword: new FormControl('', [Validators.required]),

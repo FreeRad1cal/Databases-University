@@ -1,6 +1,6 @@
-﻿using DatabasesUniversity.Common.Events.EventBus.Events;
+﻿using SecureChat.Common.Events.EventBus.Events;
 
-namespace DatabasesUniversity.Common.Events.EventBus.Abstractions
+namespace SecureChat.Common.Events.EventBus.Abstractions
 {
     public interface IEventBus
     {

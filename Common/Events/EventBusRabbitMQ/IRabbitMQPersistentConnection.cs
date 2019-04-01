@@ -1,7 +1,7 @@
-﻿using RabbitMQ.Client;
-using System;
+﻿using System;
+using RabbitMQ.Client;
 
-namespace DatabasesUniversity.Common.Events.EventBusRabbitMQ
+namespace SecureChat.Common.Events.EventBusRabbitMQ
 {
     public interface IRabbitMQPersistentConnection
         : IDisposable

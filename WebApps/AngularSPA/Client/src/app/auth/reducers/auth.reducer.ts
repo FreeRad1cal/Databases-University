@@ -96,7 +96,7 @@ export const selectIsSignedIn = (state: State) => state.signedInUser != null && 
 export const selectSignedInUser = (state: State) => state.signedInUser;
 export const selectToken = (state: State) => state.token;
 export const selectRoles = (state: State) => JwtHelper.getRoles(selectToken(state));
-export const selectPermissions = (state: State) => JwtHelper.getRoles(selectPermissions(state));
+export const selectPermissions = (state: State) => JwtHelper.getRoles(selectToken(state));
 export const selectBusy = (state: State) => state.busy
 export const selectLoginErrors = (state: State) => state.loginErrors;
 export const selectRegistrationErrors = (state: State) => state.registrationErrors;

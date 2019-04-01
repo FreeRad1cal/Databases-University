@@ -2,11 +2,6 @@
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using Autofac;
-using DatabasesUniversity.Common.Events.EventBus;
-using DatabasesUniversity.Common.Events.EventBus.Abstractions;
-using DatabasesUniversity.Common.Events.EventBus.Events;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -16,8 +11,11 @@ using Polly.Retry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
+using SecureChat.Common.Events.EventBus;
+using SecureChat.Common.Events.EventBus.Abstractions;
+using SecureChat.Common.Events.EventBus.Events;
 
-namespace DatabasesUniversity.Common.Events.EventBusRabbitMQ
+namespace SecureChat.Common.Events.EventBusRabbitMQ
 {
     public class EventBusRabbitMQ : IEventBus, IDisposable
     {
@@ -223,12 +221,11 @@ namespace DatabasesUniversity.Common.Events.EventBusRabbitMQ
                     }
                     else
                     {
-                        var handler = _serviceProvider.GetService(subscription.HandlerType);
+                        dynamic handler = _serviceProvider.GetService(subscription.HandlerType);
                         if (handler == null) continue;
                         var eventType = _subsManager.GetEventTypeByName(eventName);
                         var integrationEvent = JsonConvert.DeserializeObject(message, eventType);
-                        var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
-                        await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });
+                        await handler.Handler(integrationEvent);
                     }
                 }
             }

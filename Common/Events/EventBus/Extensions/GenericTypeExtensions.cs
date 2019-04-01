@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace DatabasesUniversity.Common.Events.EventBus.Extensions
+namespace SecureChat.Common.Events.EventBus.Extensions
 {
     public static class GenericTypeExtensions
     {

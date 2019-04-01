@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DatabasesUniversity.Common.Events.EventBus.Abstractions;
-using DatabasesUniversity.Common.Events.EventBus.Events;
+using SecureChat.Common.Events.EventBus.Abstractions;
+using SecureChat.Common.Events.EventBus.Events;
 
-namespace DatabasesUniversity.Common.Events.EventBus
+namespace SecureChat.Common.Events.EventBus
 {
     public interface IEventBusSubscriptionsManager
     {

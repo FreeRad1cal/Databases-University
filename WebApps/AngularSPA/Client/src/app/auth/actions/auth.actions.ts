@@ -63,7 +63,7 @@ export class RegistrationFailure implements Action {
 }
 
 export type AuthActionsUnion =
-  | SignIn
+  SignIn
   | SignInSuccess
   | SignInFailure
   | SignOut

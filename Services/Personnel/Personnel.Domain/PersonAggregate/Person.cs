@@ -7,15 +7,21 @@ namespace Personnel.Domain.PersonAggregate
 {
     public class Person : Entity, IAggregateRoot
     {
-        public Person(string userName, string email, Address homeAddress, Address mailingAddress = null)
+        public Person(string userName, string email, string firstName, string lastName, Address homeAddress, Address mailingAddress = null)
         {
             _mailingAddress = mailingAddress;
             UserName = userName;
             Email = email;
+            FirstName = firstName;
+            LastName = lastName;
             HomeAddress = homeAddress;
         }
 
         public string UserName { get;  }
+
+        public string FirstName { get; }
+
+        public string LastName { get; }
 
         public string Email { get; }
 

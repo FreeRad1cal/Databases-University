@@ -2,9 +2,6 @@
 using System.Linq;
 using System.Text;
 using AutoMapper;
-using DatabasesUniversity.Common.Events.EventBus;
-using DatabasesUniversity.Common.Events.EventBus.Abstractions;
-using DatabasesUniversity.Common.Events.EventBusRabbitMQ;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using MediatR;
@@ -31,6 +28,9 @@ using Newtonsoft.Json.Serialization;
 using Personnel.Api.Application.Queries;
 using Personnel.Api.Infrastructure.Filters;
 using Personnel.Infrastructure;
+using SecureChat.Common.Events.EventBus;
+using SecureChat.Common.Events.EventBus.Abstractions;
+using SecureChat.Common.Events.EventBusRabbitMQ;
 
 namespace Personnel.Api
 {

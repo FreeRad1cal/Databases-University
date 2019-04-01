@@ -41,7 +41,7 @@ namespace Personnel.Api.Application.Queries
 
         public async Task<PersonDto> GetPersonByIdAsync(int id)
         {
-            var sql = $@"SELECT People.Id, UserName, Email, Type, Street, City, State, Country, ZipCode FROM People
+            var sql = $@"SELECT * FROM People
                         INNER JOIN PersonAddressMap map ON map.PersonId = People.Id
                         INNER JOIN Addresses ON Addresses.Id = map.AddressId
                         WHERE People.Id = @Id";

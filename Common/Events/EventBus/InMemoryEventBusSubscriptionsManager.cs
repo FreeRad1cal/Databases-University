@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DatabasesUniversity.Common.Events.EventBus.Abstractions;
-using DatabasesUniversity.Common.Events.EventBus.Events;
+using SecureChat.Common.Events.EventBus.Abstractions;
+using SecureChat.Common.Events.EventBus.Events;
 
-namespace DatabasesUniversity.Common.Events.EventBus
+namespace SecureChat.Common.Events.EventBus
 {
     public class InMemoryEventBusSubscriptionsManager : IEventBusSubscriptionsManager
     {
@@ -146,18 +146,16 @@ namespace DatabasesUniversity.Common.Events.EventBus
 
         }
 
-        public bool HasSubscriptionsForEvent<T>() where T : IntegrationEvent
-        {
-            var key = GetEventKey<T>();
-            return HasSubscriptionsForEvent(key);
-        }
-        public bool HasSubscriptionsForEvent(string eventName) => _handlers.ContainsKey(eventName);
+        public bool HasSubscriptionsForEvent<T>() where T : IntegrationEvent 
+            => HasSubscriptionsForEvent(GetEventKey<T>());
 
-        public Type GetEventTypeByName(string eventName) => _eventTypes.SingleOrDefault(t => t.Name == eventName);
+        public bool HasSubscriptionsForEvent(string eventName) 
+            => _handlers.ContainsKey(eventName);
 
-        public string GetEventKey<T>()
-        {
-            return typeof(T).Name;
-        }
+        public Type GetEventTypeByName(string eventName) 
+            => _eventTypes.SingleOrDefault(t => t.Name == eventName);
+
+        public string GetEventKey<T>() 
+            => nameof(T);
     }
 }

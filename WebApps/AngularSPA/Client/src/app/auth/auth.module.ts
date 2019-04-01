@@ -22,15 +22,11 @@ import { AddressComponent } from './components/address/address.component';
 @NgModule({
   declarations: [LoginPageComponent, LoginFormComponent, RegistrationPageComponent, RegistrationFormComponent, AddressComponent],
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
     PrimengModule,
     AuthRoutingModule,
     StoreModule.forFeature('auth', reducers),
     EffectsModule.forFeature([AuthEffects]),
-    SharedModule,
-    FormsModule
+    SharedModule
   ]
 })
 export class AuthModule { 
