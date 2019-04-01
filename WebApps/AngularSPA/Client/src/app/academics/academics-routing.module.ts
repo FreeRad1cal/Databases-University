@@ -1,13 +1,17 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { ApplyPageComponent } from './containers/apply-page/apply-page.component';
 
-const authRoutes: Routes = [
-
+const academicsRoutes: Routes = [
+    {
+        path: 'apply',
+        component: ApplyPageComponent
+    }
 ];
 
 @NgModule({
     imports: [
-        RouterModule.forChild(authRoutes)
+        RouterModule.forChild(academicsRoutes)
     ],
     exports: [
         RouterModule

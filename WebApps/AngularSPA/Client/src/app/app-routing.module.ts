@@ -9,7 +9,13 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent, 
-    canActivate: [SignedInGuard]
+    canActivate: [SignedInGuard],
+    children: [
+      {
+        path: 'academics',
+        loadChildren: './academics/academics.module#AcademicsModule'
+      }
+    ]
   },
   {
     path: '**',
