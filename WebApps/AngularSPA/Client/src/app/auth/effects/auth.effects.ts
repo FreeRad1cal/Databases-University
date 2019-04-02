@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType, OnInitEffects } from "@ngrx/effects";
-import { map, tap, switchMap, filter, debounceTime, catchError, withLatestFrom } from 'rxjs/operators';
+import { map, tap, switchMap, filter, debounceTime, catchError, withLatestFrom, mergeMap } from 'rxjs/operators';
 import { Store, Action } from "@ngrx/store";
 import { JwtPersisterService } from '../services/jwt-persister.service';
 import { InitUser, AuthActionTypes, SignInSuccess, SignOut, SignIn, CompleteSignIn, SignInFailure, Register, RegistrationFailure, RegistrationSuccess } from '../actions/auth.actions';
@@ -10,6 +10,7 @@ import { JwtHelper } from '../helpers/JwtHelper';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { getToken } from '../reducers';
+import { SetGlobalBusy } from 'src/app/actions/actions';
 
 @Injectable()
 export class AuthEffects implements OnInitEffects {
@@ -41,6 +42,7 @@ export class AuthEffects implements OnInitEffects {
     @Effect()
     signIn$ = this.actions$.pipe(
         ofType<SignIn>(AuthActionTypes.SignIn),
+        tap(() => this.store.dispatch(new SetGlobalBusy({value: true}))),
         debounceTime(1000),
         switchMap(action => 
             this.authService.authenticate(action.payload.credentials).pipe(
@@ -50,7 +52,7 @@ export class AuthEffects implements OnInitEffects {
                     return of(new SignInFailure({ errors: errors }));
                 })
             ))
-        )
+    )
 
     @Effect({ dispatch: false })
     signOut$ = this.actions$.pipe(
@@ -59,18 +61,19 @@ export class AuthEffects implements OnInitEffects {
         tap(() => this.router.navigate(['login']))
     );
 
-    @Effect({ dispatch: false})
+    @Effect()
     signInSuccess$ = this.actions$.pipe(
         ofType<SignInSuccess>(AuthActionTypes.SignInSuccess),
         withLatestFrom(this.store.select(getToken)),
         tap(([_, token]) => this.jwtPersister.persistToken(token)),
-        tap(() => this.router.navigate(['']))
+        tap(() => this.router.navigate([''])),
+        map(() => new SetGlobalBusy({value: false}))
     );
 
     @Effect()
     signInFailure$ = this.actions$.pipe(
         ofType<SignInFailure>(AuthActionTypes.SignInFailure),
-        map(action => new SignOut())
+        mergeMap(action => [new SignOut(), new SetGlobalBusy({value: false})])
     );
 
     @Effect()

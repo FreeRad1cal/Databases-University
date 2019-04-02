@@ -7,12 +7,12 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './reducers';
 import { ApplicationEffects } from './effects/application.effects';
-import { ApplyPageComponent } from './containers/apply-page/apply-page.component';
-import { ApplyFormComponent } from './components/apply-form/apply-form.component';
+import { ApplicationPageComponent } from './containers/application-page/application-page.component';
+import { ApplicationFormComponent } from './components/application-form/application-form.component';
 
 @NgModule({
-  declarations: [ApplyPageComponent, ApplyFormComponent],
-  entryComponents: [ApplyPageComponent],
+  declarations: [ApplicationPageComponent, ApplicationFormComponent],
+  entryComponents: [ApplicationPageComponent],
   imports: [
     CommonModule,
     AcademicsRoutingModule,

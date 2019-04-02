@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import {ToolbarModule} from 'primeng/toolbar';
 import {CardModule} from 'primeng/card';
@@ -8,6 +7,9 @@ import {StepsModule} from 'primeng/steps';
 import {CheckboxModule} from 'primeng/checkbox';
 import {DropdownModule} from 'primeng/dropdown';
 import {TieredMenuModule} from 'primeng/tieredmenu';
+import {DialogModule} from 'primeng/dialog';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {PanelModule} from 'primeng/panel';
 
 const primengModules = [
   ToolbarModule,
@@ -16,7 +18,10 @@ const primengModules = [
   StepsModule,
   CheckboxModule,
   DropdownModule,
-  TieredMenuModule
+  TieredMenuModule,
+  DialogModule,
+  ProgressSpinnerModule,
+  PanelModule
 ];
 
 @NgModule({

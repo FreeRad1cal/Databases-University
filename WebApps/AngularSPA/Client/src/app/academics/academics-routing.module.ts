@@ -1,11 +1,11 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { ApplyPageComponent } from './containers/apply-page/apply-page.component';
+import { ApplicationPageComponent } from './containers/application-page/application-page.component';
 
 const academicsRoutes: Routes = [
     {
         path: 'apply',
-        component: ApplyPageComponent
+        component: ApplicationPageComponent
     }
 ];
 

@@ -8,13 +8,16 @@ import {
 import { environment } from '../../environments/environment';
 import * as fromRouter from '@ngrx/router-store';
 import { storeFreeze } from 'ngrx-store-freeze';
+import * as fromRoot from './app.reducer';
 
 export interface State {
-    router: fromRouter.RouterReducerState;
+  router: fromRouter.RouterReducerState;
+  root: fromRoot.State
 }
 
 export const reducers: ActionReducerMap<State> = {
     router: fromRouter.routerReducer,
+    root: fromRoot.reducer
 };
 
 export function logger(reducer: ActionReducer<State>): ActionReducer<State> {
@@ -29,3 +32,8 @@ export function logger(reducer: ActionReducer<State>): ActionReducer<State> {
 export const metaReducers: MetaReducer<State>[] = !environment.production
   ? [logger, storeFreeze]
   : [];
+
+export const getGlobalBusy = createSelector(
+  (state: State) => state.root,
+  fromRoot.selectGlobalBusy
+)

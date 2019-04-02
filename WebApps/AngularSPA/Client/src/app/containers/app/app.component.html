@@ -1,3 +1,13 @@
 <div class="d-flex flex-column justify-content-center h-100">
     <router-outlet></router-outlet>
 </div>
+
+<p-dialog 
+    [visible]="globalBusy | async" 
+    [modal]="true" 
+    [responsive]="true"
+    [blockScroll]="true"
+    [showHeader]="false"
+    [closable]="false">
+    <p-progressSpinner></p-progressSpinner>
+</p-dialog>

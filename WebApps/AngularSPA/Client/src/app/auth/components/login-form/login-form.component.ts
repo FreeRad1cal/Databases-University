@@ -12,9 +12,9 @@ export class LoginFormComponent implements OnInit {
 
   @Input()
   busy: boolean;
-
   @Output()
   login = new EventEmitter<LoginCredentials>();
+  
   loginForm: FormGroup;
 
   constructor() { }

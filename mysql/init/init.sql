@@ -59,7 +59,8 @@ CREATE TABLE IF NOT EXISTS Semesters (
 	Id INT NOT NULL AUTO_INCREMENT,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
-	RegistrationDate DATE NOT NULL,
+	RegistrationStartDate DATE NOT NULL,
+	ApplicationStartDate DATE NOT NULL,
 	PRIMARY KEY (Id)
 );
 
@@ -68,6 +69,7 @@ CREATE TABLE IF NOT EXISTS Applications (
 	PersonId INT NOT NULL,
 	SemesterId INT NOT NULL,
 	Detail TEXT NOT NULL,
+	IsDraft BOOLEAN DEFAULT FALSE,
 	PRIMARY KEY (Id),
 	FOREIGN KEY (SemesterId)
 		REFERENCES Semesters (Id)
@@ -77,12 +79,12 @@ CREATE TABLE IF NOT EXISTS Applications (
 CREATE TABLE IF NOT EXISTS ApplicationDecisions (
 	ApplicationId INT NOT NULL,
 	Decision BOOLEAN NOT NULL,
-	MakerId INT,
+	DeciderId INT,
 	PRIMARY KEY (ApplicationId),
 	FOREIGN KEY (ApplicationId)
 		REFERENCES Applications (Id)
 		ON DELETE CASCADE,
-	FOREIGN KEY (MakerId)
+	FOREIGN KEY (DeciderId)
 		REFERENCES Employees (Id)
 		ON DELETE SET NULL
 );
