@@ -9,17 +9,21 @@ import { reducers } from './reducers';
 import { ApplicationEffects } from './effects/application.effects';
 import { ApplicationPageComponent } from './containers/application-page/application-page.component';
 import { ApplicationFormComponent } from './components/application-form/application-form.component';
+import { ApplicationService } from './services/application.service';
+import { AcademicsEffects } from './effects/academics.effects';
+import { AcademicsService } from './services/academics.service';
 
 @NgModule({
   declarations: [ApplicationPageComponent, ApplicationFormComponent],
   entryComponents: [ApplicationPageComponent],
+  providers: [ApplicationService, AcademicsService],
   imports: [
     CommonModule,
     AcademicsRoutingModule,
     SharedModule,
     PrimengModule,
     StoreModule.forFeature('academics', reducers),
-    EffectsModule.forFeature([ApplicationEffects]),
+    EffectsModule.forFeature([ApplicationEffects, AcademicsEffects]),
   ]
 })
 export class AcademicsModule { }

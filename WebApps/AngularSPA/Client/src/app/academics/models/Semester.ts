@@ -3,5 +3,8 @@ export interface Semester {
     startDate: Date;
     endDate: Date;
     registrationStartDate: Date;
+    registrationEndDate: Date;
     applicationStartDate: Date;
+    applicationEndDate: Date;
+    name: string;
 }

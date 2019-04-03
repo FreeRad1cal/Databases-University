@@ -1,3 +1,5 @@
-<div class="d-flex justify-content-center align-items-center">
-  <app-application-form (submit)="onSubmit($event)"></app-application-form>
-</div>
+<app-application-form 
+  class="flex-grow-1 h-50" 
+  [semesters]="semesters | async"
+  [draft]="draft | async"
+  (submit)="onSubmit($event)"></app-application-form>

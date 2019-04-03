@@ -1,5 +1,4 @@
 export interface Application {
-    PersonId: string;
-    SemesterId: string;
-    Detail: string;
+    semester: string;
+    detail: string;
 }

@@ -3,10 +3,23 @@ import { Application } from '../models/Application';
 import { Semester } from '../models/Semester';
 
 export enum AcademicsActionTypes {
+    InitializeAcademicsRoot = '[Academics] Initialize Academics Root',
+    AcademicsRootInitialized = '[Academics] Academics Root Initialized',
+
+    InitializeApplication = '[Academics] Initialize Application',
+    ApplicationInitialized = '[Academics] Application Initialized',
     SubmitApplication = '[Academics] Submit Application',
     SaveDraftApplication = '[Academics] Save Draft Application',
-    InitializeApplication = '[Academics] Initialize Application',
-    ApplicationInitialized = '[Academics] Application Initialized'
+}
+
+export class InitializeAcademicsRoot implements Action {
+    readonly type = AcademicsActionTypes.InitializeAcademicsRoot;
+}
+
+export class AcademicsRootInitialized implements Action {
+    readonly type = AcademicsActionTypes.AcademicsRootInitialized;
+
+    constructor(public payload: {semesters: Semester[]}) {}
 }
 
 export class SubmitApplication implements Action {
@@ -28,11 +41,13 @@ export class InitializeApplication implements Action {
 export class ApplicationInitialized implements Action {
     readonly type = AcademicsActionTypes.ApplicationInitialized;
 
-    constructor(public payload: {draft: Application, semesters: Semester[]}) {}
+    constructor(public payload: {draft: Application}) {}
 }
 
 export type AcademicsActionsUnion = 
     SubmitApplication
     | SaveDraftApplication
     | InitializeApplication
-    | ApplicationInitialized;
+    | ApplicationInitialized
+    | InitializeAcademicsRoot
+    | AcademicsRootInitialized;

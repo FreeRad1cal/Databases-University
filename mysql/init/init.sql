@@ -60,7 +60,10 @@ CREATE TABLE IF NOT EXISTS Semesters (
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
 	RegistrationStartDate DATE NOT NULL,
+	RegistrationEndDate DATE NOT NULL,
 	ApplicationStartDate DATE NOT NULL,
+	ApplicationEndDate DATE NOT NULL,
+	Name VARCHAR(255) NOT NULL,
 	PRIMARY KEY (Id)
 );
 
