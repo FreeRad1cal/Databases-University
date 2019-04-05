@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Personnel.Domain.Common;
+using Personnel.Domain.Events;
 
 namespace Personnel.Domain.PersonAggregate
 {
@@ -15,6 +16,8 @@ namespace Personnel.Domain.PersonAggregate
             FirstName = firstName;
             LastName = lastName;
             HomeAddress = homeAddress;
+
+            AddDomainEvent(new PersonCreatedDomainEvent(this));
         }
 
         public string UserName { get;  }

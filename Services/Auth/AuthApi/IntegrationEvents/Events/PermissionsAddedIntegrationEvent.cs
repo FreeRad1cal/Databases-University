@@ -10,7 +10,7 @@ namespace AuthApi.IntegrationEvents.Events
     public class PermissionsAddedIntegrationEvent : IntegrationEvent
     {
         [JsonProperty]
-        public string PersonId { get; private set; }
+        public int PersonId { get; private set; }
 
         [JsonProperty]
         public IEnumerable<string> Permissions { get; private set; }

@@ -7,7 +7,7 @@ namespace AuthApi.Entities
 {
     public class Claim
     {
-        public string PersonId { get; private set; }
+        public int PersonId { get; private set; }
 
         public string Type { get; private set; }
 
@@ -15,7 +15,7 @@ namespace AuthApi.Entities
 
         public Claim() { }
 
-        public Claim(string personId, string type, string value)
+        public Claim(int personId, string type, string value)
         {
             PersonId = personId;
             Type = type;

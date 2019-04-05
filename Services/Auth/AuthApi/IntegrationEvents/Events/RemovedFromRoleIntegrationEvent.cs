@@ -7,12 +7,12 @@ using SecureChat.Common.Events.EventBus.Events;
 
 namespace AuthApi.IntegrationEvents.Events
 {
-    public class PermissionsRemovedIntegrationEvent : IntegrationEvent
+    public class RemovedFromRoleIntegrationEvent : IntegrationEvent
     {
         [JsonProperty]
         public int PersonId { get; private set; }
 
         [JsonProperty]
-        public IEnumerable<string> Permissions { get; private set; }
+        public string Role { get; private set; }
     }
 }
