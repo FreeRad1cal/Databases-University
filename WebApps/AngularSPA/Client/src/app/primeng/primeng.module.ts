@@ -10,6 +10,7 @@ import {TieredMenuModule} from 'primeng/tieredmenu';
 import {DialogModule} from 'primeng/dialog';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {PanelModule} from 'primeng/panel';
+import {InputTextareaModule} from 'primeng/inputtextarea';
 
 const primengModules = [
   ToolbarModule,
@@ -21,7 +22,8 @@ const primengModules = [
   TieredMenuModule,
   DialogModule,
   ProgressSpinnerModule,
-  PanelModule
+  PanelModule,
+  InputTextareaModule
 ];
 
 @NgModule({

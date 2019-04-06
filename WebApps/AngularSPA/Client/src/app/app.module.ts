@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
 import { EffectsModule } from '@ngrx/effects';
 import { PrimengModule } from './primeng/primeng.module';
 import { HeaderComponent } from './containers/header/header.component';
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { HeaderComponent } from './containers/header/header.component';
     HomeComponent,
     NotFoundPageComponent,
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,23 @@
+<form class="d-flex flex-column align-items-center h-100" [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
+    <div class="p-2 w-25">
+        <div class="ui-inputgroup">
+            <p-dropdown [options]="semesters" [filter]="true" formControlName="semester" placeholder="Semester"></p-dropdown>
+        </div>
+        <span *ngFor="let key of applicationForm.controls.semester.errors | objToKeys" class="text-danger">
+            <div *ngIf=" applicationForm.controls.semester.touched">
+                {{errorDictionary.semester[key]}}
+            </div> 
+        </span>
+    </div>
+    <div class="p-2 w-75 h-50">
+        <div class="ui-inputgroup h-100">
+            <textarea pInputTextarea placeholder="Why do you want to apply?" formControlName="detail" class="w-100"></textarea>
+        </div>
+        <span *ngFor="let key of applicationForm.controls.detail.errors | objToKeys" class="text-danger">
+            <div *ngIf=" applicationForm.controls.detail.touched">
+                {{errorDictionary.detail[key]}}
+            </div> 
+        </span>
+    </div>
+    <button pButton type="submit" label="Apply" [disabled]="!applicationForm.valid"></button>
+</form>
