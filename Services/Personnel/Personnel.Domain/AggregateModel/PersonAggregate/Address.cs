@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Personnel.Domain.Common;
 
-namespace Personnel.Domain.PersonAggregate
+namespace Personnel.Domain.AggregateModel.PersonAggregate
 {
     public class Address : ValueObject
     {

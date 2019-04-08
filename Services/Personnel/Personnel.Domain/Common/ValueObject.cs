@@ -7,6 +7,7 @@ namespace Personnel.Domain.Common
 {
     public abstract class ValueObject
     {
+        // Added solely for the sake of convenience. Not used for equality comparison.
         public int Id { get; set; }
 
         protected static bool EqualOperator(ValueObject left, ValueObject right)

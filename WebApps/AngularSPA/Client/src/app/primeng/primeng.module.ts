@@ -11,6 +11,9 @@ import {DialogModule} from 'primeng/dialog';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {PanelModule} from 'primeng/panel';
 import {InputTextareaModule} from 'primeng/inputtextarea';
+import {TableModule} from 'primeng/table';
+import {PaginatorModule} from 'primeng/paginator';
+import {MultiSelectModule} from 'primeng/multiselect';
 
 const primengModules = [
   ToolbarModule,
@@ -23,7 +26,10 @@ const primengModules = [
   DialogModule,
   ProgressSpinnerModule,
   PanelModule,
-  InputTextareaModule
+  InputTextareaModule,
+  TableModule,
+  PaginatorModule,
+  MultiSelectModule
 ];
 
 @NgModule({

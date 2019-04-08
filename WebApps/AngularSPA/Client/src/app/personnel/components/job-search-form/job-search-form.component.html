@@ -1,0 +1,5 @@
+<form class="d-flex flex-column" [formGroup]="jobSearchForm" (ngSubmit)="onSubmit()">
+  <p-multiSelect [options]="jobTitleOptions" [filter]="true" formControlName="jobTitles" defaultLabel="Job Title(s)" class="w-25"></p-multiSelect>
+  <input type="text" pInputText placeholder="Contains keyword" class="w-50">
+  <button pButton type="submit" label="Search" class="align-self-center mt-4"></button>
+</form>

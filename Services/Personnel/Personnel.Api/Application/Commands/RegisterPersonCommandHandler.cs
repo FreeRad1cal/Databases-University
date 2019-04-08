@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Personnel.Api.Dtos;
-using Personnel.Domain.PersonAggregate;
 using Helpers;
 using Microsoft.Extensions.Logging;
 using Personnel.Api.Application.Queries;
+using Personnel.Domain.AggregateModel.PersonAggregate;
 using Personnel.Domain.Exceptions;
 using SecureChat.Common.Events.EventBus.Abstractions;
 
@@ -50,6 +50,8 @@ namespace Personnel.Api.Application.Commands
             var person = new Person(request.UserName, request.EmailAddress, request.FirstName, request.LastName,
                 _mapper.Map<Address>(request.HomeAddress),
                 _mapper.Map<Address>(request.MailingAddress));
+
+            _logger.LogInformation("----- Creating Person - Person: {@Person}", person);
 
             var saltHash = SaltedHashHelper.GenerateSaltedHash(8, request.Password);
             var result = _personRepository.Add(person, saltHash.Salt, saltHash.Hash);

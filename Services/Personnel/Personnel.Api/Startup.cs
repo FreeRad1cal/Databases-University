@@ -18,7 +18,6 @@ using Personnel.Api.Dtos;
 using Personnel.Api.Infrastructure;
 using Personnel.Api.Infrastructure.HealthChecks;
 using Personnel.Api.Infrastructure.Services;
-using Personnel.Domain.PersonAggregate;
 using Personnel.Infrastructure.Repositories;
 using Helpers.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -27,6 +26,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Personnel.Api.Application.Queries;
 using Personnel.Api.Infrastructure.Filters;
+using Personnel.Domain.AggregateModel.JobPostingAggregate;
+using Personnel.Domain.AggregateModel.PersonAggregate;
 using Personnel.Infrastructure;
 using SecureChat.Common.Events.EventBus;
 using SecureChat.Common.Events.EventBus.Abstractions;
@@ -81,6 +82,9 @@ namespace Personnel.Api
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddTransient<IPersonQueries, PersonQueries>();
 
+            services.AddScoped<IJobPostingRepository, JobPostingRepository>();
+            services.AddTransient<IEmploymentQueries, EmploymentQueries>();
+
             services.AddScoped<DatabaseSeed>();
 
             services.AddAutoMapper(cfg =>
@@ -88,6 +92,8 @@ namespace Personnel.Api
                 cfg.CreateMap<AddressDto, Address>();
                 cfg.CreateMap<Address, AddressDto>();
                 cfg.CreateMap<Person, PersonDto>();
+                cfg.CreateMap<JobPosting, JobPostingDto>();
+                cfg.CreateMap<JobTitle, JobTitleDto>();
             });
 
             services.AddEventBus(Configuration);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Personnel.Api.Application.IntegrationEvents;
-using Personnel.Domain.EmployeeAggregate;
+using Personnel.Domain.AggregateModel.EmployeeAggregate;
 using Personnel.Domain.Events;
 using SecureChat.Common.Events.EventBus.Abstractions;
 

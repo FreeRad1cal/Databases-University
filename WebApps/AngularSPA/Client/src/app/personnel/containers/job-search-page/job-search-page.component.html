@@ -1,0 +1,18 @@
+<div class="container w-100 h-100">
+  <div class="row m-4">
+    <app-job-search-form [jobTitles]="jobTitles$ | async" (search)="onSearch($event)" class="col"></app-job-search-form>
+  </div>
+  <div *ngIf="showResult$ | async">
+    <div class="row m-4">
+    <app-job-search-result [items]="jobPostings$ | async" class="col"></app-job-search-result>
+    </div>
+    <div class="row justify-content-center m-4">
+      <p-paginator [rows]="(pagination$ | async).limit" [totalRecords]="totalJobPostings$ | async" (onPageChange)="paginate($event)" [rowsPerPageOptions]="[5,25,100]" class="col-4"></p-paginator>
+    </div>
+  </div>
+  <div class="row m-4">
+    <div *ngFor="let error of errors$ | async" class="alert alert-danger" role="alert">
+      {{error}}
+    </div>
+  </div>
+</div>

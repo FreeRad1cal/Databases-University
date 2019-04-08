@@ -8,7 +8,6 @@ using Dapper;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using Personnel.Api.Dtos;
-using Personnel.Domain.PersonAggregate;
 using Personnel.Infrastructure;
 
 namespace Personnel.Api.Application.Queries
@@ -17,13 +16,11 @@ namespace Personnel.Api.Application.Queries
     {
         private readonly IDbConnectionFactory _dbConnectionFactory;
         private readonly IMapper _mapper;
-        private PersonnelApiSettings _settings;
 
-        public PersonQueries(IOptions<PersonnelApiSettings> settings, IDbConnectionFactory dbConnectionFactory, IMapper mapper)
+        public PersonQueries(IDbConnectionFactory dbConnectionFactory, IMapper mapper)
         {
             _dbConnectionFactory = dbConnectionFactory;
             _mapper = mapper;
-            _settings = settings.Value;
         }
 
         public async Task<bool> UserNameOrEmailExists(string userName, string email)

@@ -75,6 +75,7 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
 
                 policy.Execute(() =>
                 {
+
                     _connection = _connectionFactory
                           .CreateConnection();
                 });

@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <div class="col-2">
+      Id: {{(jobPosting$ | async).id}}
+    </div>
+    <div class="col">
+      Title: {{(jobPosting$ | async).jobTitleName}}
+    </div>
+  </div>
+  <div class="row justify-content-center border border-primary">
+    <div class="col-auto">
+      {{(jobPosting$ | async).description}}
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <button pButton type="button" label="Return" (click)="onReturn()" class="mr-auto"></button>
+      <button pButton type="button" label="Apply" (click)="onApply()"></button>
+    </div>
+  </div>
+</div>

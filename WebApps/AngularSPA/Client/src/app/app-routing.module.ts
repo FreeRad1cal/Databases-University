@@ -19,6 +19,10 @@ const routes: Routes = [
       {
         path: 'academics',
         loadChildren: './academics/academics.module#AcademicsModule'
+      },
+      {
+        path: 'personnel',
+        loadChildren: './personnel/personnel.module#PersonnelModule'
       }
     ]
   },

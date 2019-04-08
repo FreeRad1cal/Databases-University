@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using Dapper;
 using MediatR;
 using Microsoft.Extensions.Options;
+using Personnel.Domain.AggregateModel.PersonAggregate;
 using Personnel.Domain.Common;
-using Personnel.Domain.PersonAggregate;
 using Personnel.Infrastructure.UnitOfWork;
 
 namespace Personnel.Infrastructure.Repositories
@@ -80,6 +80,7 @@ namespace Personnel.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        // Note include Get method when you need an aggregate root object
         public async Task<Person> GetAsync(int personId)
         {
             throw new NotImplementedException();

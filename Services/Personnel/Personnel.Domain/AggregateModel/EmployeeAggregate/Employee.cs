@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Personnel.Domain.AggregateModel.PersonAggregate;
 using Personnel.Domain.Common;
 using Personnel.Domain.Events;
-using Personnel.Domain.PersonAggregate;
 
-namespace Personnel.Domain.EmployeeAggregate
+namespace Personnel.Domain.AggregateModel.EmployeeAggregate
 {
     public class Employee : Entity, IAggregateRoot
     {

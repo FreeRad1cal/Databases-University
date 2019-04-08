@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MediatR;
-using Personnel.Domain.EmployeeAggregate;
+using Personnel.Domain.AggregateModel.EmployeeAggregate;
 
 namespace Personnel.Domain.Events
 {

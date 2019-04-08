@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Personnel.Api.Application.Commands;
 using Personnel.Api.Dtos;
+using Personnel.Domain.AggregateModel.JobPostingAggregate;
 using Personnel.Domain.Exceptions;
 using Polly;
 using Polly.Retry;
@@ -23,6 +24,12 @@ namespace Personnel.Api.Infrastructure
         }
 
         public async Task SeedAsync()
+        {
+            var tasks = new[] {SeedPerson(), SeedJobPosting()};
+            await Task.WhenAll(tasks);
+        }
+
+        private async Task SeedPerson()
         {
             try
             {
@@ -51,7 +58,29 @@ namespace Personnel.Api.Infrastructure
                     }
                 };
 
-                var policy = CreatePolicy(_logger, nameof(DatabaseSeed));
+                var policy = CreatePolicy(_logger, nameof(SeedPerson));
+                await policy.ExecuteAsync(async () =>
+                {
+                    await _mediator.Send(command);
+                });
+            }
+            catch (PersonnelDomainException e)
+            {
+                _logger.LogError(e.Message);
+            };
+        }
+
+        private async Task SeedJobPosting()
+        {
+            try
+            {
+                var command = new CreateJobPostingCommand()
+                {
+                    JobTitle = "Database Administrator",
+                    Description = "Manage databases"
+                };
+
+                var policy = CreatePolicy(_logger, nameof(SeedJobPosting));
                 await policy.ExecuteAsync(async () =>
                 {
                     await _mediator.Send(command);

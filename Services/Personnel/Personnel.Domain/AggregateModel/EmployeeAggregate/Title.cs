@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Personnel.Domain.EmployeeAggregate
+﻿namespace Personnel.Domain.AggregateModel.EmployeeAggregate
 {
     public class Title
     {
