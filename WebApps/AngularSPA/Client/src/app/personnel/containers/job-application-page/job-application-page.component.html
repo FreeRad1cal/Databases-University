@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table class="table">
+          <tbody>
+            <tr>
+              <th scope="row">Job Id</th>
+              <td>{{(jobPosting$ | async).id}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Job Title</th>
+              <td>{{(jobPosting$ | async).jobTitleName}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Posted Time</th>
+              <td>{{(jobPosting$ | async).postedTime}}</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+  <div class="row">
+    <app-job-application-form [jobPosting]="jobPosting$ | async" (submit)="onSubmit($event)" class="w-100"></app-job-application-form>
+  </div>
+</div>

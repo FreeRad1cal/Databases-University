@@ -15,16 +15,16 @@ const routes: Routes = [
     path: '',
     component: HomeComponent, 
     canActivate: [SignedInGuard],
-    children: [
-      {
-        path: 'academics',
-        loadChildren: './academics/academics.module#AcademicsModule'
-      },
-      {
-        path: 'personnel',
-        loadChildren: './personnel/personnel.module#PersonnelModule'
-      }
-    ]
+      children: [
+        {
+          path: 'academics',
+          loadChildren: './academics/academics.module#AcademicsModule'
+        },
+        {
+          path: 'personnel',
+          loadChildren: './personnel/personnel.module#PersonnelModule'
+        }
+      ]
   },
   {
     path: '**',

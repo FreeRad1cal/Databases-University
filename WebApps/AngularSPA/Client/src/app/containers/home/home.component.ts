@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
       map(([user, roles, perms]) => [
         {label: `${user.firstName} ${user.lastName}`, disabled: true},
         {label: 'Employment', items: [
-          {label: 'Search Jobs', routerLink: ['personnel', 'job-search']},
+          {label: 'Search Jobs', routerLink: ['/personnel/job-search']},
           {label: 'My Applications'}
         ] },
         {label: 'Academics', items: [

@@ -1,20 +1,31 @@
 <div class="container">
-  <div class="row">
-    <div class="col-2">
-      Id: {{(jobPosting$ | async).id}}
-    </div>
-    <div class="col">
-      Title: {{(jobPosting$ | async).jobTitleName}}
-    </div>
-  </div>
-  <div class="row justify-content-center border border-primary">
-    <div class="col-auto">
-      {{(jobPosting$ | async).description}}
-    </div>
-  </div>
   <div class="row justify-content-center">
-    <div class="col-6">
-      <button pButton type="button" label="Return" (click)="onReturn()" class="mr-auto"></button>
+    <table class="table">
+        <tbody>
+          <tr>
+            <th scope="row">Job Id</th>
+            <td>{{(jobPosting$ | async).id}}</td>
+          </tr>
+          <tr>
+            <th scope="row">Job Title</th>
+            <td>{{(jobPosting$ | async).jobTitleName}}</td>
+          </tr>
+          <tr>
+              <th scope="row">Posted date</th>
+              <td>{{(jobPosting$ | async).postedTime}}</td>
+            </tr>
+          <tr>
+            <th scope="row">Job Description</th>
+            <td>{{(jobPosting$ | async).description}}</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+  <div class="row">
+    <div class="col-auto mr-auto">
+      <button pButton type="button" label="Return" (click)="onReturn()"></button>
+    </div>
+    <div class="col-auto">
       <button pButton type="button" label="Apply" (click)="onApply()"></button>
     </div>
   </div>

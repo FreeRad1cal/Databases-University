@@ -1,0 +1,19 @@
+<div class="container w-100">
+  <div class="row">
+    <div class="col-auto">Please upload your resume (PDF files only)</div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <p-fileUpload mode="basic" auto="auto" [customUpload]="true" (uploadHandler)="onUpload($event)" accept="application/pdf" maxFileSize="1000000" uploadLabel="Select Resume">
+      </p-fileUpload>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-auto mr-auto">
+      <button pButton type="button" label="Return" (click)="onReturn()"></button>
+    </div>
+    <div class="col-auto">
+      <button pButton type="button" label="Submit" (click)="onSubmit()"></button>
+    </div>
+  </div>
+</div>

@@ -58,3 +58,8 @@ export const getTotalJobPostings = createSelector(
     selectJobSearch,
     fromJobSearch.selectTotalJobPostings
 )
+
+export const getHasSearched = createSelector(
+    selectJobSearch,
+    fromJobSearch.selectHasSearched
+)

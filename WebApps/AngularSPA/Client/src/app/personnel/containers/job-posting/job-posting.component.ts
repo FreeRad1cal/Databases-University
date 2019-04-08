@@ -30,10 +30,10 @@ export class JobPostingComponent implements OnInit {
   }
 
   onReturn() {
-    this.router.navigate(['job-search']);
+    this.router.navigate(['personnel', 'job-search']);
   }
 
   onApply() {
-    this.router.navigate(['job-search', 'apply', this.id])
+    this.router.navigate(['personnel', 'job-search', 'apply', this.id])
   }
 }

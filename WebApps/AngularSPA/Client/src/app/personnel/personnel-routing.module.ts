@@ -1,17 +1,20 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { JobSearchPageComponent } from './containers/job-search-page/job-search-page.component';
-import { JobSearchComponent } from './containers/job-search/job-search.component';
 import { JobPostingComponent } from './containers/job-posting/job-posting.component';
+import { JobApplicationPageComponent } from './containers/job-application-page/job-application-page.component';
 
 const personnelRoutes: Routes = [
     {
         path: 'job-search',
-        component: JobSearchComponent,
         children: [
             {
                 path: 'posting/:id',
                 component: JobPostingComponent
+            },
+            {
+                path: 'apply/:id',
+                component: JobApplicationPageComponent
             },
             {
                 path: '',

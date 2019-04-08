@@ -13,11 +13,12 @@ import { PersonnelService } from './services/personnel.service';
 import { JobSearchFormComponent } from './components/job-search-form/job-search-form.component';
 import { JobSearchResultComponent } from './components/job-search-result/job-search-result.component';
 import { JobSearchPageComponent } from './containers/job-search-page/job-search-page.component';
-import { JobSearchComponent } from './containers/job-search/job-search.component';
 import { JobPostingComponent } from './containers/job-posting/job-posting.component';
+import { JobApplicationPageComponent } from './containers/job-application-page/job-application-page.component';
+import { JobApplicationFormComponent } from './components/job-application-form/job-application-form.component';
 
 @NgModule({
-  declarations: [JobSearchPageComponent, JobSearchFormComponent, JobSearchResultComponent, JobSearchComponent, JobPostingComponent],
+  declarations: [JobSearchPageComponent, JobSearchFormComponent, JobSearchResultComponent, JobPostingComponent, JobApplicationPageComponent, JobApplicationFormComponent],
   entryComponents: [JobSearchPageComponent],
   providers: [JobSearchService, PersonnelService],
   imports: [

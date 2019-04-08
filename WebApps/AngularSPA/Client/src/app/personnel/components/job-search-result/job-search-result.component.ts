@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { JobPosting } from '../../models/JobPosting';
 
 @Component({
@@ -10,8 +10,6 @@ export class JobSearchResultComponent implements OnInit {
 
   @Input()
   items: JobPosting[];
-
-  constructor() { }
 
   ngOnInit() {
   }

@@ -14,6 +14,8 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {TableModule} from 'primeng/table';
 import {PaginatorModule} from 'primeng/paginator';
 import {MultiSelectModule} from 'primeng/multiselect';
+import {FileUploadModule} from 'primeng/fileupload';
+
 
 const primengModules = [
   ToolbarModule,
@@ -29,7 +31,8 @@ const primengModules = [
   InputTextareaModule,
   TableModule,
   PaginatorModule,
-  MultiSelectModule
+  MultiSelectModule,
+  FileUploadModule
 ];
 
 @NgModule({

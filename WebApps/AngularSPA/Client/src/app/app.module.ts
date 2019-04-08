@@ -14,7 +14,6 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { AuthModule } from './auth/auth.module';
 import { EffectsModule } from '@ngrx/effects';
 import { PrimengModule } from './primeng/primeng.module';
-import { HeaderComponent } from './containers/header/header.component';
 import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
@@ -23,7 +22,6 @@ import { ErrorComponent } from './components/error/error.component';
     HomeComponent,
     NotFoundPageComponent,
     FooterComponent,
-    HeaderComponent,
     ErrorComponent
   ],
   imports: [

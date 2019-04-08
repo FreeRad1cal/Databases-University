@@ -8,6 +8,7 @@ export interface State extends EntityState<JobPosting> {
     offset: number;
     errors: string[];
     totalJobPostings: number;
+    hasSearched: boolean;
 }
 
 export const adapter: EntityAdapter<JobPosting> = createEntityAdapter<JobPosting>();
@@ -17,7 +18,8 @@ export const initialState: State = adapter.getInitialState({
     limit: 25,
     offset: 0,
     errors: [],
-    totalJobPostings: 0
+    totalJobPostings: 0,
+    hasSearched: false
 });
 
 export function reducer(state = initialState, action: PersonnelJobSearchActionsUnion): State {
@@ -42,6 +44,11 @@ export function reducer(state = initialState, action: PersonnelJobSearchActionsU
             return {
                 ...initialState
             }
+        case PersonnelJobSearchActionTypes.Search:
+            return {
+                ...initialState,
+                hasSearched: true
+            }
         default: {
             return state;
         }
@@ -58,3 +65,4 @@ export const selectJobPostings = selectAll;
 export const selectJobPostingById = (id: string) => (state: State) => selectAll(state).filter(posting => posting.id == id)[0];
 export const selectErrors = (state: State) => state.errors;
 export const selectTotalJobPostings = (state: State) => state.totalJobPostings;
+export const selectHasSearched = (state: State) => state.hasSearched

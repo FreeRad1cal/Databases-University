@@ -1,4 +1,4 @@
-<p-table [value]="items">
+<p-table [value]="items" *ngIf="items.length > 0">
   <ng-template pTemplate="header">
       <tr>
           <th>Id</th>
@@ -9,8 +9,13 @@
   <ng-template pTemplate="body" let-posting>
       <tr>
           <td>{{posting.id}}</td>
-          <td>{{posting.jobTitleName}}</td>
+          <td>
+            <a [routerLink]="['posting', posting.id]">{{posting.jobTitleName}}</a>
+          </td>
           <td>{{posting.postedTime}}</td>
       </tr>
   </ng-template>
 </p-table>
+<div *ngIf="items.length == 0" class="alert alert-danger" role="alert">
+    No job postings found
+</div>
