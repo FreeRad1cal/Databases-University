@@ -10,14 +10,11 @@ import { map } from 'rxjs/operators';
 })
 export class ErrorComponent implements OnInit {
 
-  errors: Observable<string[]>;
 
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.errors = this.route.queryParams.pipe(
-      map(params => params['errors'])
-    )
+
   }
 
 }

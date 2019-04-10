@@ -31,8 +31,8 @@ export function reducer(state = initialState, action: PersonnelJobSearchActionsU
                 offset: action.payload.pagination.offset
             }
         case PersonnelJobSearchActionTypes.SearchCompleted:{
-            let newState = adapter.addAll(action.payload.postings, state);
-            newState.totalJobPostings = action.payload.totalPostings;
+            let newState = adapter.upsertMany(action.payload.postings, state);
+            newState.totalJobPostings = action.payload.totalPostings ? action.payload.totalPostings : state.totalJobPostings;
             return newState;
         }
         case PersonnelJobSearchActionTypes.SearchFailed:
@@ -46,7 +46,7 @@ export function reducer(state = initialState, action: PersonnelJobSearchActionsU
             }
         case PersonnelJobSearchActionTypes.Search:
             return {
-                ...initialState,
+                ...state,
                 hasSearched: true
             }
         default: {

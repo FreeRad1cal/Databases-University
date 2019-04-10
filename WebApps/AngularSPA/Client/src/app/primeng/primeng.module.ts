@@ -15,7 +15,7 @@ import {TableModule} from 'primeng/table';
 import {PaginatorModule} from 'primeng/paginator';
 import {MultiSelectModule} from 'primeng/multiselect';
 import {FileUploadModule} from 'primeng/fileupload';
-
+import {VirtualScrollerModule} from 'primeng/virtualscroller';
 
 const primengModules = [
   ToolbarModule,
@@ -32,7 +32,8 @@ const primengModules = [
   TableModule,
   PaginatorModule,
   MultiSelectModule,
-  FileUploadModule
+  FileUploadModule,
+  VirtualScrollerModule
 ];
 
 @NgModule({

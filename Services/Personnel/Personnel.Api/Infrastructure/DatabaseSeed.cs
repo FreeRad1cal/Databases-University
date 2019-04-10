@@ -92,7 +92,7 @@ namespace Personnel.Api.Infrastructure
             };
         }
 
-        private AsyncRetryPolicy CreatePolicy(ILogger logger, string prefix, int retries = 3)
+        private AsyncRetryPolicy CreatePolicy(ILogger logger, string prefix, int retries = 6)
         {
             return Policy.Handle<SqlException>().
                 WaitAndRetryAsync(

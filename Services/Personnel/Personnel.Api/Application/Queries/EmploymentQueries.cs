@@ -8,6 +8,7 @@ using Personnel.Api.Dtos;
 using Personnel.Api.Models;
 using Personnel.Domain.AggregateModel.JobPostingAggregate;
 using Personnel.Infrastructure;
+using Personnel.Infrastructure.Services;
 
 namespace Personnel.Api.Application.Queries
 {
@@ -15,14 +16,16 @@ namespace Personnel.Api.Application.Queries
     {
         private readonly IDbConnectionFactory _dbConnectionFactory;
         private readonly IMapper _mapper;
+        private readonly IResumePersisterService _resumePersisterService;
 
-        public EmploymentQueries(IDbConnectionFactory dbConnectionFactory, IMapper mapper)
+        public EmploymentQueries(IDbConnectionFactory dbConnectionFactory, IMapper mapper, IResumePersisterService resumePersisterService)
         {
             _dbConnectionFactory = dbConnectionFactory;
             _mapper = mapper;
+            _resumePersisterService = resumePersisterService;
         }
 
-        public async Task<ArrayResponse<JobPostingDto>> GetJobPostings(Pagination pagination, string query = null, IEnumerable<string> jobTitleNames = null)
+        public async Task<ArrayResponse<JobPostingDto>> GetJobPostingsAsync(Pagination pagination, string query = null, IEnumerable<string> jobTitleNames = null)
         {
             var descriptionFilter = string.IsNullOrWhiteSpace(query)
                 ? @"TRUE"
@@ -60,12 +63,53 @@ namespace Personnel.Api.Application.Queries
             }
         }
 
-        public async Task<JobPostingDto> GetJobPostinById(int id)
+        public async Task<JobPostingDto> GetJobPostingByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var sql = $@"SELECT * FROM JobPostings WHERE JobPostings.Id = @{nameof(id)}";
+
+            using (var conn = await _dbConnectionFactory.GetConnectionAsync())
+            {
+                return await conn.QueryFirstOrDefaultAsync<JobPostingDto>(sql, new { id });
+            }
         }
 
-        public async Task<IEnumerable<JobTitleDto>> GetJobTitles()
+        public async Task<IEnumerable<JobApplicationDto>> GetJobApplicationsByApplicantIdAsync(int applicantId)
+        {
+            var sql = $@"SELECT * FROM JobApplications WHERE JobApplications.ApplicantId = @{nameof(applicantId)}";
+
+            using (var conn = await _dbConnectionFactory.GetConnectionAsync())
+            {
+                return await conn.QueryAsync<JobApplicationDto>(sql, new { applicantId });
+            }
+        }
+
+        public async Task<ArrayResponse<JobApplicationDto>> GetJobApplications(int? applicantId, int? jobPostingId)
+        {
+            var applicantIdFilter = applicantId is null
+                ? @"TRUE"
+                : $@"JobApplications.ApplicantId = @{nameof(applicantId)}";
+
+            var jobTitleFilter = jobPostingId is null
+                ? @"TRUE"
+                : $@"JobApplications.JobPostingId = @{nameof(jobPostingId)}";
+
+            var sql = $@"SELECT * FROM JobApplications
+                        WHERE {applicantIdFilter} AND {jobTitleFilter}";
+
+            using (var conn = await _dbConnectionFactory.GetConnectionAsync())
+            {
+                var result = await conn.QueryAsync<JobApplicationDto>(sql, new { applicantId, jobPostingId });
+                var total = await conn.QueryFirstOrDefaultAsync<int>(@"SELECT COUNT(*) AS total FROM JobApplications");
+
+                return new ArrayResponse<JobApplicationDto>()
+                {
+                    Total = total,
+                    Items = result
+                };
+            }
+        }
+
+        public async Task<IEnumerable<JobTitleDto>> GetJobTitlesAsync()
         {
             var sql = $@"SELECT * FROM JobTitles";
 
@@ -73,6 +117,31 @@ namespace Personnel.Api.Application.Queries
             {
                 return await conn.QueryAsync<JobTitleDto>(sql);
             }
+        }
+
+        public async Task<JobTitleDto> GetJobTitleByNameAsync(string name)
+        {
+            var sql = $@"SELECT * FROM JobTitles WHERE JobTitles.Name = @{nameof(name)}";
+
+            using (var conn = await _dbConnectionFactory.GetConnectionAsync())
+            {
+                return await conn.QueryFirstOrDefaultAsync<JobTitleDto>(sql, new {name});
+            }
+        }
+
+        public async Task<byte[]> GetResumeByApplicationId(int id)
+        {
+            var sql = $@"SELECT ResumeFileName
+                        FROM JobApplications
+                        WHERE JobApplications.Id = @{nameof(id)}";
+
+            string fileName;
+            using (var conn = await _dbConnectionFactory.GetConnectionAsync())
+            {
+                fileName = await conn.QueryFirstOrDefaultAsync<string>(sql, new { id });
+            }
+
+            return await _resumePersisterService.GetResumeAsync(fileName);
         }
     }
 }

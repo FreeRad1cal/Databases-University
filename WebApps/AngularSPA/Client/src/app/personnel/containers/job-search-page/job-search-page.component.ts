@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { SetPagination, Search, ResetJobSearch } from '../../actions/job-search.actions';
-import { getJobTiles, getJobPostings, getPagination, getTotalJobPostings, getErrors, getHasSearched } from '../../reducers';
+import { getJobTiles, getJobPostings, getPagination, getTotalJobPostings, getJobSearchErrors, getHasSearched } from '../../reducers';
 import { JobTitle } from '../../models/JobTitle';
 import { Observable, of } from 'rxjs';
 import { JobPosting } from '../../models/JobPosting';
@@ -29,7 +29,7 @@ export class JobSearchPageComponent implements OnInit {
   errors$: Observable<string[]>;
   hasSearched$: Observable<boolean>;
 
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>) {}
 
   ngOnInit() {
     this.jobTitles$ = this.store.pipe(
@@ -43,12 +43,15 @@ export class JobSearchPageComponent implements OnInit {
       select(getTotalJobPostings)
     );
     this.errors$ = this.store.pipe(
-      select(getErrors)
+      select(getJobSearchErrors)
     )
     this.hasSearched$ = this.store.select(getHasSearched);
   }
 
-  private lastQuery: JobSearchQuery;
+  private lastQuery: JobSearchQuery = {
+    query: '',
+    jobTitles: []
+  };
   onSearch(event: JobSearchQuery) {
     this.lastQuery = event;
     this.store.dispatch(new Search({query: event.query, jobTitles: event.jobTitles}));

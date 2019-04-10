@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap, map } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
-import { getJobPostingById } from '../../reducers';
+import { getJobPostingById, getJobApplicationErrors } from '../../reducers';
 import { Observable } from 'rxjs';
 import { JobPosting } from '../../models/JobPosting';
 import { getSignedInUser } from 'src/app/auth/reducers';
+import { JobApplication } from '../../models/JobApplication';
+import { SubmitJobApplication, ResetJobApplication } from '../../actions/job-application.actions';
 
 @Component({
   selector: 'app-job-application-page',
@@ -15,25 +17,27 @@ import { getSignedInUser } from 'src/app/auth/reducers';
     class: 'flex-grow-1'
   }
 })
-export class JobApplicationPageComponent implements OnInit {
+export class JobApplicationPageComponent implements OnInit, OnDestroy {
   jobPosting$: Observable<JobPosting>;
-  personId$: Observable<string>;
+  errors$: Observable<string[]>;
+  postingId: string;
 
   constructor(private route: ActivatedRoute, private store: Store<any>) { }
 
   ngOnInit() {
-    this.jobPosting$ = this.route.paramMap.pipe(
-      switchMap(params => params.get('id')),
-      switchMap(id => this.store.select(getJobPostingById(id)))
-    );
-    this.personId$ = this.store.pipe(
-      select(getSignedInUser),
-      map(person => person.id)
-    );
+    this.postingId = this.route.snapshot.paramMap.get('id');
+    this.jobPosting$ = this.store.select(getJobPostingById(this.postingId));
+    this.errors$ = this.store.pipe(
+      select(getJobApplicationErrors)
+    )
   }
 
-  onSubmit() {
-    
+  ngOnDestroy() {
+    this.store.dispatch(new ResetJobApplication());
+  }
+
+  onSubmit(application: JobApplication) {
+    this.store.dispatch(new SubmitJobApplication({application: application}));
   }
 
 }

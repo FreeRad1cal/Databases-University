@@ -14,7 +14,7 @@ import { Roles } from 'src/app/auth/known-claims/roles';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   host: {
-    class: 'd-flex flex-grow-1 justify-content-left'
+    class: 'flex-grow-1'
   }
 })
 export class HomeComponent implements OnInit {
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
         {label: `${user.firstName} ${user.lastName}`, disabled: true},
         {label: 'Employment', items: [
           {label: 'Search Jobs', routerLink: ['/personnel/job-search']},
-          {label: 'My Applications'}
+          {label: 'My Applications', routerLink: ['/personnel/job-search/my-job-applications']}
         ] },
         {label: 'Academics', items: [
           {label: 'Apply to DBU', routerLink: ['academics', 'apply']},

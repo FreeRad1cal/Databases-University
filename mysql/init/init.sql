@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS JobApplications (
 	JobPostingId INT NOT NULL,
 	ApplicantId INT NOT NULL,
 	Time DATE NOT NULL,
-	Resume TEXT NOT NULL,
+	ResumeFileName VARCHAR(255) NOT NULL,
 	PRIMARY KEY (Id),
 	FOREIGN KEY (JobPostingId)
 		REFERENCES JobPostings (Id)

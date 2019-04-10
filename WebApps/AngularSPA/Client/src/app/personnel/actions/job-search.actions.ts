@@ -8,7 +8,8 @@ export enum PersonnelJobSearchActionTypes {
     Search = "[PersonnelJobSearch] Search",
     SearchCompleted = "[PersonnelJobSearch] SeachCompleted",
     SearchFailed = "[PersonnelJobSearch] SearchFailed",
-    ResetJobSearch = "[PersonnelJobSearch] ResetJobSearch"
+    ResetJobSearch = "[PersonnelJobSearch] ResetJobSearch",
+    LoadJobPostingById = "[PersonnelJobSearch] LoadJobPostingById"
 }
 
 export class SetPagination implements Action {
@@ -26,7 +27,7 @@ export class Search implements Action {
 export class SearchCompleted implements Action {
     readonly type = PersonnelJobSearchActionTypes.SearchCompleted;
     
-    constructor(public payload: {postings: JobPosting[], totalPostings: number}) {}
+    constructor(public payload: {postings: JobPosting[], totalPostings?: number}) {}
 }
 
 export class SearchFailed implements Action {
@@ -39,9 +40,16 @@ export class ResetJobSearch implements Action {
     readonly type = PersonnelJobSearchActionTypes.ResetJobSearch;
 }
 
+export class LoadJobPostingById implements Action {
+    readonly type = PersonnelJobSearchActionTypes.LoadJobPostingById;
+
+    constructor(public payload: {id: string}) {}
+}
+
 export type PersonnelJobSearchActionsUnion = 
     SetPagination
     | Search
     | SearchCompleted
     | SearchFailed
-    | ResetJobSearch;
+    | ResetJobSearch
+    | LoadJobPostingById;

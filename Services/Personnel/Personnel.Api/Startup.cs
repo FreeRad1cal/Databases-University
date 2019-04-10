@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using AutoMapper;
@@ -21,14 +22,17 @@ using Personnel.Api.Infrastructure.Services;
 using Personnel.Infrastructure.Repositories;
 using Helpers.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Personnel.Api.Application.Queries;
 using Personnel.Api.Infrastructure.Filters;
+using Personnel.Domain.AggregateModel.JobApplicationAggregate;
 using Personnel.Domain.AggregateModel.JobPostingAggregate;
 using Personnel.Domain.AggregateModel.PersonAggregate;
 using Personnel.Infrastructure;
+using Personnel.Infrastructure.Services;
 using SecureChat.Common.Events.EventBus;
 using SecureChat.Common.Events.EventBus.Abstractions;
 using SecureChat.Common.Events.EventBusRabbitMQ;
@@ -75,6 +79,7 @@ namespace Personnel.Api
             services.AddMediatR(typeof(Startup).Assembly);
 
             services.AddScoped<IDbConnectionFactory, MySqlConnectionFactory>();
+            services.AddTransient<IResumePersisterService, ResumePersisterService>();
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IIdentityService, IdentityService>();
@@ -85,6 +90,8 @@ namespace Personnel.Api
             services.AddScoped<IJobPostingRepository, JobPostingRepository>();
             services.AddTransient<IEmploymentQueries, EmploymentQueries>();
 
+            services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+
             services.AddScoped<DatabaseSeed>();
 
             services.AddAutoMapper(cfg =>
@@ -94,6 +101,7 @@ namespace Personnel.Api
                 cfg.CreateMap<Person, PersonDto>();
                 cfg.CreateMap<JobPosting, JobPostingDto>();
                 cfg.CreateMap<JobTitle, JobTitleDto>();
+                cfg.CreateMap<JobApplication, JobApplicationDto>();
             });
 
             services.AddEventBus(Configuration);

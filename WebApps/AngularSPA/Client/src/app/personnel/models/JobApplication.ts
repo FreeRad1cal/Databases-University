@@ -1,6 +1,6 @@
 export interface JobApplication {
+    id?: string;
     jobPostingId: string;
-    applicantId: string;
-    time: Date,
-    resume: File
+    resume?: File;
+    time?: Date;
 }

@@ -10,11 +10,19 @@ namespace Personnel.Api.Application.Queries
 {
     public interface IEmploymentQueries
     {
-        Task<ArrayResponse<JobPostingDto>> GetJobPostings(Pagination pagination, string query = null,
+        Task<ArrayResponse<JobPostingDto>> GetJobPostingsAsync(Pagination pagination, string query = null,
             IEnumerable<string> jobTitleNames = null);
 
-        Task<JobPostingDto> GetJobPostinById(int id);
+        Task<JobPostingDto> GetJobPostingByIdAsync(int id);
 
-        Task<IEnumerable<JobTitleDto>> GetJobTitles();
+        Task<IEnumerable<JobApplicationDto>> GetJobApplicationsByApplicantIdAsync(int applicantId);
+
+        Task<ArrayResponse<JobApplicationDto>> GetJobApplications(int? applicantId, int? jobPostingId);
+
+        Task<IEnumerable<JobTitleDto>> GetJobTitlesAsync();
+
+        Task<JobTitleDto> GetJobTitleByNameAsync(string name);
+
+        Task<byte[]> GetResumeByApplicationId(int id);
     }
 }

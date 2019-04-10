@@ -14,7 +14,7 @@ export class JobApplicationFormComponent implements OnInit {
   @Input()
   jobPosting: JobPosting;
   @Output()
-  submit = new EventEmitter<File>();
+  submit = new EventEmitter<JobApplication>();
 
   uploadedFiles: File[] = [];
 
@@ -32,7 +32,10 @@ export class JobApplicationFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submit.emit(this.uploadedFiles[0]);
+    this.submit.emit({
+      jobPostingId: this.jobPosting.id,
+      resume: this.uploadedFiles[0]
+    });
   }
 
 }

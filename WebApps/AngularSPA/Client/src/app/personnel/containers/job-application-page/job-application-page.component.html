@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
   <div class="row">
     <div class="col">
       <table class="table">
@@ -20,6 +20,9 @@
     </div>
   </div>
   <div class="row">
-    <app-job-application-form [jobPosting]="jobPosting$ | async" (submit)="onSubmit($event)" class="w-100"></app-job-application-form>
+    <app-job-application-form [jobPosting]="jobPosting$ | async" (submit)="onSubmit($event)" class="col-12"></app-job-application-form>
+  </div>
+  <div class="row alert alert-danger" *ngFor="let error of errors$ | async">
+    <span class="col">{{error}}</span>
   </div>
 </div>

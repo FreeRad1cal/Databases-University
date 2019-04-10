@@ -10,6 +10,8 @@ services:
         EventBusPassword: ${EVENT_BUS_PASSWORD}
         Secret: ${SHARED_SECRET}
         AngularSpa: http://localhost:5002
+    volumes:
+      - ./Services/Personnel/Resumes:/app/resumes
   
   registrar.api:
     environment:

@@ -1,4 +1,5 @@
 import * as fromJobSearch from './job-search.reducer';
+import * as fromJobApplication from './job-application.reducer';
 import * as fromPersonnelRoot from './personnel.reducer';
 import * as fromRoot from '../../reducers';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
@@ -6,6 +7,7 @@ import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/s
 export interface PersonnelState {
     root: fromPersonnelRoot.State;
     jobSearch: fromJobSearch.State;
+    jobApplication: fromJobApplication.State;
 }
 
 export interface State extends fromRoot.State {
@@ -14,7 +16,8 @@ export interface State extends fromRoot.State {
 
 export const reducers: ActionReducerMap<PersonnelState> = {
     root: fromPersonnelRoot.reducer,
-    jobSearch: fromJobSearch.reducer
+    jobSearch: fromJobSearch.reducer,
+    jobApplication: fromJobApplication.reducer
 }
 
 export const selectPersonnelState = createFeatureSelector<PersonnelState>('personnel');
@@ -49,7 +52,7 @@ export const getJobPostingById = (id: string) => createSelector(
     fromJobSearch.selectJobPostingById(id)
 )
 
-export const getErrors = createSelector(
+export const getJobSearchErrors = createSelector(
     selectJobSearch,
     fromJobSearch.selectErrors
 )
@@ -62,4 +65,19 @@ export const getTotalJobPostings = createSelector(
 export const getHasSearched = createSelector(
     selectJobSearch,
     fromJobSearch.selectHasSearched
+)
+
+export const selectJobApplication = createSelector(
+    selectPersonnelState,
+    (state: PersonnelState) => state.jobApplication
+)
+
+export const getJobApplicationErrors = createSelector(
+    selectJobApplication,
+    fromJobApplication.selectErrors
+)
+
+export const getJobApplications = createSelector(
+    selectJobApplication,
+    fromJobApplication.selectJobApplications
 )

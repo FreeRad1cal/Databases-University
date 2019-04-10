@@ -49,9 +49,11 @@ namespace Personnel.Infrastructure.Repositories
                 var address = kvp.Key;
                 var type = kvp.Value;
                 var addressSql = $@"INSERT INTO Addresses (Street, City, State, Country, Zipcode)
-                            VALUES (@{nameof(address.Street)}, @{nameof(address.City)}, @{nameof(address.State)}, @{nameof(address.Country)}, @{nameof(address.ZipCode)} )
-                            ON DUPLICATE KEY UPDATE Id = LAST_INSERT_ID(Id);
-                            SELECT LAST_INSERT_ID()";
+                                SELECT @{nameof(address.Street)}, @{nameof(address.City)}, @{nameof(address.State)}, @{nameof(address.Country)}, @{nameof(address.ZipCode)}
+                                FROM DUAL
+                                WHERE NOT EXISTS (SELECT * FROM Addresses a WHERE a.Street=@{nameof(address.Street)} AND a.City=@{nameof(address.City)} AND a.State=@{nameof(address.State)} AND a.Country=@{nameof(address.Country)} AND a.ZipCode=@{nameof(address.ZipCode)}) 
+                                LIMIT 1;
+                                SELECT Id from Addresses a WHERE a.Street=@{nameof(address.Street)} AND a.City=@{nameof(address.City)} AND a.State=@{nameof(address.State)} AND a.Country=@{nameof(address.Country)} AND a.ZipCode=@{nameof(address.ZipCode)}";
                 AddOperation(address,
                     async connection =>
                     {
