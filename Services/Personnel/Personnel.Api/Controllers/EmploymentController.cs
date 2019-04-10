@@ -35,7 +35,7 @@ namespace Personnel.Api.Controllers
         }
 
         [HttpGet("job-postings/{id}", Name = nameof(GetJobPostingById))]
-        public async Task<ActionResult> GetJobPostingById([Required, FromRoute] int id)
+        public async Task<ActionResult> GetJobPostingById([FromRoute] int id)
         {
             var jobPosting = await _employmentQueries.GetJobPostingByIdAsync(id);
             if (jobPosting == null)
@@ -85,16 +85,23 @@ namespace Personnel.Api.Controllers
         }
 
         [HttpGet("job-applications/{id}", Name = nameof(GetJobApplicationById))]
-        public async Task<ActionResult> GetJobApplicationById([Required, FromRoute] int id)
+        public async Task<ActionResult> GetJobApplicationById([FromRoute] int id)
         {
             throw new NotImplementedException();
         }
 
         [HttpGet("resumes/{id}")]
-        public async Task<ActionResult> GetResumeByApplicationid([Required, FromRoute] int id)
+        public async Task<ActionResult> GetResumeByApplicationid([FromRoute] int id)
         {
             var resume = await _employmentQueries.GetResumeByApplicationId(id);
             return File(resume, "application/pdf");
+        }
+
+        [HttpDelete("job-applications/{id}")]
+        public async Task<ActionResult> DeleteJobApplicationById([FromRoute] int id)
+        {
+            await _mediator.Publish(new DeleteJobApplicationCommand(id));
+            return NoContent();
         }
     }
 }

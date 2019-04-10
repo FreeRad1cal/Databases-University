@@ -81,3 +81,8 @@ export const getJobApplications = createSelector(
     selectJobApplication,
     fromJobApplication.selectJobApplications
 )
+
+export const getLastJobApplicationAction = createSelector(
+    selectJobApplication,
+    fromJobApplication.getLastApplicationAction
+)

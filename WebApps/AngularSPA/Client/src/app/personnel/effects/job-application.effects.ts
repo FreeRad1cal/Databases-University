@@ -9,7 +9,7 @@ import { Search, PersonnelJobSearchActionTypes, SearchCompleted, SearchFailed, R
 import { getPagination } from '../reducers';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ROUTER_NAVIGATION, RouterNavigationAction, ROUTER_REQUEST, RouterRequestAction } from '@ngrx/router-store';
-import { SubmitJobApplication, PersonnelApplicationActionTypes, ApplicationSubmissionSuccess, ApplicationSubmissionFailure, LoadMyJobApplications, JobApplicationsLoaded, OpenResume } from '../actions/job-application.actions';
+import { SubmitJobApplication, PersonnelApplicationActionTypes, ApplicationSubmissionSuccess, ApplicationSubmissionFailure, LoadMyJobApplications, JobApplicationsLoaded, OpenResume, ActOnJobApplication, ApplicationActionSuccess } from '../actions/job-application.actions';
 import { PersonnelService } from '../services/personnel.service';
 import { getSignedInUser } from 'src/app/auth/reducers';
 
@@ -49,21 +49,37 @@ export class JobApplicationEffects {
         ))
     )
 
-    @Effect()
+    @Effect({dispatch: false})
     openResume$ = this.actions$.pipe(
         ofType<OpenResume>(PersonnelApplicationActionTypes.OpenResume),
-        tap(() => this.store.dispatch(new SetGlobalBusy({value: true}))),
         switchMap(action => this.personnelService.getResumeByApplicationId(action.payload.id).pipe(
-            mergeMap((blob: Blob) => {
+            tap((blob: Blob) => {
                 const fileURL = URL.createObjectURL(blob);
                 window.open(fileURL, '_blank');
-                return of(new SetGlobalBusy({value: false}))
             }),
             catchError((res: HttpErrorResponse) => {
                 this.router.navigate(['/error']);
-                return of(new SetGlobalBusy({value: false}));
+                return of();
             })
         ))
+    )
+
+    @Effect()
+    actOnJobApplication$ = this.actions$.pipe(
+        ofType<ActOnJobApplication>(PersonnelApplicationActionTypes.ActOnJobApplication),
+        tap(() => this.store.dispatch(new SetGlobalBusy({value: true}))),
+        switchMap(action => {
+            switch(action.payload.jobApplicationAction.action) {
+                case 'withdraw':
+                    return this.personnelService.deleteJobApplicationById(action.payload.jobApplicationAction.id).pipe(
+                        mergeMap(res => [new ApplicationActionSuccess({jobApplicationAction: action.payload.jobApplicationAction}), new SetGlobalBusy({value: false})]),
+                        catchError((res: HttpErrorResponse) => {
+                            this.router.navigate(['/error']);
+                            return of(new SetGlobalBusy({value: false}));
+                        })
+                    )
+            }
+        })
     )
 
     constructor(

@@ -10,8 +10,10 @@ namespace Personnel.Domain.AggregateModel.JobApplicationAggregate
     {
         JobApplication Add(JobApplication jobApplication);
 
-        void Update(JobApplication jobPosting);
+        void Update(JobApplication jobApplication);
 
-        Task<JobApplication> GetAsync(int jobApplicationId);
+        Task<JobApplication> GetAsync(int id);
+
+        void Delete(JobApplication jobApplication);
     }
 }

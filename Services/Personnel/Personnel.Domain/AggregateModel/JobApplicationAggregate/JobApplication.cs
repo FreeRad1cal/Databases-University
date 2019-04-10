@@ -11,27 +11,36 @@ namespace Personnel.Domain.AggregateModel.JobApplicationAggregate
 {
     public class JobApplication : Entity, IAggregateRoot
     {
-        public byte[] Resume { get; }
+        public byte[] Resume { get; private set; }
 
-        public int JobPostingId { get; }
+        public string ResumeFileName { get; private set; }
 
-        public int ApplicantId { get; }
+        public int JobPostingId { get; private set; }
 
-        public DateTime Time { get; } = DateTime.Now;
+        public int ApplicantId { get; private set; }
 
-        public JobApplication(int jobPostingId, int applicantId, byte[] resume)
+        public DateTime Time { get; private set; }
+
+        public static JobApplication Create(int jobPostingId, int applicantId, byte[] resume)
         {
-            JobPostingId = jobPostingId;
-            ApplicantId = applicantId;
-            Resume = resume;
-
             if (resume.Length > 16777215)
             {
                 throw new PersonnelDomainException("Could not create job application",
-                    new[] {"The resume file is too large"});
+                    new[] { "The resume file is too large" });
             }
 
-            AddDomainEvent(new JobApplicationSubmittedDomainEvent(this));
+            var jobApplication = new JobApplication(jobPostingId, applicantId, DateTime.Now, resume);
+            jobApplication.AddDomainEvent(new JobApplicationSubmittedDomainEvent(jobApplication));
+            return jobApplication;
+        }
+
+        public JobApplication(int jobPostingId, int applicantId, DateTime time, byte[] resume = null, string resumeFileName = null)
+        {
+            JobPostingId = jobPostingId;
+            ApplicantId = applicantId;
+            Time = time;
+            Resume = resume;
+            ResumeFileName = resumeFileName;
         }
     }
 }

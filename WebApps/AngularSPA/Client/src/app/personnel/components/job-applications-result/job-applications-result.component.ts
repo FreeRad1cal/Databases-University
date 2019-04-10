@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { JobApplication } from '../../models/JobApplication';
 import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/components/common/selectitem';
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 
 export type JobApplicationAction = 'withdraw' | 'hire' | 'reject';
 export type JobApplicationActionDescriptor = {
@@ -30,11 +31,11 @@ export class JobApplicationsResultComponent implements OnInit {
     label: string;
   }[];
 
-  constructor(private router: Router) { }
+  constructor() { }
 
   ngOnInit() {
     this.actions = [
-      {label: 'Widthdraw', action: 'withdraw'}
+      {label: 'Withdraw', action: 'withdraw'}
     ];
     if (this.canHire) {
       this.actions.concat([

@@ -3,6 +3,7 @@ import { JobTitle } from '../models/JobTitle';
 import { JobPosting } from '../models/JobPosting';
 import { Pagination } from '../models/Pagination';
 import { JobApplication } from '../models/JobApplication';
+import { JobApplicationActionDescriptor } from '../components/job-applications-result/job-applications-result.component';
 
 export enum PersonnelApplicationActionTypes {
     SubmitJobApplication = "[PersonnelJobApplication] SubmitJobApplication",
@@ -12,6 +13,8 @@ export enum PersonnelApplicationActionTypes {
     LoadMyJobApplications = "[PersonnelJobApplication] LoadMyJobApplications",
     JobApplicationsLoaded = "[PersonnelJobApplication] JobApplicationsLoaded",
     OpenResume = "[PersonnelJobApplication] OpenApplication",
+    ActOnJobApplication = "[PersonnelJobApplication] ActOnJobApplication",
+    ApplicationActionSuccess = "[PersonnelJobApplication] ApplicationActionSuccess"
 }
 
 export class SubmitJobApplication implements Action {
@@ -52,6 +55,18 @@ export class OpenResume implements Action {
     constructor(public payload: {id: string}) {}
 }
 
+export class ActOnJobApplication implements Action {
+    readonly type = PersonnelApplicationActionTypes.ActOnJobApplication;
+
+    constructor(public payload: {jobApplicationAction: JobApplicationActionDescriptor}) {}
+}
+
+export class ApplicationActionSuccess implements Action {
+    readonly type = PersonnelApplicationActionTypes.ApplicationActionSuccess;
+
+    constructor(public payload: {jobApplicationAction: JobApplicationActionDescriptor}) {}
+}
+
 export type PersonnelApplicationActionsUnion = 
     SubmitJobApplication
     | ApplicationSubmissionSuccess
@@ -59,4 +74,6 @@ export type PersonnelApplicationActionsUnion =
     | ResetJobApplication
     | LoadMyJobApplications
     | JobApplicationsLoaded
-    | OpenResume;
+    | OpenResume
+    | ActOnJobApplication
+    | ApplicationActionSuccess;

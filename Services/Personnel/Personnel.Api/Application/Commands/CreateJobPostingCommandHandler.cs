@@ -35,11 +35,18 @@ namespace Personnel.Api.Application.Commands
         {
             var jobPosting = new JobPosting(new JobTitle(request.JobTitle), request.Description);
 
-            _logger.LogInformation("----- Creating Job Posting - JobPosting: {@JobPosting}", jobPosting);
-
             var result = _jobPostingRepository.Add(jobPosting);
             await _jobPostingRepository.SaveChangesAsync();
-            
+
+            if (!jobPosting.IsTransient())
+            {
+                _logger.LogInformation("----- Created Job Posting - JobPosting: {@JobPosting}", jobPosting);
+            }
+            else
+            {
+                _logger.LogError("----- Could not create job posting - JobPosting: {@JobPosting}", jobPosting);
+            }
+
             return _mapper.Map<JobPostingDto>(result);
         }
     }

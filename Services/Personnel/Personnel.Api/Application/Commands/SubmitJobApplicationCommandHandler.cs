@@ -58,7 +58,8 @@ namespace Personnel.Api.Application.Commands
 
             var memoryStream = new MemoryStream();
             await request.Resume.CopyToAsync(memoryStream, cancellationToken);
-;           var jobApplication = new JobApplication(request.JobPostingId, myId, memoryStream.ToArray());
+;
+            var jobApplication = JobApplication.Create(request.JobPostingId, myId, memoryStream.ToArray());
             var result = _jobApplicationRepository.Add(jobApplication);
             await _jobApplicationRepository.SaveChangesAsync();
 

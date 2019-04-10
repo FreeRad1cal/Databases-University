@@ -33,7 +33,7 @@ const primengModules = [
   PaginatorModule,
   MultiSelectModule,
   FileUploadModule,
-  VirtualScrollerModule
+  VirtualScrollerModule,
 ];
 
 @NgModule({
