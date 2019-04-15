@@ -8,7 +8,7 @@ namespace Personnel.Domain.AggregateModel.JobApplicationAggregate
 {
     public interface IJobApplicationRepository : IRepository<JobApplication>
     {
-        JobApplication Add(JobApplication jobApplication);
+        JobApplication Add(JobApplication jobApplication, byte[] resume);
 
         void Update(JobApplication jobApplication);
 

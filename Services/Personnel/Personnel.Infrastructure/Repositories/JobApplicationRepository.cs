@@ -23,7 +23,7 @@ namespace Personnel.Infrastructure.Repositories
             _resumePersisterService = resumePersisterService;
         }
 
-        public JobApplication Add(JobApplication jobApplication)
+        public JobApplication Add(JobApplication jobApplication, byte[] resume)
         {
             var sql = $@"INSERT INTO JobApplications (JobPostingId, ApplicantId, Time, ResumeFileName)
                         VALUES (@JobPostingId, @ApplicantId, @Time, @ResumeFileName);
@@ -40,7 +40,7 @@ namespace Personnel.Infrastructure.Repositories
                     ResumeFileName = resumeFilename
                 });
                 jobApplication.Id = id;
-                await _resumePersisterService.SaveResumeAsync(jobApplication.Resume, resumeFilename);
+                await _resumePersisterService.SaveResumeAsync(resume, resumeFilename);
             });
 
             return jobApplication;
@@ -58,11 +58,7 @@ namespace Personnel.Infrastructure.Repositories
 
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
-                var result = await conn.QueryFirstAsync(sql, new {id});
-                var jobApplication = new JobApplication(result.JobPostingId, result.ApplicantId, result.Time,
-                    await _resumePersisterService.GetResumeAsync(result.ResumeFileName), result.ResumeFileName);
-                jobApplication.Id = result.Id;
-                return jobApplication;
+                return await conn.QueryFirstAsync<JobApplication>(sql, new {id});
             }
         }
 

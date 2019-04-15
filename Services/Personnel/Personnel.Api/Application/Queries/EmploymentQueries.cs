@@ -43,7 +43,11 @@ namespace Personnel.Api.Application.Queries
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
                 var result = await conn.QueryAsync<JobPostingDto, JobTitleDto, JobPostingDto>(sql,
-                    (posting, jobTitle) => posting,
+                    (posting, jobTitle) =>
+                    {
+                        posting.JobTitle = jobTitle;
+                        return posting;
+                    },
                     new
                     {
                         Limit = pagination.Limit,
@@ -65,27 +69,32 @@ namespace Personnel.Api.Application.Queries
 
         public async Task<JobPostingDto> GetJobPostingByIdAsync(int id)
         {
-            var sql = $@"SELECT * FROM JobPostings WHERE JobPostings.Id = @{nameof(id)}";
+            var sql = $@"SELECT * FROM JobPostings
+                        JOIN JobTitles ON JobPostings.JobTitleName = JobTitles.Name
+                        WHERE JobPostings.Id = @{nameof(id)}";
 
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
-                return await conn.QueryFirstOrDefaultAsync<JobPostingDto>(sql, new { id });
+                var result = await conn.QueryAsync<JobPostingDto, JobTitleDto, JobPostingDto>(sql, (posting, jobTitle) =>
+                {
+                    posting.JobTitle = jobTitle;
+                    return posting;
+                },
+                new { id },
+                splitOn: "Name");
+
+                return result.FirstOrDefault();
             }
         }
 
         public async Task<IEnumerable<JobApplicationDto>> GetJobApplicationsByApplicantIdAsync(int applicantId)
         {
-            var sql = $@"SELECT * FROM JobApplications WHERE JobApplications.ApplicantId = @{nameof(applicantId)}";
-
-            using (var conn = await _dbConnectionFactory.GetConnectionAsync())
-            {
-                return await conn.QueryAsync<JobApplicationDto>(sql, new { applicantId });
-            }
+            return (await GetJobApplications(applicantId, null)).Items;
         }
 
         public async Task<ArrayResponse<JobApplicationDto>> GetJobApplications(int? applicantId, int? jobPostingId)
         {
-            var applicantIdFilter = applicantId is null
+            var applicantFilter = applicantId is null
                 ? @"TRUE"
                 : $@"JobApplications.ApplicantId = @{nameof(applicantId)}";
 
@@ -94,11 +103,21 @@ namespace Personnel.Api.Application.Queries
                 : $@"JobApplications.JobPostingId = @{nameof(jobPostingId)}";
 
             var sql = $@"SELECT * FROM JobApplications
-                        WHERE {applicantIdFilter} AND {jobTitleFilter}";
+                        JOIN People ON JobApplications.ApplicantId = People.Id
+                        JOIN JobPostings ON JobApplications.JobPostingId = JobPostings.Id
+                        JOIN JobTitles ON JobPostings.JobTitleName = JobTitles.Name
+                        WHERE {applicantFilter} AND {jobTitleFilter}";
 
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
-                var result = await conn.QueryAsync<JobApplicationDto>(sql, new { applicantId, jobPostingId });
+                var result = await conn.QueryAsync(sql,
+                    (JobApplicationDto jobApplication, JobPostingDto jobPosting, JobTitleDto jobTitle) =>
+                    {
+                        jobPosting.JobTitle = jobTitle;
+                        jobApplication.JobPosting = jobPosting;
+                        return jobApplication;
+                    },
+                    new { applicantId, jobPostingId });
                 var total = await conn.QueryFirstOrDefaultAsync<int>(@"SELECT COUNT(*) AS total FROM JobApplications");
 
                 return new ArrayResponse<JobApplicationDto>()

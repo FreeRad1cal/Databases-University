@@ -60,7 +60,7 @@ namespace Personnel.Api
             {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            }); ;
+            });
 
             services.AddCors(options =>
             {

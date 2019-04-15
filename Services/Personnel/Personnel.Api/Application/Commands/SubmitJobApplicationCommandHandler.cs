@@ -50,7 +50,7 @@ namespace Personnel.Api.Application.Commands
             var myId = _identityService.GetUserIdentity();
 
             var hasApplied = (await _employmentQueries.GetJobApplicationsByApplicantIdAsync(myId))
-                .Any(app => app.JobPostingId == request.JobPostingId);
+                .Any(app => app.JobPosting.Id == request.JobPostingId);
             if (hasApplied)
             {
                 throw new PersonnelDomainException(ErrorTypes.JobApplicationError, new[] { "You have already applied for this position" });
@@ -59,8 +59,8 @@ namespace Personnel.Api.Application.Commands
             var memoryStream = new MemoryStream();
             await request.Resume.CopyToAsync(memoryStream, cancellationToken);
 ;
-            var jobApplication = JobApplication.Create(request.JobPostingId, myId, memoryStream.ToArray());
-            var result = _jobApplicationRepository.Add(jobApplication);
+            var jobApplication = new JobApplication(request.JobPostingId, myId);
+            var result = _jobApplicationRepository.Add(jobApplication, memoryStream.ToArray());
             await _jobApplicationRepository.SaveChangesAsync();
 
             return _mapper.Map<JobApplicationDto>(result);

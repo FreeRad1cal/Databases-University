@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Personnel.Domain.AggregateModel.JobPostingAggregate;
 
 namespace Personnel.Api.Dtos
 {
@@ -10,7 +11,7 @@ namespace Personnel.Api.Dtos
     {
         public int Id { get; set; }
 
-        public string JobTitleName { get; set; }
+        public JobTitleDto JobTitle { get; set; }
 
         public string Description { get; set; }
 
