@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { JobPosting } from '../../models/JobPosting';
 import { getSignedInUser } from 'src/app/auth/reducers';
 import { JobApplication } from '../../models/JobApplication';
-import { SubmitJobApplication, ResetJobApplication } from '../../actions/job-application.actions';
+import { SubmitJobApplication } from '../../actions/job-application.actions';
 
 @Component({
   selector: 'app-job-application-page',
@@ -17,7 +17,7 @@ import { SubmitJobApplication, ResetJobApplication } from '../../actions/job-app
     class: 'flex-grow-1'
   }
 })
-export class JobApplicationPageComponent implements OnInit, OnDestroy {
+export class JobApplicationPageComponent implements OnInit {
   jobPosting$: Observable<JobPosting>;
   errors$: Observable<string[]>;
   postingId: string;
@@ -32,12 +32,8 @@ export class JobApplicationPageComponent implements OnInit, OnDestroy {
     )
   }
 
-  ngOnDestroy() {
-    this.store.dispatch(new ResetJobApplication());
-  }
-
-  onSubmit(application: JobApplication) {
-    this.store.dispatch(new SubmitJobApplication({application: application}));
+  onSubmit(jobPostingId: string, resume: File) {
+    this.store.dispatch(new SubmitJobApplication({jobPostingId, resume}));
   }
 
 }

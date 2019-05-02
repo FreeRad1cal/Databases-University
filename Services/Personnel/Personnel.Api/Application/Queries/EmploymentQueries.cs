@@ -87,9 +87,9 @@ namespace Personnel.Api.Application.Queries
             }
         }
 
-        public async Task<IEnumerable<JobApplicationDto>> GetJobApplicationsByApplicantIdAsync(int applicantId)
+        public async Task<ArrayResponse<JobApplicationDto>> GetJobApplicationsByApplicantIdAsync(int applicantId)
         {
-            return (await GetJobApplications(applicantId, null)).Items;
+            return await GetJobApplications(applicantId, null);
         }
 
         public async Task<ArrayResponse<JobApplicationDto>> GetJobApplications(int? applicantId, int? jobPostingId)
@@ -103,7 +103,6 @@ namespace Personnel.Api.Application.Queries
                 : $@"JobApplications.JobPostingId = @{nameof(jobPostingId)}";
 
             var sql = $@"SELECT * FROM JobApplications
-                        JOIN People ON JobApplications.ApplicantId = People.Id
                         JOIN JobPostings ON JobApplications.JobPostingId = JobPostings.Id
                         JOIN JobTitles ON JobPostings.JobTitleName = JobTitles.Name
                         WHERE {applicantFilter} AND {jobTitleFilter}";
@@ -117,7 +116,8 @@ namespace Personnel.Api.Application.Queries
                         jobApplication.JobPosting = jobPosting;
                         return jobApplication;
                     },
-                    new { applicantId, jobPostingId });
+                    new { applicantId, jobPostingId },
+                    splitOn:"Id,Id,Name");
                 var total = await conn.QueryFirstOrDefaultAsync<int>(@"SELECT COUNT(*) AS total FROM JobApplications");
 
                 return new ArrayResponse<JobApplicationDto>()
@@ -128,13 +128,20 @@ namespace Personnel.Api.Application.Queries
             }
         }
 
-        public async Task<IEnumerable<JobTitleDto>> GetJobTitlesAsync()
+        public async Task<ArrayResponse<JobTitleDto>> GetJobTitlesAsync()
         {
             var sql = $@"SELECT * FROM JobTitles";
 
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
-                return await conn.QueryAsync<JobTitleDto>(sql);
+                var result = await conn.QueryAsync<JobTitleDto>(sql);
+                var total = await conn.QueryFirstOrDefaultAsync<int>(@"SELECT COUNT(*) AS total FROM JobTitles");
+
+                return new ArrayResponse<JobTitleDto>()
+                {
+                    Total = total,
+                    Items = result
+                };
             }
         }
 

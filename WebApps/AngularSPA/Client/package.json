@@ -34,6 +34,7 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
     "ngrx-store-freeze": "^0.2.4",
+    "normalizr": "^3.3.0",
     "npm": "^6.5.0",
     "primeflex": "^1.0.0-rc.1",
     "primeicons": "^1.0.0",

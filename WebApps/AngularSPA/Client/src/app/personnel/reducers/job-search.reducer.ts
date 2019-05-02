@@ -1,53 +1,46 @@
 import { JobPosting } from '../models/JobPosting';
-import { PersonnelJobSearchActionsUnion, PersonnelJobSearchActionTypes, ResetJobSearch } from '../actions/job-search.actions';
+import { PersonnelJobSearchActionsUnion, PersonnelJobSearchActionTypes } from '../actions/job-search.actions';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { JobSearchQuery } from '../models/JobSearchQuery';
 
-export interface State extends EntityState<JobPosting> {
+export interface State {
     page: number;
     limit: number;
     offset: number;
     errors: string[];
-    totalJobPostings: number;
-    hasSearched: boolean;
+    lastQuery: JobSearchQuery;
 }
 
-export const adapter: EntityAdapter<JobPosting> = createEntityAdapter<JobPosting>();
-
-export const initialState: State = adapter.getInitialState({
+export const initialState = {
     page: 0,
     limit: 25,
     offset: 0,
     errors: [],
-    totalJobPostings: 0,
-    hasSearched: false
-});
+    lastQuery: null
+};
 
 export function reducer(state = initialState, action: PersonnelJobSearchActionsUnion): State {
     switch (action.type) {
-        case PersonnelJobSearchActionTypes.SetPagination:
+        case PersonnelJobSearchActionTypes.Paginate:
             return {
                 ...state,
                 limit: action.payload.pagination.limit,
                 offset: action.payload.pagination.offset
             }
-        case PersonnelJobSearchActionTypes.SearchCompleted:{
-            let newState = adapter.upsertMany(action.payload.postings, state);
-            newState.totalJobPostings = action.payload.totalPostings ? action.payload.totalPostings : state.totalJobPostings;
-            return newState;
-        }
         case PersonnelJobSearchActionTypes.SearchFailed:
             return {
                 ...state,
                 errors: action.payload.errors
             }
-        case PersonnelJobSearchActionTypes.ResetJobSearch:
-            return {
-                ...initialState
-            }
         case PersonnelJobSearchActionTypes.Search:
             return {
                 ...state,
-                hasSearched: true
+                errors: [],
+                lastQuery: action.payload.query
+            }
+        case PersonnelJobSearchActionTypes.Reset:
+            return {
+                ...initialState
             }
         default: {
             return state;
@@ -55,14 +48,6 @@ export function reducer(state = initialState, action: PersonnelJobSearchActionsU
     }
 }
 
-const {
-    selectAll,
-    selectTotal
-  } = adapter.getSelectors();
-
 export const selectPagination = (state: State) => { return {page: state.page, limit: state.limit, offset: state.offset} };
-export const selectJobPostings = selectAll;
-export const selectJobPostingById = (id: string) => (state: State) => selectAll(state).filter(posting => posting.id == id)[0];
 export const selectErrors = (state: State) => state.errors;
-export const selectTotalJobPostings = (state: State) => state.totalJobPostings;
-export const selectHasSearched = (state: State) => state.hasSearched
+export const selectLastQuery = (state: State) => state.lastQuery;

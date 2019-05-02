@@ -12,7 +12,7 @@ namespace Personnel.Api.Dtos
 
         public JobPostingDto JobPosting { get; set; }
 
-        public PersonDto Person { get; set; }
+        public string ApplicantId { get; set; }
 
         public DateTime Time { get; set; }
     }

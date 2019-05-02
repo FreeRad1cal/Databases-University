@@ -9,11 +9,15 @@
             </tr>
             <tr>
               <th scope="row">Job Title</th>
-              <td>{{(jobPosting$ | async).jobTitleName}}</td>
+              <td>{{(jobPosting$ | async).jobTitle}}</td>
             </tr>
             <tr>
               <th scope="row">Posted Time</th>
               <td>{{(jobPosting$ | async).postedTime}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Description</th>
+              <td>{{(jobPosting$ | async).description}}</td>
             </tr>
           </tbody>
         </table>

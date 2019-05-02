@@ -1,1 +1,1 @@
-<div class="alert alert-danger">An error has occured</div>
+<div *ngFor="let error of errors$ | async" class="alert alert-danger">{{error}}</div>

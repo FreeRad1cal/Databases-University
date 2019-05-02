@@ -50,6 +50,7 @@ namespace Personnel.Api.Application.Commands
             var myId = _identityService.GetUserIdentity();
 
             var hasApplied = (await _employmentQueries.GetJobApplicationsByApplicantIdAsync(myId))
+                .Items
                 .Any(app => app.JobPosting.Id == request.JobPostingId);
             if (hasApplied)
             {

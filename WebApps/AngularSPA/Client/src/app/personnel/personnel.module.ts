@@ -8,7 +8,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './reducers';
 import { JobSearchEffects } from './effects/job-search.effects';
 import { PersonnelEffects } from './effects/personnel.effects';
-import { PersonnelService } from './services/personnel.service';
+import { JobSearchService } from './services/job-search.service';
 import { JobSearchFormComponent } from './components/job-search-form/job-search-form.component';
 import { JobSearchResultComponent } from './components/job-search-result/job-search-result.component';
 import { JobSearchPageComponent } from './containers/job-search-page/job-search-page.component';
@@ -19,11 +19,12 @@ import { JobApplicationEffects } from './effects/job-application.effects';
 import { JobApplicationConfirmationComponent } from './containers/job-application-confirmation/job-application-confirmation.component';
 import { MyJobApplicationsComponent } from './containers/my-job-applications/my-job-applications.component';
 import { JobApplicationsResultComponent } from './components/job-applications-result/job-applications-result.component';
+import { JobApplicationService } from './services/job-application.service';
 
 @NgModule({
   declarations: [JobSearchPageComponent, JobSearchFormComponent, JobSearchResultComponent, JobPostingComponent, JobApplicationPageComponent, JobApplicationFormComponent, JobApplicationConfirmationComponent, MyJobApplicationsComponent, JobApplicationsResultComponent],
   entryComponents: [JobSearchPageComponent],
-  providers: [PersonnelService],
+  providers: [JobSearchService, JobApplicationService],
   imports: [
     CommonModule,
     PersonnelRoutingModule,

@@ -14,7 +14,7 @@
                 <tr>
                     <td>{{application.id}}</td>
                     <td>{{application.time}}</td>
-                    <td><a [routerLink]="['/personnel/job-search/posting', application.jobPostingId]">Click To Open</a></td>
+                    <td><a [routerLink]="['/personnel/job-search/posting', application.jobPosting]">{{getJobTitleByPostingId(application.jobPosting)}}</a></td>
                     <td><a href="javascript:void(0)" (click)="onOpenResume(application.id)">Click To Open</a></td>
                     <td>
                         <a href="javascript:void(0)" (click)="onAction(action.action, application.id)" *ngFor="let action of actions" class="pl-2 pr-2">{{action.label}}</a>

@@ -1,5 +1,11 @@
 <div class="container-fluid">
     <div class="row">
-        <app-job-applications-result [jobApplications]="myJobApplications$ | async" (openResume)="onOpenResume($event)" (action)="onAction($event)" [canHire]="false" class="col-12"></app-job-applications-result>
+        <app-job-applications-result 
+        [jobApplications]="myJobApplications$ | async" 
+        [jobPostings]="myJobPostings$ | async" 
+        (openResume)="onOpenResume($event)" 
+        (action)="onAction($event)" 
+        [canHire]="false" 
+        class="col-12"></app-job-applications-result>
     </div>
 </div>

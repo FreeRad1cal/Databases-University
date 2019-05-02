@@ -2,7 +2,7 @@
   <div class="row m-4">
     <app-job-search-form [jobTitles]="jobTitles$ | async" (search)="onSearch($event)" class="col"></app-job-search-form>
   </div>
-  <div *ngIf="hasSearched$ | async">
+  <div *ngIf="lastSearchQuery$ | async">
     <div class="row m-4">
     <app-job-search-result [items]="jobPostings$ | async" class="col"></app-job-search-result>
     </div>

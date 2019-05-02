@@ -22,6 +22,8 @@ export const reducers: ActionReducerMap<PersonnelState> = {
 
 export const selectPersonnelState = createFeatureSelector<PersonnelState>('personnel');
 
+// Personnel root
+
 export const selectPersonnelRootState = createSelector(
     selectPersonnelState,
     (state: PersonnelState) => state.root
@@ -29,27 +31,59 @@ export const selectPersonnelRootState = createSelector(
 
 export const getJobTiles = createSelector(
     selectPersonnelRootState,
-    fromPersonnelRoot.selectJobTitles
+    fromPersonnelRoot.jobTitleEntitySelectors.selectAll
 )
+
+export const getJobTitleByName = (name: string) => createSelector(
+    selectPersonnelRootState,
+    fromPersonnelRoot.selectJobTitleByName(name)
+)
+
+export const getTotalJobTitles = createSelector(
+    selectPersonnelRootState,
+    fromPersonnelRoot.selectTotalJobTitles
+)
+
+export const getJobPostings = createSelector(
+    selectPersonnelRootState,
+    fromPersonnelRoot.jobPostingEntitySelectors.selectAll
+)
+
+export const getJobPostingById = (id: string) => createSelector(
+    selectPersonnelRootState,
+    fromPersonnelRoot.selectJobPostingById(id)
+)
+
+export const getTotalJobPostings = createSelector(
+    selectPersonnelRootState,
+    fromPersonnelRoot.selectTotalJobPostings
+)
+
+export const getJobApplications = createSelector(
+    selectPersonnelRootState,
+    fromPersonnelRoot.jobApplicationEntitySelectors.selectAll
+)
+
+export const getJobApplicationById = (id: string) => createSelector(
+    selectPersonnelRootState,
+    fromPersonnelRoot.selectJobApplicationById(id)
+)
+
+export const getTotalJobApplications = createSelector(
+    selectPersonnelRootState,
+    fromPersonnelRoot.selectTotalJobApplications
+)
+
+// Job Search
 
 export const selectJobSearch = createSelector(
     selectPersonnelState,
     (state: PersonnelState) => state.jobSearch
 )
 
-export const getPagination = createSelector(
+export const getJobSearchPagination = createSelector(
     selectJobSearch,
     fromJobSearch.selectPagination
-)
-
-export const getJobPostings = createSelector(
-    selectJobSearch,
-    fromJobSearch.selectJobPostings
-)
-
-export const getJobPostingById = (id: string) => createSelector(
-    selectJobSearch,
-    fromJobSearch.selectJobPostingById(id)
 )
 
 export const getJobSearchErrors = createSelector(
@@ -57,15 +91,12 @@ export const getJobSearchErrors = createSelector(
     fromJobSearch.selectErrors
 )
 
-export const getTotalJobPostings = createSelector(
+export const getLastJobSearchQuery = createSelector(
     selectJobSearch,
-    fromJobSearch.selectTotalJobPostings
+    fromJobSearch.selectLastQuery
 )
 
-export const getHasSearched = createSelector(
-    selectJobSearch,
-    fromJobSearch.selectHasSearched
-)
+// Job Application
 
 export const selectJobApplication = createSelector(
     selectPersonnelState,
@@ -75,11 +106,6 @@ export const selectJobApplication = createSelector(
 export const getJobApplicationErrors = createSelector(
     selectJobApplication,
     fromJobApplication.selectErrors
-)
-
-export const getJobApplications = createSelector(
-    selectJobApplication,
-    fromJobApplication.selectJobApplications
 )
 
 export const getLastJobApplicationAction = createSelector(

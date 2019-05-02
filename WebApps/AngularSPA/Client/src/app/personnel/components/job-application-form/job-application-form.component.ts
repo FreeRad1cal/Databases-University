@@ -14,7 +14,10 @@ export class JobApplicationFormComponent implements OnInit {
   @Input()
   jobPosting: JobPosting;
   @Output()
-  submit = new EventEmitter<JobApplication>();
+  submit = new EventEmitter<{
+    jobPostingId: string,
+    resume: File
+  }>();
 
   uploadedFiles: File[] = [];
 

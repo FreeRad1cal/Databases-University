@@ -15,11 +15,11 @@ namespace Personnel.Api.Application.Queries
 
         Task<JobPostingDto> GetJobPostingByIdAsync(int id);
 
-        Task<IEnumerable<JobApplicationDto>> GetJobApplicationsByApplicantIdAsync(int applicantId);
+        Task<ArrayResponse<JobApplicationDto>> GetJobApplicationsByApplicantIdAsync(int applicantId);
 
         Task<ArrayResponse<JobApplicationDto>> GetJobApplications(int? applicantId, int? jobPostingId);
 
-        Task<IEnumerable<JobTitleDto>> GetJobTitlesAsync();
+        Task<ArrayResponse<JobTitleDto>> GetJobTitlesAsync();
 
         Task<JobTitleDto> GetJobTitleByNameAsync(string name);
 

@@ -1,14 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { JobApplication } from '../../models/JobApplication';
-import { Router } from '@angular/router';
-import { SelectItem } from 'primeng/components/common/selectitem';
-import { ConfirmationService } from 'primeng/components/common/confirmationservice';
-
-export type JobApplicationAction = 'withdraw' | 'hire' | 'reject';
-export type JobApplicationActionDescriptor = {
-  action: JobApplicationAction;
-  id: string
-}
+import { JobApplicationActionDescriptor, JobApplicationAction } from '../../reducers/job-application.reducer';
+import { JobPosting } from '../../models/JobPosting';
 
 @Component({
   selector: 'app-job-applications-result',
@@ -19,6 +12,8 @@ export class JobApplicationsResultComponent implements OnInit {
 
   @Input()
   jobApplications: JobApplication[];
+  @Input()
+  jobPostings: JobPosting[];
   @Input()
   canHire: boolean;
   @Output()
@@ -54,5 +49,9 @@ export class JobApplicationsResultComponent implements OnInit {
       action: action,
       id: id
     });
+  }
+
+  getJobTitleByPostingId(id: string) {
+    return this.jobPostings.find(posting => posting.id == id).jobTitle;
   }
 }

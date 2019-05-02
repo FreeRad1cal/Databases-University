@@ -37,8 +37,3 @@ export const getGlobalBusy = createSelector(
   (state: State) => state.root,
   fromRoot.selectGlobalBusy
 )
-
-export const getGlobalErrors = createSelector(
-  (state: State) => state.root,
-  fromRoot.setGlobalErrors
-)

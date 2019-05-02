@@ -6,7 +6,6 @@ import { switchMap, withLatestFrom, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { JobPosting } from '../../models/JobPosting';
 import { Location } from '@angular/common';
-import { LoadJobPostingById } from '../../actions/job-search.actions';
 
 @Component({
   selector: 'app-job-posting',
@@ -27,7 +26,6 @@ export class JobPostingComponent implements OnInit {
         this.id = params.get('id');
         return this.id;
       }),
-      tap(id => this.store.dispatch(new LoadJobPostingById({id: id}))),
       switchMap(id => this.store.select(getJobPostingById(id)))
     );
   }

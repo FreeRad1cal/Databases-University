@@ -1,17 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { SetPagination, Search, ResetJobSearch } from '../../actions/job-search.actions';
-import { getJobTiles, getJobPostings, getPagination, getTotalJobPostings, getJobSearchErrors, getHasSearched } from '../../reducers';
+import { Paginate, Search } from '../../actions/job-search.actions';
+import { getJobTiles, getJobPostings, getJobSearchPagination, getTotalJobPostings, getJobSearchErrors, getLastJobSearchQuery } from '../../reducers';
 import { JobTitle } from '../../models/JobTitle';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject, combineLatest } from 'rxjs';
 import { JobPosting } from '../../models/JobPosting';
 import { Pagination } from '../../models/Pagination';
-import { map, concat } from 'rxjs/operators';
-
-export interface JobSearchQuery {
-  query: string,
-  jobTitles: JobTitle[]
-};
+import { map, concat, take, tap, catchError, withLatestFrom } from 'rxjs/operators';
+import { JobSearchService } from '../../services/job-search.service';
+import { AddJobTitles } from '../../actions/personnel-actions';
+import { Router } from '@angular/router';
+import * as _ from 'lodash';
+import { JobSearchQuery } from '../../models/JobSearchQuery';
 
 @Component({
   selector: 'app-job-search-page',
@@ -27,34 +27,46 @@ export class JobSearchPageComponent implements OnInit {
   pagination$: Observable<Pagination>;
   totalJobPostings$: Observable<number>;
   errors$: Observable<string[]>;
-  hasSearched$: Observable<boolean>;
+  lastSearchQuery$: Observable<JobSearchQuery>;
 
-  constructor(private store: Store<any>) {}
+  constructor(private store: Store<any>, private router: Router) {}
 
   ngOnInit() {
     this.jobTitles$ = this.store.pipe(
       select(getJobTiles)
     );
-    this.jobPostings$ = this.store.pipe(select(getJobPostings));
+
     this.pagination$ = this.store.pipe(
-      select(getPagination)
+      select(getJobSearchPagination)
     );
+
+    this.lastSearchQuery$ = this.store.pipe(
+      select(getLastJobSearchQuery)
+    );
+    
+    this.jobPostings$ = combineLatest(this.store.select(getJobPostings), this.pagination$, this.lastSearchQuery$).pipe(
+      map(([jobPostings, pagination, lastQuery]) => _(jobPostings)
+        .filter(jobPosting => {
+          const queryMatch = jobPosting.description.includes(lastQuery.query);
+          const jobTitleMatch = lastQuery.jobTitles.length > 1 ? lastQuery.jobTitles.includes(jobPosting.jobTitle) : true;
+          return queryMatch && jobTitleMatch;
+        })
+        .drop(pagination.offset)
+        .take(pagination.limit)
+        .value())
+    );
+
     this.totalJobPostings$ = this.store.pipe(
       select(getTotalJobPostings)
     );
+    
     this.errors$ = this.store.pipe(
       select(getJobSearchErrors)
-    )
-    this.hasSearched$ = this.store.select(getHasSearched);
+    );
   }
 
-  private lastQuery: JobSearchQuery = {
-    query: '',
-    jobTitles: []
-  };
-  onSearch(event: JobSearchQuery) {
-    this.lastQuery = event;
-    this.store.dispatch(new Search({query: event.query, jobTitles: event.jobTitles}));
+  onSearch(query: JobSearchQuery) {
+    this.store.dispatch(new Search({query: query}));
   }
 
   paginate(event: any) {
@@ -62,7 +74,6 @@ export class JobSearchPageComponent implements OnInit {
       limit: event.rows,
       offset: event.first
     };
-    this.store.dispatch(new SetPagination({pagination: pagination}));
-    this.onSearch(this.lastQuery);
+    this.store.dispatch(new Paginate({pagination: pagination}));
   }
 }

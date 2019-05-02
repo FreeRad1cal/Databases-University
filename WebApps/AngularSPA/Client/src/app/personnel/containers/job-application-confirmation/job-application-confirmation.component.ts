@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { ResetJobApplication } from '../../actions/job-application.actions';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 
@@ -23,7 +22,7 @@ export class JobApplicationConfirmationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.store.dispatch(new ResetJobApplication());
+    //this.store.dispatch(new ResetJobApplication());
   }
 
 }
