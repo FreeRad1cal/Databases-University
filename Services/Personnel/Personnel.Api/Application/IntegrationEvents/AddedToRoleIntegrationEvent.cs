@@ -9,11 +9,9 @@ namespace Personnel.Api.Application.IntegrationEvents
 {
     public class AddedToRoleIntegrationEvent : IntegrationEvent
     {
-        [JsonProperty]
-        public int PersonId { get; private set; }
+        public int PersonId { get; }
 
-        [JsonProperty]
-        public string Role { get; private set; }
+        public string Role { get; }
 
         public AddedToRoleIntegrationEvent(int personId, string role)
         {

@@ -20,6 +20,7 @@ using Microsoft.Extensions.Options;
 using SecureChat.Common.Events.EventBus;
 using SecureChat.Common.Events.EventBus.Abstractions;
 using SecureChat.Common.Events.EventBusRabbitMQ;
+using SecureChat.Common.Events.EventBusRabbitMQ.Extensions;
 
 namespace AuthApi
 {
@@ -54,6 +55,8 @@ namespace AuthApi
 
             services.AddTransient<ITokenService, DefaultTokenService>();
             services.AddTransient<IClaimService, DefaultClaimService>();
+
+            services.AddEventBus(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -62,6 +65,8 @@ namespace AuthApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.ConfigureEventBus();
 
             app.UseHealthChecks("/hc", new HealthCheckOptions
             {
@@ -83,31 +88,13 @@ namespace AuthApi
 
     internal static class CustomExtensionMethods
     {
-        public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddSingleton<IRabbitMQPersistentConnection, DefaultRabbitMQPersistentConnection>();
-            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-            services.Configure<EventBusOptions>(options =>
-            {
-                options.HostName = configuration["EventBusConnection"];
-                options.UserName = configuration["EventBusUserName"];
-                options.Password = configuration["EventBusPassword"];
-                options.QueueName = typeof(Startup).Assembly.GetName().Name;
-            });
-
-            services.AddSingleton<IEventBus, EventBusRabbitMQ>();
-            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-
-            return services;
-        }
-
         public static IApplicationBuilder ConfigureEventBus(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
-                eventBus.Subscribe<PermissionsAddedIntegrationEvent, PermissionsAddedIntegrationEventHandler>();
-                eventBus.Subscribe<PermissionsRemovedIntegrationEvent, PermissionsRemovedIntegrationEventHandler>();
+                eventBus.Subscribe<AddedToRoleIntegrationEvent, AddedToRoleIntegrationEventHandler>();
+                eventBus.Subscribe<RemovedFromRoleIntegrationEvent, RemovedFromRoleIntegrationEventHandler>();
             }
 
             return app;

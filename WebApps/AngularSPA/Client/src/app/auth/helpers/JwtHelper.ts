@@ -20,10 +20,7 @@ export class JwtHelper {
 
     static getRoles(jwt: string) : string[] {
         // Returns an array when no rol claims are present or when only one rol claim is present
-        return [].concat(jwt_decode<any>(jwt).rol)
-    }
-
-    static getPermissions(jwt: string): string[] {
-        return [].concat(jwt_decode<any>(jwt).perm);
+        let decoded = jwt_decode<any>(jwt);
+        return [].concat(decoded.Role)
     }
 }

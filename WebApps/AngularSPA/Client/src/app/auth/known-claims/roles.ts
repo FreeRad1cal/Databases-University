@@ -1,6 +1,5 @@
 export namespace Roles {
+    export const Employee = "Employee";
     export const Student = "Student";
-    export const HR = "HR";
-    export const Registrar = "Registrar";
 }
 

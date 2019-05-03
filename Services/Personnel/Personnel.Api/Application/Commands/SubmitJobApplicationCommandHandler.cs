@@ -62,7 +62,7 @@ namespace Personnel.Api.Application.Commands
 ;
             var jobApplication = new JobApplication(request.JobPostingId, myId);
             var result = _jobApplicationRepository.Add(jobApplication, memoryStream.ToArray());
-            await _jobApplicationRepository.SaveChangesAsync();
+            await _jobApplicationRepository.UnitOfWork.SaveChangesAsync();
 
             return _mapper.Map<JobApplicationDto>(result);
         }

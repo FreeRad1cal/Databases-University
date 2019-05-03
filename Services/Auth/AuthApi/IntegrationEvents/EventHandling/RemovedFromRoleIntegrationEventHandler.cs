@@ -13,9 +13,9 @@ namespace AuthApi.IntegrationEvents.EventHandling
     public class RemovedFromRoleIntegrationEventHandler : IIntegrationEventHandler<RemovedFromRoleIntegrationEvent>
     {
         private readonly IClaimService _claimService;
-        private readonly ILogger<PermissionsAddedIntegrationEventHandler> _logger;
+        private readonly ILogger<RemovedFromRoleIntegrationEventHandler> _logger;
 
-        public RemovedFromRoleIntegrationEventHandler(IClaimService claimService, ILogger<PermissionsAddedIntegrationEventHandler> logger)
+        public RemovedFromRoleIntegrationEventHandler(IClaimService claimService, ILogger<RemovedFromRoleIntegrationEventHandler> logger)
         {
             _claimService = claimService;
             _logger = logger;
@@ -23,7 +23,7 @@ namespace AuthApi.IntegrationEvents.EventHandling
 
         public async Task Handle(RemovedFromRoleIntegrationEvent integrationEvent)
         {
-            _logger.LogInformation($"----- Handling integration event: {integrationEvent.Id} at {nameof(PermissionsAddedIntegrationEventHandler)} - ({integrationEvent})");
+            _logger.LogInformation($"----- Handling integration event: {integrationEvent.Id} at {nameof(RemovedFromRoleIntegrationEventHandler)} - ({integrationEvent})");
 
             var claim = new Claim(integrationEvent.PersonId, type: "Role", value: integrationEvent.Role);
             var result = await _claimService.RemoveClaim(claim);

@@ -6,19 +6,22 @@ using System.Threading.Tasks;
 using Dapper;
 using MediatR;
 using Personnel.Domain.AggregateModel.JobApplicationAggregate;
+using Personnel.Domain.Common;
 using Personnel.Infrastructure.Services;
 using Personnel.Infrastructure.UnitOfWork;
 
 namespace Personnel.Infrastructure.Repositories
 {
-    public class JobApplicationRepository : SqlUnitOfWork, IJobApplicationRepository
+    public class JobApplicationRepository : IJobApplicationRepository
     {
+        public IUnitOfWork UnitOfWork { get; }
+
         private readonly IDbConnectionFactory _dbConnectionFactory;
         private readonly IResumePersisterService _resumePersisterService;
 
-        public JobApplicationRepository(IMediator mediator, IDbConnectionFactory dbConnectionFactory, IResumePersisterService resumePersisterService) 
-            : base(mediator, dbConnectionFactory)
+        public JobApplicationRepository(IUnitOfWork unitOfWork, IDbConnectionFactory dbConnectionFactory, IResumePersisterService resumePersisterService)
         {
+            UnitOfWork = unitOfWork;
             _dbConnectionFactory = dbConnectionFactory;
             _resumePersisterService = resumePersisterService;
         }
@@ -29,7 +32,7 @@ namespace Personnel.Infrastructure.Repositories
                         VALUES (@JobPostingId, @ApplicantId, @Time, @ResumeFileName);
                         SELECT LAST_INSERT_ID();";
 
-            AddOperation(jobApplication, async connection =>
+            UnitOfWork.AddOperation(jobApplication, async connection =>
             {
                 var resumeFilename = _resumePersisterService.CreateFilename();
                 var id = await connection.QueryFirstAsync<int>(sql, new
@@ -66,7 +69,7 @@ namespace Personnel.Infrastructure.Repositories
         {
             var sql = $@"DELETE FROM JobApplications
                         WHERE JobApplications.Id=@{nameof(jobApplication.Id)}";
-            AddOperation(jobApplication, async connection =>
+            UnitOfWork.AddOperation(jobApplication, async connection =>
             {
                 await connection.ExecuteAsync(sql, new {jobApplication.Id});
                 _resumePersisterService.DeleteResume(jobApplication.ResumeFileName);

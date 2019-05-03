@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Personnel.Domain.Common
 {
-    public interface IRepository<T> : IUnitOfWork
+    public interface IRepository<T>
         where T : IAggregateRoot
     {
+        IUnitOfWork UnitOfWork { get; }
     }
 }

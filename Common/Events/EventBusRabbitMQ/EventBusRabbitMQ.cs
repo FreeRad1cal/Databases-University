@@ -224,8 +224,8 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
                         dynamic handler = _serviceProvider.GetService(subscription.HandlerType);
                         if (handler == null) continue;
                         var eventType = _subsManager.GetEventTypeByName(eventName);
-                        var integrationEvent = JsonConvert.DeserializeObject(message, eventType);
-                        await handler.Handler(integrationEvent);
+                        dynamic integrationEvent = JsonConvert.DeserializeObject(message, eventType);
+                        await handler.Handle(integrationEvent);
                     }
                 }
             }

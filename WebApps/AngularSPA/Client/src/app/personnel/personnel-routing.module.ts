@@ -8,14 +8,14 @@ import { MyJobApplicationsComponent } from './containers/my-job-applications/my-
 
 const personnelRoutes: Routes = [
     {
-        path: 'job-search',
+        path: 'employment',
         children: [
             {
                 path: 'apply/confirmation',
                 component: JobApplicationConfirmationComponent
             },
             {
-                path: 'posting/:id',
+                path: 'job-posting/:id',
                 component: JobPostingComponent
             },
             {
@@ -27,8 +27,13 @@ const personnelRoutes: Routes = [
                 component: MyJobApplicationsComponent
             },
             {
-                path: '',
+                path: 'job-search',
                 component: JobSearchPageComponent
+            },
+            {
+                path: '',
+                redirectTo: 'job-search',
+                pathMatch: 'full'
             }
         ]
     }

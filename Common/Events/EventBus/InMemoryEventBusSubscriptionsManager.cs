@@ -156,6 +156,6 @@ namespace SecureChat.Common.Events.EventBus
             => _eventTypes.SingleOrDefault(t => t.Name == eventName);
 
         public string GetEventKey<T>() 
-            => nameof(T);
+            => typeof(T).Name;
     }
 }

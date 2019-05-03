@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { Store, select } from '@ngrx/store';
 import { SignOut } from 'src/app/auth/actions/auth.actions';
-import { getSignedInUser, getRoles, getPermissions } from 'src/app/auth/reducers';
+import { getSignedInUser, getRoles } from 'src/app/auth/reducers';
 import { Observable, of } from 'rxjs';
 import { Person } from 'src/app/auth/models/Person';
 import { map, catchError, withLatestFrom } from 'rxjs/operators';
@@ -20,19 +20,25 @@ import { Roles } from 'src/app/auth/known-claims/roles';
 export class HomeComponent implements OnInit {
   
   items: Observable<MenuItem[]>;
+  myRoles$: Observable<string[]>;
 
   constructor(private store: Store<any>) { }
 
   ngOnInit() {
+    this.myRoles$ = this.store.select(getRoles);
+
     this.items = this.store.pipe(
       select(getSignedInUser),
-      withLatestFrom(this.store.select(getRoles), this.store.select(getPermissions)),
-      map(([user, roles, perms]) => [
+      withLatestFrom(this.myRoles$),
+      map(([user, roles]) => [
         {label: `${user.firstName} ${user.lastName}`, disabled: true},
         {label: 'Employment', items: [
-          {label: 'Search Jobs', routerLink: ['/personnel/job-search']},
-          {label: 'My Applications', routerLink: ['/personnel/job-search/my-job-applications']}
-        ] },
+          {label: 'Search Jobs', routerLink: ['/personnel/employment/job-search']},
+          {label: 'My Applications', routerLink: ['/personnel/employment/my-job-applications']},
+        ]},
+        {label: 'Employee Center', items: [
+          {label: 'Received Job Applications', routerLink: ['/personnel/received-job-applications']},
+        ], visible: roles.includes(Roles.Employee)},
         {label: 'Academics', items: [
           {label: 'Apply to DBU', routerLink: ['academics', 'apply']},
           {label: 'Student Center', visible: roles.includes(Roles.Student)}

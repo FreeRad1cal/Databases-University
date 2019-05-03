@@ -36,7 +36,7 @@ namespace Personnel.Api.Application.Commands
             var jobPosting = new JobPosting(new JobTitle(request.JobTitle), request.Description);
 
             var result = _jobPostingRepository.Add(jobPosting);
-            await _jobPostingRepository.SaveChangesAsync();
+            await _jobPostingRepository.UnitOfWork.SaveChangesAsync();
 
             if (!jobPosting.IsTransient())
             {

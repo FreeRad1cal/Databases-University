@@ -31,7 +31,7 @@ export class JobApplicationFormComponent implements OnInit {
   }
   
   onReturn() {
-    this.router.navigate(['personnel', 'job-search', 'posting', this.jobPosting.id]);
+    this.router.navigate(['personnel', 'employment', 'job-posting', this.jobPosting.id]);
   }
 
   onSubmit() {

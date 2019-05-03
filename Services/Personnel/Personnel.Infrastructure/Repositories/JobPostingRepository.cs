@@ -5,22 +5,25 @@ using System.Threading.Tasks;
 using Dapper;
 using MediatR;
 using Personnel.Domain.AggregateModel.JobPostingAggregate;
+using Personnel.Domain.Common;
 using Personnel.Infrastructure.UnitOfWork;
 
 namespace Personnel.Infrastructure.Repositories
 {
-    public class JobPostingRepository : SqlUnitOfWork, IJobPostingRepository
+    public class JobPostingRepository : IJobPostingRepository
     {
-        public JobPostingRepository(IMediator mediator, IDbConnectionFactory dbConnectionFactory) 
-            : base(mediator, dbConnectionFactory)
+        public IUnitOfWork UnitOfWork { get; }
+
+        public JobPostingRepository(IUnitOfWork unitOfWork)
         {
+            UnitOfWork = unitOfWork;
         }
 
         public JobPosting Add(JobPosting jobPosting)
         {
             var jobTitleSql = $@"INSERT IGNORE INTO JobTitles (Name)
                                 VALUES (@{nameof(JobTitle.Name)})";
-            AddOperation(jobPosting.JobTitle, async connection =>
+            UnitOfWork.AddOperation(jobPosting.JobTitle, async connection =>
             {
                 await connection.ExecuteAsync(jobTitleSql, jobPosting.JobTitle);
             });
@@ -28,7 +31,7 @@ namespace Personnel.Infrastructure.Repositories
             var jobPostingSql = $@"INSERT INTO JobPostings (JobTitleName, Description, PostedTime)
                         VALUES (@JobTitleName, @{nameof(JobPosting.Description)}, @{nameof(JobPosting.PostedTime)});
                         SELECT LAST_INSERT_ID();";
-            AddOperation(jobPosting, async connection =>
+            UnitOfWork.AddOperation(jobPosting, async connection =>
             {
                 var id = await connection.QueryFirstAsync<int>(jobPostingSql, new
                 {

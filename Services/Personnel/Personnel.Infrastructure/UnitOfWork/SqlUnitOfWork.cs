@@ -17,15 +17,15 @@ namespace Personnel.Infrastructure.UnitOfWork
     class OperationDescriptor
     {
         public Guid Id { get; } = Guid.NewGuid();
-        public object Entity { get; }
+        public object Object { get; }
         public Func<IDbConnection, Task> Operation { get; }
 
         public bool IsDispatching =>
-            Entity.GetType() == typeof(Entity);
+            Object.GetType().BaseType == typeof(Entity);
 
-        public OperationDescriptor(object entity, Func<IDbConnection, Task> operation)
+        public OperationDescriptor(object obj, Func<IDbConnection, Task> operation)
         {
-            Entity = entity;
+            Object = obj;
             Operation = operation;
         }
 
@@ -36,12 +36,10 @@ namespace Personnel.Infrastructure.UnitOfWork
     }
 
     // Not thread-safe
-    public abstract class SqlUnitOfWork : IUnitOfWork
+    public class SqlUnitOfWork : IUnitOfWork
     {
         private readonly IMediator _mediator;
         private readonly IDbConnectionFactory _dbConnectionFactory;
-
-        private readonly object _syncRoot = new object();
 
         private List<OperationDescriptor> _operations = new List<OperationDescriptor>();
 
@@ -51,7 +49,7 @@ namespace Personnel.Infrastructure.UnitOfWork
             _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public virtual async Task SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
             try
             {
@@ -63,7 +61,7 @@ namespace Personnel.Infrastructure.UnitOfWork
                         await operation.Operation(conn);
                         if (operation.IsDispatching)
                         {
-                            await DispatchDomainEventsAsync(operation.Entity as Entity);
+                            await DispatchDomainEventsAsync(operation.Object as Entity);
                         }
                     }
 
@@ -76,9 +74,9 @@ namespace Personnel.Infrastructure.UnitOfWork
             }
         }
 
-        public void AddOperation(object entity, Func<IDbConnection, Task> operation)
+        public void AddOperation(object obj, Func<IDbConnection, Task> operation)
         {
-            _operations.Add(new OperationDescriptor(entity, operation));
+            _operations.Add(new OperationDescriptor(obj, operation));
         }
 
         private async Task DispatchDomainEventsAsync(Entity entity)

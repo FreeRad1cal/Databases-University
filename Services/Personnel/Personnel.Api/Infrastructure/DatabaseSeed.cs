@@ -25,7 +25,7 @@ namespace Personnel.Api.Infrastructure
 
         public async Task SeedAsync()
         {
-            var tasks = new[] {SeedPerson(), SeedJobPosting()};
+            var tasks = new[] { SeedJobPosting(), SeedPerson()};
             await Task.WhenAll(tasks);
         }
 
@@ -61,7 +61,9 @@ namespace Personnel.Api.Infrastructure
                 var policy = CreatePolicy(_logger, nameof(SeedPerson));
                 await policy.ExecuteAsync(async () =>
                 {
-                    await _mediator.Send(command);
+                    var result = await _mediator.Send(command);
+                    var hireCommand = new HirePersonCommand(result.Id, new JobTitleDto() { Name = "Database Administrator" });
+                    await _mediator.Publish(hireCommand);
                 });
             }
             catch (PersonnelDomainException e)

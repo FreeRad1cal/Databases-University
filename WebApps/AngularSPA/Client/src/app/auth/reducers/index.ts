@@ -41,11 +41,6 @@ export const getRoles = createSelector(
     fromAuth.selectRoles
 );
 
-
-export const getPermissions = createSelector(
-    selectAuthStatusState,
-    fromAuth.selectPermissions
-);
 export const getBusy = createSelector(
   selectAuthStatusState,
   fromAuth.selectBusy  

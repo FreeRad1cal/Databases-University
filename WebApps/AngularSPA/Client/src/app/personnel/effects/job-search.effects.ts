@@ -40,9 +40,9 @@ export class JobSearchEffects {
     );
 
     @Effect()
-    exitSearch$ = this.actions$.pipe(
+    exitEmployment$ = this.actions$.pipe(
         ofType<RouterRequestAction>(ROUTER_REQUEST),
-        filter(action => action.payload.routerState.url.includes('job-search') && !action.payload.event.url.includes('job-search')),
+        filter(action => action.payload.routerState.url.includes('employment') && !action.payload.event.url.includes('employment')),
         map(() => new Reset())
     );
 

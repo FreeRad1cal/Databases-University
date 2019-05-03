@@ -26,7 +26,7 @@ namespace Personnel.Api.Application.Commands
         {
             var appl = await _jobApplicationRepository.GetAsync(request.Id);
             _jobApplicationRepository.Delete(appl);
-            await _jobApplicationRepository.SaveChangesAsync();
+            await _jobApplicationRepository.UnitOfWork.SaveChangesAsync();
             _logger.LogInformation("----- Deleted job application: {@Id}", request.Id);
         }
     }

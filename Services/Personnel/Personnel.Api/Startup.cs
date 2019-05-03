@@ -31,11 +31,14 @@ using Personnel.Api.Infrastructure.Filters;
 using Personnel.Domain.AggregateModel.JobApplicationAggregate;
 using Personnel.Domain.AggregateModel.JobPostingAggregate;
 using Personnel.Domain.AggregateModel.PersonAggregate;
+using Personnel.Domain.Common;
 using Personnel.Infrastructure;
 using Personnel.Infrastructure.Services;
+using Personnel.Infrastructure.UnitOfWork;
 using SecureChat.Common.Events.EventBus;
 using SecureChat.Common.Events.EventBus.Abstractions;
 using SecureChat.Common.Events.EventBusRabbitMQ;
+using SecureChat.Common.Events.EventBusRabbitMQ.Extensions;
 
 namespace Personnel.Api
 {
@@ -78,6 +81,8 @@ namespace Personnel.Api
 
             services.AddMediatR(typeof(Startup).Assembly);
 
+            services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
+
             services.AddScoped<IDbConnectionFactory, MySqlConnectionFactory>();
             services.AddTransient<IResumePersisterService, ResumePersisterService>();
 
@@ -101,6 +106,7 @@ namespace Personnel.Api
                 cfg.CreateMap<Person, PersonDto>();
                 cfg.CreateMap<JobPosting, JobPostingDto>();
                 cfg.CreateMap<JobTitle, JobTitleDto>();
+                cfg.CreateMap<JobTitleDto, JobTitle>();
                 cfg.CreateMap<JobApplication, JobApplicationDto>();
             });
 
@@ -141,24 +147,6 @@ namespace Personnel.Api
 
     internal static class CustomExtensionMethods
     {
-        public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddSingleton<IRabbitMQPersistentConnection, DefaultRabbitMQPersistentConnection>();
-            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-            services.Configure<EventBusOptions>(options =>
-            {
-                options.HostName = configuration["EventBusConnection"];
-                options.UserName = configuration["EventBusUserName"];
-                options.Password = configuration["EventBusPassword"];
-                options.QueueName = typeof(Startup).Assembly.GetName().Name;
-            });
-
-            services.AddSingleton<IEventBus, EventBusRabbitMQ>();
-            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-
-            return services;
-        }
-
         public static IServiceCollection AddAuthentication(this IServiceCollection services,
             IConfiguration configuration)
         {
@@ -180,22 +168,5 @@ namespace Personnel.Api
 
             return services;
         }
-
-        //public static IServiceCollection AddMediator(this IServiceCollection services)
-        //{
-        //    services.AddMediatR();
-
-        //    foreach (var handlerInterface in new[] {typeof(IRequestHandler<,>), typeof(INotificationHandler<>)})
-        //    {
-        //        var handlers = typeof(Startup).Assembly.GetTypes()
-        //            .Where(type => type.ImplementsGenericInterface(handlerInterface));
-        //        foreach (var handler in handlers)
-        //        {
-        //            services.AddTransient(handlerInterface, handler);
-        //        }
-        //    }
-
-        //    return services;
-        //}
     }
 }
