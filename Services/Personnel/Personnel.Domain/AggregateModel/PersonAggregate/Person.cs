@@ -28,7 +28,7 @@ namespace Personnel.Domain.AggregateModel.PersonAggregate
             HomeAddress = homeAddress;
             MailingAddress = mailingAddress;
 
-            AddDomainEvent(new PersonCreatedDomainEvent(this));
+            AddDomainEvent(new PersonRegisteredDomainEvent(this));
         }
 
         public string UserName { get; private set; }

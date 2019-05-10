@@ -55,6 +55,7 @@ namespace AuthApi
 
             services.AddTransient<ITokenService, DefaultTokenService>();
             services.AddTransient<IClaimService, DefaultClaimService>();
+            services.AddTransient<IUserService, DefaultUserService>();
 
             services.AddEventBus(Configuration);
         }

@@ -1,5 +1,32 @@
-CREATE DATABASE IF NOT EXISTS db;
-USE db;
+CREATE DATABASE IF NOT EXISTS auth_db;
+CREATE USER 'auth_service'@'localhost' IDENTIFIED BY '12345';
+GRANT ALL PRIVILEGES ON auth_db . * TO 'auth_service'@'localhost';
+
+CREATE DATABASE IF NOT EXISTS personnel_db;
+CREATE USER 'personnel_service'@'localhost' IDENTIFIED BY '12345';
+GRANT ALL PRIVILEGES ON personnel_db . * TO 'personnel_service'@'localhost';
+
+USE auth_db;
+
+CREATE TABLE IF NOT EXISTS Users (
+	Id INT NOT NULL,
+	PasswordHash VARCHAR(1024) NOT NULL,
+	PasswordSalt VARCHAR(255) NOT NULL,
+	UserName VARCHAR(255) NOT NULL,
+	PRIMARY KEY (Id)
+)
+
+CREATE TABLE IF NOT EXISTS Claims (
+	Type VARCHAR(255) NOT NULL,
+	Value VARCHAR(255) NOT NULL,
+	UserId INT NOT NULL,
+	PRIMARY KEY (Type, Value, UserId),
+	FOREIGN KEY (UserId)
+		REFERENCES Users (Id)
+		ON DELETE CASCADE
+);
+
+USE personnel_db;
 
 CREATE TABLE IF NOT EXISTS People (
 	Id INT NOT NULL AUTO_INCREMENT,
@@ -7,8 +34,6 @@ CREATE TABLE IF NOT EXISTS People (
 	FirstName VARCHAR(255) NOT NULL,
 	LastName VARCHAR(255) NOT NULL,
 	Email VARCHAR(255) NOT NULL,
-	PasswordHash VARCHAR(1024) NOT NULL,
-	PasswordSalt VARCHAR(255) NOT NULL,
 	PRIMARY KEY (Id)
 );
 
@@ -107,16 +132,6 @@ CREATE TABLE IF NOT EXISTS JobApplicationDecision (
 	FOREIGN KEY (DeciderId)
 		REFERENCES People (Id)
 		ON DELETE SET NULL
-);
-
-CREATE TABLE IF NOT EXISTS Claims (
-	Type VARCHAR(255) NOT NULL,
-	Value VARCHAR(255) NOT NULL,
-	PersonId INT NOT NULL,
-	PRIMARY KEY (Type, Value, PersonId),
-	FOREIGN KEY (PersonId)
-		REFERENCES People (Id)
-		ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Semesters (

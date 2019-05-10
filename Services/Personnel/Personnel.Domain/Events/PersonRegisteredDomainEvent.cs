@@ -6,11 +6,11 @@ using Personnel.Domain.AggregateModel.PersonAggregate;
 
 namespace Personnel.Domain.Events
 {
-    public class PersonCreatedDomainEvent : INotification
+    public class PersonRegisteredDomainEvent : INotification
     {
         public Person Person { get; }
 
-        public PersonCreatedDomainEvent(Person person)
+        public PersonRegisteredDomainEvent(Person person)
         {
             Person = person;
         }

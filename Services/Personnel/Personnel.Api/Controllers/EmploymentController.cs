@@ -103,5 +103,10 @@ namespace Personnel.Api.Controllers
             await _mediator.Publish(new DeleteJobApplicationCommand(id));
             return NoContent();
         }
+
+        public async Task<ActionResult> HirePerson([FromBody] HirePersonCommand command)
+        {
+
+        }
     }
 }

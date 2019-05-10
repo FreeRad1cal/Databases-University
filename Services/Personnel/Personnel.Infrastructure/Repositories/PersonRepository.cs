@@ -29,10 +29,10 @@ namespace Personnel.Infrastructure.Repositories
             UnitOfWork = unitOfWork;
         }
 
-        public Person Add(Person person, string salt, string hash)
+        public Person Add(Person person)
         {
-            var personSql = $@"INSERT INTO People (Username, FirstName, LastName, Email, PasswordSalt, PasswordHash)
-                        VALUES (@{nameof(person.UserName)}, @{nameof(person.FirstName)}, @{nameof(person.LastName)}, @{nameof(person.Email)}, @PasswordSalt, @PasswordHash);
+            var personSql = $@"INSERT INTO People (Username, FirstName, LastName, Email)
+                        VALUES (@{nameof(person.UserName)}, @{nameof(person.FirstName)}, @{nameof(person.LastName)}, @{nameof(person.Email)});
                         SELECT LAST_INSERT_ID();";
             UnitOfWork.AddOperation(person, async connection =>
             {
@@ -42,8 +42,6 @@ namespace Personnel.Infrastructure.Repositories
                     person.Email,
                     person.FirstName,
                     person.LastName,
-                    PasswordSalt = salt,
-                    PasswordHash = hash
                 });
                 person.Id = id;
             });
@@ -140,7 +138,7 @@ namespace Personnel.Infrastructure.Repositories
         private void InsertAddressIfNotExists(Address address, string type, Person person)
         {
             var sql = $@"INSERT INTO Addresses (Street, City, State, Country, Zipcode)
-                                SELECT @{nameof(address.Street)}, @{nameof(address.City)}, @{nameof(address.State)}, @{nameof(address.Country)}, @{nameof(address.ZipCode)}
+                                SELECT {nameof(address.Street)}, {nameof(address.City)}, {nameof(address.State)}, {nameof(address.Country)}, {nameof(address.ZipCode)}
                                 FROM DUAL
                                 WHERE NOT EXISTS (SELECT * FROM Addresses a WHERE a.Street=@{nameof(address.Street)} AND a.City=@{nameof(address.City)} AND a.State=@{nameof(address.State)} AND a.Country=@{nameof(address.Country)} AND a.ZipCode=@{nameof(address.ZipCode)}) 
                                 LIMIT 1;

@@ -5,7 +5,7 @@ namespace Personnel.Domain.AggregateModel.PersonAggregate
 {
     public interface IPersonRepository : IRepository<Person>
     {
-        Person Add(Person person, string salt, string hash);
+        Person Add(Person person);
 
         void Update(Person person);
 

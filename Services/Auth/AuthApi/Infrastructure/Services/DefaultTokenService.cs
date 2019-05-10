@@ -42,10 +42,9 @@ namespace AuthApi.Infrastructure.Services
                         return p;
                     }, param: new {UserName = userName}, splitOn: "Type"))
                     .FirstOrDefault();
-                if (person == null ||
-                    !SaltedHashHelper.VerifyPasswordAgainstSaltedHash(password, person.PasswordHash, person.PasswordSalt))
+                if (person == null)
                 {
-                    throw new AuthException();
+                    throw new InvalidOperationException();
                 }
 
                 var claims = customClaims

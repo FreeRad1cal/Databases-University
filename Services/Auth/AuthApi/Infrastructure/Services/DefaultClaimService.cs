@@ -37,10 +37,8 @@ namespace AuthApi.Infrastructure.Services
                         VALUES (@{nameof(Claim.Type)}, @{nameof(Claim.Value)}, @{nameof(Claim.PersonId)})";
 
             using (var conn = await GetDbConnectionAsync())
-            using (var transaction = conn.BeginTransaction())
             {
-                var affectedRows = await conn.ExecuteAsync(sql, claims, transaction);
-                transaction.Commit();
+                var affectedRows = await conn.ExecuteAsync(sql, claims);
                 return affectedRows;
             }
         }
@@ -51,10 +49,8 @@ namespace AuthApi.Infrastructure.Services
                         WHERE Type = @{nameof(Claim.Type)}, Value = @{nameof(Claim.Value)}, PersonId = @{nameof(Claim.PersonId)})";
 
             using (var conn = await GetDbConnectionAsync())
-            using (var transaction = conn.BeginTransaction())
             {
-                var affectedRows = await conn.ExecuteAsync(sql, claims, transaction);
-                transaction.Commit();
+                var affectedRows = await conn.ExecuteAsync(sql, claims);
                 return affectedRows;
             }
         }

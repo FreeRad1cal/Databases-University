@@ -4,7 +4,7 @@ services:
   personnel.api:
     environment:
         ASPNETCORE_ENVIRONMENT: Development
-        ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
+        ConnectionString: Server=mysql; Database=personnel_db; Uid=personnel_service; Pwd=12345;
         EventBusConnection: rabbitmq
         EventBusUserName: ${EVENT_BUS_USERNAME}
         EventBusPassword: ${EVENT_BUS_PASSWORD}
@@ -17,12 +17,12 @@ services:
   registrar.api:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
+      ConnectionString: Server=mysql; Database=registrar_db; Uid=registrar_service; Pwd=12345;
 
   auth.api:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionString: Server=mysql; Database=db; Uid=user; Pwd=12345;
+      ConnectionString: Server=mysql; Database=auth_db; Uid=auth_service; Pwd=12345;
       EventBusConnection: rabbitmq
       EventBusUserName: ${EVENT_BUS_USERNAME}
       EventBusPassword: ${EVENT_BUS_PASSWORD}

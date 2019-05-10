@@ -8,6 +8,7 @@ using MediatR;
 using Personnel.Api.Dtos;
 using Helpers;
 using Microsoft.Extensions.Logging;
+using Personnel.Api.Application.IntegrationEvents;
 using Personnel.Api.Application.Queries;
 using Personnel.Domain.AggregateModel.PersonAggregate;
 using Personnel.Domain.Exceptions;
@@ -53,12 +54,13 @@ namespace Personnel.Api.Application.Commands
 
             _logger.LogInformation("----- Creating Person - Person: {@Person}", person);
 
-            var saltHash = SaltedHashHelper.GenerateSaltedHash(8, request.Password);
-            var result = _personRepository.Add(person, saltHash.Salt, saltHash.Hash);
+            var result = _personRepository.Add(person);
 
             await _personRepository.UnitOfWork.SaveChangesAsync();
 
             _logger.LogInformation("----- Created Person - Person: {@Person}", person);
+
+            _eventBus.Publish(new PersonRegisteredIntegrationEvent(result.Id, request.Password, result.UserName));
 
             return _mapper.Map<PersonDto>(result);
         }

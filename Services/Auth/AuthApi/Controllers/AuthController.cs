@@ -14,10 +14,12 @@ namespace AuthApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ITokenService _tokenService;
+        private readonly IUserService _userService;
 
-        public AuthController(ITokenService tokenService)
+        public AuthController(ITokenService tokenService, IUserService userService)
         {
             _tokenService = tokenService;
+            _userService = userService;
         }
 
         [HttpPost("authenticate", Name = nameof(Authenticate))]
@@ -28,18 +30,16 @@ namespace AuthApi.Controllers
                 return BadRequest();
             }
 
-            try
-            {
-                var jwt = await _tokenService.GetTokenFromLoginCredentialsAsync(credentials.UserName, credentials.Password);
-                return new JsonResult(jwt);
-            }
-            catch (AuthException)
+            if (!await _userService.ValidateCredentials(credentials))
             {
                 return Unauthorized(new ErrorResponse()
                 {
-                    Errors = new [] {"Invalid username or password"}
+                    Errors = new[] { "Invalid username or password" }
                 });
             }
+
+            var jwt = await _tokenService.GetTokenFromLoginCredentialsAsync(credentials.UserName, credentials.Password);
+            return new JsonResult(jwt);
         }
     }
 }
