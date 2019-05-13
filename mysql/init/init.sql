@@ -1,10 +1,10 @@
 CREATE DATABASE IF NOT EXISTS auth_db;
-CREATE USER 'auth_service'@'localhost' IDENTIFIED BY '12345';
-GRANT ALL PRIVILEGES ON auth_db . * TO 'auth_service'@'localhost';
+CREATE USER 'auth_service'@'%' IDENTIFIED BY '12345';
+GRANT ALL PRIVILEGES ON auth_db.* TO 'auth_service'@'%';
 
 CREATE DATABASE IF NOT EXISTS personnel_db;
-CREATE USER 'personnel_service'@'localhost' IDENTIFIED BY '12345';
-GRANT ALL PRIVILEGES ON personnel_db . * TO 'personnel_service'@'localhost';
+CREATE USER 'personnel_service'@'%' IDENTIFIED BY '12345';
+GRANT ALL PRIVILEGES ON personnel_db . * TO 'personnel_service'@'%';
 
 USE auth_db;
 
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Users (
 	PasswordSalt VARCHAR(255) NOT NULL,
 	UserName VARCHAR(255) NOT NULL,
 	PRIMARY KEY (Id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS Claims (
 	Type VARCHAR(255) NOT NULL,

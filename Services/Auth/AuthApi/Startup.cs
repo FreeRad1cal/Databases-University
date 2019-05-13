@@ -57,7 +57,7 @@ namespace AuthApi
             services.AddTransient<IClaimService, DefaultClaimService>();
             services.AddTransient<IUserService, DefaultUserService>();
 
-            services.AddEventBus(Configuration);
+            services.AddEventBus(Configuration, GetType().Assembly);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -96,6 +96,7 @@ namespace AuthApi
                 var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
                 eventBus.Subscribe<AddedToRoleIntegrationEvent, AddedToRoleIntegrationEventHandler>();
                 eventBus.Subscribe<RemovedFromRoleIntegrationEvent, RemovedFromRoleIntegrationEventHandler>();
+                eventBus.Subscribe<PersonRegisteredIntegrationEvent, PersonRegisteredIntegrationEventHandler>(); 
             }
 
             return app;

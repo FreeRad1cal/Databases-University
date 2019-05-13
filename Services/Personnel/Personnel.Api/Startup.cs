@@ -110,7 +110,7 @@ namespace Personnel.Api
                 cfg.CreateMap<JobApplication, JobApplicationDto>();
             });
 
-            services.AddEventBus(Configuration);
+            services.AddEventBus(Configuration, GetType().Assembly);
 
             services.AddHealthChecks()
                 .AddCheck("self-check", () => HealthCheckResult.Healthy())

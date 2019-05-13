@@ -106,7 +106,7 @@ namespace Personnel.Api.Controllers
 
         public async Task<ActionResult> HirePerson([FromBody] HirePersonCommand command)
         {
-
+            throw new NotImplementedException();
         }
     }
 }

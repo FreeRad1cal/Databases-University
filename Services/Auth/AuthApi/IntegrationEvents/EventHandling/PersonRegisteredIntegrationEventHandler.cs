@@ -19,7 +19,7 @@ namespace AuthApi.IntegrationEvents.EventHandling
 
         public async Task Handle(PersonRegisteredIntegrationEvent integrationEvent)
         {
-            await _userService.AddUser(integrationEvent.Id, integrationEvent.UserName, integrationEvent.Password);
+            await _userService.AddUser(integrationEvent.UserId, integrationEvent.UserName, integrationEvent.Password);
         }
     }
 }

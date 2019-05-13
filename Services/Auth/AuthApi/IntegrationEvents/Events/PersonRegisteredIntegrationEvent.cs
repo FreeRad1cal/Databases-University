@@ -1,20 +1,17 @@
-﻿using SecureChat.Common.Events.EventBus.Events;
+﻿using Newtonsoft.Json;
+using SecureChat.Common.Events.EventBus.Events;
 
 namespace AuthApi.IntegrationEvents.Events
 {
     public class PersonRegisteredIntegrationEvent : IntegrationEvent
     {
+        [JsonProperty]
         public string UserName { get; set; }
 
+        [JsonProperty]
         public string Password { get; set; }
 
-        public int Id { get; set; }
-
-        public PersonRegisteredIntegrationEvent(int id, string password, string userName)
-        {
-            Id = id;
-            Password = password;
-            UserName = userName;
-        }
+        [JsonProperty]
+        public int UserId { get; set; }
     }
 }

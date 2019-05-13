@@ -12,11 +12,11 @@ namespace Personnel.Api.Application.IntegrationEvents
 
         public string Password { get; set; }
 
-        public int Id { get; set; }
+        public int UserId { get; set; }
 
         public PersonRegisteredIntegrationEvent(int id, string password, string userName)
         {
-            Id = id;
+            UserId = id;
             Password = password;
             UserName = userName;
         }

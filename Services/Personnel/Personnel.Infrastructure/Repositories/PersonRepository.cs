@@ -137,8 +137,8 @@ namespace Personnel.Infrastructure.Repositories
 
         private void InsertAddressIfNotExists(Address address, string type, Person person)
         {
-            var sql = $@"INSERT INTO Addresses (Street, City, State, Country, Zipcode)
-                                SELECT {nameof(address.Street)}, {nameof(address.City)}, {nameof(address.State)}, {nameof(address.Country)}, {nameof(address.ZipCode)}
+            var sql = $@"INSERT INTO Addresses (Street, City, State, Country, ZipCode)
+                                SELECT @{nameof(address.Street)}, @{nameof(address.City)}, @{nameof(address.State)}, @{nameof(address.Country)}, @{nameof(address.ZipCode)}
                                 FROM DUAL
                                 WHERE NOT EXISTS (SELECT * FROM Addresses a WHERE a.Street=@{nameof(address.Street)} AND a.City=@{nameof(address.City)} AND a.State=@{nameof(address.State)} AND a.Country=@{nameof(address.Country)} AND a.ZipCode=@{nameof(address.ZipCode)}) 
                                 LIMIT 1;
