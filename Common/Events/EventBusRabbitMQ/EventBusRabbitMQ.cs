@@ -41,7 +41,6 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
             _serviceProvider = serviceProvider;
             _options = options.Value;
             _subsManager = subsManager;
-            _consumerChannel = CreateConsumerChannel();
             _subsManager.OnEventRemoved += SubsManager_OnEventRemoved;
         }
 
@@ -125,6 +124,11 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ
             var containsKey = _subsManager.HasSubscriptionsForEvent(eventName);
             if (!containsKey)
             {
+                if (_subsManager.IsEmpty)
+                {
+                    _consumerChannel = CreateConsumerChannel();
+                }
+
                 if (!_persistentConnection.IsConnected)
                 {
                     _persistentConnection.TryConnect();

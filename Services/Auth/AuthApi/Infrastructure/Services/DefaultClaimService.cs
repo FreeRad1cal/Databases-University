@@ -33,7 +33,7 @@ namespace AuthApi.Infrastructure.Services
 
         public async Task<int> AddClaims(IEnumerable<Claim> claims)
         {
-            var sql = $@"INSERT INTO Claims (Type, Value, PersonId)
+            var sql = $@"INSERT INTO Claims (Type, Value, UserId)
                         VALUES (@{nameof(Claim.Type)}, @{nameof(Claim.Value)}, @{nameof(Claim.PersonId)})";
 
             using (var conn = await GetDbConnectionAsync())

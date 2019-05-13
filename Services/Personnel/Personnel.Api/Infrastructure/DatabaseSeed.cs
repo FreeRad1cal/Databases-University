@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Personnel.Api.Application.Commands;
+using Personnel.Api.Application.Queries;
 using Personnel.Api.Dtos;
-using Personnel.Domain.AggregateModel.JobPostingAggregate;
 using Personnel.Domain.Exceptions;
 using Polly;
 using Polly.Retry;
@@ -16,17 +16,26 @@ namespace Personnel.Api.Infrastructure
     {
         private readonly IMediator _mediator;
         private readonly ILogger<DatabaseSeed> _logger;
+        private readonly IPersonQueries _personQueries;
 
-        public DatabaseSeed(IMediator mediator, ILogger<DatabaseSeed> logger)
+        public DatabaseSeed(IMediator mediator, ILogger<DatabaseSeed> logger, IPersonQueries personQueries)
         {
             _mediator = mediator;
             _logger = logger;
+            _personQueries = personQueries;
         }
 
         public async Task SeedAsync()
         {
-            var tasks = new[] { SeedJobPosting(), SeedPerson()};
-            await Task.WhenAll(tasks);
+            var policy = CreatePolicy(_logger, nameof(SeedAsync));
+            await policy.ExecuteAsync(async () =>
+            {
+                if (!await _personQueries.UserNameOrEmailExists("userName", "email@email.com"))
+                {
+                    var tasks = new[] { SeedJobPosting(), SeedPerson() };
+                    await Task.WhenAll(tasks);
+                }
+            });
         }
 
         private async Task SeedPerson()
@@ -58,13 +67,9 @@ namespace Personnel.Api.Infrastructure
                     }
                 };
 
-                var policy = CreatePolicy(_logger, nameof(SeedPerson));
-                await policy.ExecuteAsync(async () =>
-                {
-                    var result = await _mediator.Send(command);
-                    var hireCommand = new HirePersonCommand(result.Id, new JobTitleDto() { Name = "Database Administrator" });
-                    await _mediator.Publish(hireCommand);
-                });
+                var result = await _mediator.Send(command);
+                var hireCommand = new HirePersonCommand(result.Id, new JobTitleDto() { Name = "Database Administrator" });
+                await _mediator.Publish(hireCommand);
             }
             catch (PersonnelDomainException e)
             {
@@ -82,11 +87,7 @@ namespace Personnel.Api.Infrastructure
                     Description = "Manage databases"
                 };
 
-                var policy = CreatePolicy(_logger, nameof(SeedJobPosting));
-                await policy.ExecuteAsync(async () =>
-                {
-                    await _mediator.Send(command);
-                });
+                await _mediator.Send(command);
             }
             catch (PersonnelDomainException e)
             {
@@ -96,10 +97,10 @@ namespace Personnel.Api.Infrastructure
 
         private AsyncRetryPolicy CreatePolicy(ILogger logger, string prefix, int retries = 6)
         {
-            return Policy.Handle<SqlException>().
+            return Policy.Handle<Exception>().
                 WaitAndRetryAsync(
                     retryCount: retries, 
-                    sleepDurationProvider: retry => TimeSpan.FromSeconds(5), 
+                    sleepDurationProvider: retry => TimeSpan.FromSeconds(5) * retry, 
                     onRetry: (exception, timeSpan, retry, ctx) =>
                     {
                         logger.LogTrace($"[{prefix}] Exception {exception.GetType().Name} with message ${exception.Message} detected on attempt {retry} of {retries}");

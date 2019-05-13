@@ -91,13 +91,10 @@ namespace AuthApi
     {
         public static IApplicationBuilder ConfigureEventBus(this IApplicationBuilder app)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
-                eventBus.Subscribe<AddedToRoleIntegrationEvent, AddedToRoleIntegrationEventHandler>();
-                eventBus.Subscribe<RemovedFromRoleIntegrationEvent, RemovedFromRoleIntegrationEventHandler>();
-                eventBus.Subscribe<PersonRegisteredIntegrationEvent, PersonRegisteredIntegrationEventHandler>(); 
-            }
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<AddedToRoleIntegrationEvent, AddedToRoleIntegrationEventHandler>();
+            eventBus.Subscribe<RemovedFromRoleIntegrationEvent, RemovedFromRoleIntegrationEventHandler>();
+            eventBus.Subscribe<PersonRegisteredIntegrationEvent, PersonRegisteredIntegrationEventHandler>();
 
             return app;
         }

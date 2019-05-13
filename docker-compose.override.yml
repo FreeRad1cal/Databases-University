@@ -8,7 +8,7 @@ services:
         EventBusConnection: rabbitmq
         EventBusUserName: ${EVENT_BUS_USERNAME}
         EventBusPassword: ${EVENT_BUS_PASSWORD}
-        EventBusQueueName: DatabasesUniversity
+        EventBusQueueName: personnel.api
         Secret: ${SHARED_SECRET}
         AngularSpa: http://localhost:5002
     volumes:
@@ -26,7 +26,7 @@ services:
       EventBusConnection: rabbitmq
       EventBusUserName: ${EVENT_BUS_USERNAME}
       EventBusPassword: ${EVENT_BUS_PASSWORD}
-      EventBusQueueName: DatabasesUniversity
+      EventBusQueueName: auth.api
       Secret: ${SHARED_SECRET}
       AngularSpa: http://localhost:5002
 

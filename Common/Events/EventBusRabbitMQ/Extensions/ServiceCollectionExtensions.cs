@@ -17,6 +17,7 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ.Extensions
         {
             services.AddSingleton<IRabbitMQPersistentConnection, DefaultRabbitMQPersistentConnection>();
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+            services.AddSingleton<IEventBus, EventBusRabbitMQ>();
             services.Configure<EventBusOptions>(options =>
             {
                 options.HostName = configuration["EventBusConnection"];
@@ -24,9 +25,6 @@ namespace SecureChat.Common.Events.EventBusRabbitMQ.Extensions
                 options.Password = configuration["EventBusPassword"];
                 options.QueueName = configuration["EventBusQueueName"];
             });
-
-            services.AddSingleton<IEventBus, EventBusRabbitMQ>();
-            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
 
             var concreteTypes = asm.GetTypes()
                 .Where(type => type.ImplementsGenericInterface(typeof(IIntegrationEventHandler<>)) 

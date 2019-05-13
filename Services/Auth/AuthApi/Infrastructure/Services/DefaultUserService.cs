@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AuthApi.Models;
 using Dapper;
 using Helpers;
+using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 
 namespace AuthApi.Infrastructure.Services
@@ -14,9 +15,9 @@ namespace AuthApi.Infrastructure.Services
     {
         private readonly AuthApiSettings _authApiSettings;
 
-        public DefaultUserService(AuthApiSettings authApiSettings)
+        public DefaultUserService(IOptions<AuthApiSettings> authApiSettings)
         {
-            _authApiSettings = authApiSettings;
+            _authApiSettings = authApiSettings.Value;
         }
 
         public async Task<bool> AddUser(int id, string userName, string password)

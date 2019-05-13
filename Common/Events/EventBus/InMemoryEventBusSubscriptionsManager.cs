@@ -10,6 +10,7 @@ namespace SecureChat.Common.Events.EventBus
     {
         private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
         private readonly List<Type> _eventTypes;
+        private Guid guid = Guid.NewGuid();
 
         public event EventHandler<string> OnEventRemoved;
 
@@ -20,7 +21,10 @@ namespace SecureChat.Common.Events.EventBus
         }
 
         public bool IsEmpty => !_handlers.Keys.Any();
-        public void Clear() => _handlers.Clear();
+        public void Clear()
+        {
+            _handlers.Clear();
+        }
 
         public void AddDynamicSubscription<TH>(string eventName)
             where TH : IDynamicIntegrationEventHandler
