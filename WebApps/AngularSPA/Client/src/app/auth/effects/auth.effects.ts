@@ -57,8 +57,8 @@ export class AuthEffects implements OnInitEffects {
     @Effect({ dispatch: false })
     signOut$ = this.actions$.pipe(
         ofType<SignOut>(AuthActionTypes.SignOut),
+        tap(() => this.router.navigate(['login'])),
         tap(() => this.jwtPersister.clearPersistedToken()),
-        tap(() => this.router.navigate(['login']))
     );
 
     @Effect()

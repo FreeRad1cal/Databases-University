@@ -78,9 +78,9 @@ namespace Personnel.Api.Controllers
         }
 
         [HttpGet("job-applications", Name = nameof(GetJobApplications))]
-        public async Task<ActionResult> GetJobApplications(int? applicantId, int? jobPostingId)
+        public async Task<ActionResult> GetJobApplications(int? applicantId, int? jobPostingId, Pagination pagination)
         {
-            var jobApplications = await _employmentQueries.GetJobApplications(applicantId, jobPostingId);
+            var jobApplications = await _employmentQueries.GetJobApplications(pagination, applicantId, jobPostingId);
             return Ok(jobApplications);
         }
 

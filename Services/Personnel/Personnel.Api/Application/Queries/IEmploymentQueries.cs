@@ -17,7 +17,7 @@ namespace Personnel.Api.Application.Queries
 
         Task<ArrayResponse<JobApplicationDto>> GetJobApplicationsByApplicantIdAsync(int applicantId);
 
-        Task<ArrayResponse<JobApplicationDto>> GetJobApplications(int? applicantId, int? jobPostingId);
+        Task<ArrayResponse<JobApplicationDto>> GetJobApplications(Pagination pagination, int? applicantId, int? jobPostingId);
 
         Task<ArrayResponse<JobTitleDto>> GetJobTitlesAsync();
 

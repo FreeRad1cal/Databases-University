@@ -35,10 +35,8 @@ export class HomeComponent implements OnInit {
         {label: 'Employment', items: [
           {label: 'Search Jobs', routerLink: ['/personnel/employment/job-search']},
           {label: 'My Applications', routerLink: ['/personnel/employment/my-job-applications']},
+          {label: 'Received Job Applications', routerLink: ['/personnel/employment/job-applications'], visible: roles.includes(Roles.Employee)}
         ]},
-        {label: 'Employee Center', items: [
-          {label: 'Received Job Applications', routerLink: ['/personnel/received-job-applications']},
-        ], visible: roles.includes(Roles.Employee)},
         {label: 'Academics', items: [
           {label: 'Apply to DBU', routerLink: ['academics', 'apply']},
           {label: 'Student Center', visible: roles.includes(Roles.Student)}

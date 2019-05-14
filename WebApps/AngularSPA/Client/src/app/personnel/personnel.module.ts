@@ -20,9 +20,10 @@ import { JobApplicationConfirmationComponent } from './containers/job-applicatio
 import { MyJobApplicationsComponent } from './containers/my-job-applications/my-job-applications.component';
 import { JobApplicationsResultComponent } from './components/job-applications-result/job-applications-result.component';
 import { JobApplicationService } from './services/job-application.service';
+import { JobApplicationsComponent } from './containers/job-applications/job-applications.component';
 
 @NgModule({
-  declarations: [JobSearchPageComponent, JobSearchFormComponent, JobSearchResultComponent, JobPostingComponent, JobApplicationPageComponent, JobApplicationFormComponent, JobApplicationConfirmationComponent, MyJobApplicationsComponent, JobApplicationsResultComponent],
+  declarations: [JobSearchPageComponent, JobSearchFormComponent, JobSearchResultComponent, JobPostingComponent, JobApplicationPageComponent, JobApplicationFormComponent, JobApplicationConfirmationComponent, MyJobApplicationsComponent, JobApplicationsResultComponent, JobApplicationsComponent],
   entryComponents: [JobSearchPageComponent],
   providers: [JobSearchService, JobApplicationService],
   imports: [

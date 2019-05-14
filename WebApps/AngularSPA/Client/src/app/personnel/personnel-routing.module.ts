@@ -5,6 +5,7 @@ import { JobPostingComponent } from './containers/job-posting/job-posting.compon
 import { JobApplicationPageComponent } from './containers/job-application-page/job-application-page.component';
 import { JobApplicationConfirmationComponent } from './containers/job-application-confirmation/job-application-confirmation.component';
 import { MyJobApplicationsComponent } from './containers/my-job-applications/my-job-applications.component';
+import { JobApplicationsComponent } from './containers/job-applications/job-applications.component';
 
 const personnelRoutes: Routes = [
     {
@@ -25,6 +26,10 @@ const personnelRoutes: Routes = [
             {
                 path: 'my-job-applications',
                 component: MyJobApplicationsComponent
+            },
+            {
+                path: 'job-applications',
+                component: JobApplicationsComponent
             },
             {
                 path: 'job-search',

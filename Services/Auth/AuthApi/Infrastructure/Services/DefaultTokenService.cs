@@ -29,9 +29,10 @@ namespace AuthApi.Infrastructure.Services
 
         public async Task<string> GetTokenFromLoginCredentialsAsync(string userName, string password)
         {
-            const string sql = @"SELECT People.Id, PasswordHash, PasswordSalt, Type, Value FROM People
-                                LEFT JOIN Claims ON People.Id = Claims.PersonId
-                                WHERE People.UserName = @UserName;";
+            const string sql = @"SELECT Users.Id, PasswordHash, PasswordSalt, Type, Value 
+                                FROM Users
+                                LEFT JOIN Claims ON Users.Id = Claims.UserId
+                                WHERE Users.UserName = @UserName;";
 
             using (var conn = await GetDbConnectionAsync())
             {

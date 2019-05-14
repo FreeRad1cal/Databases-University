@@ -3,6 +3,7 @@ import { JobPosting } from '../../models/JobPosting';
 import { JobApplication } from '../../models/JobApplication';
 import { FileUpload } from 'primeng/fileupload';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-job-application-form',
@@ -21,7 +22,7 @@ export class JobApplicationFormComponent implements OnInit {
 
   uploadedFiles: File[] = [];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private location: Location) { }
 
   ngOnInit() {
   }
@@ -31,7 +32,7 @@ export class JobApplicationFormComponent implements OnInit {
   }
   
   onReturn() {
-    this.router.navigate(['personnel', 'employment', 'job-posting', this.jobPosting.id]);
+    this.location.back();
   }
 
   onSubmit() {

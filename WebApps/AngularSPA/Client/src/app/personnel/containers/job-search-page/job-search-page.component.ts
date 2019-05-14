@@ -1,17 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Paginate, Search } from '../../actions/job-search.actions';
-import { getJobTiles, getJobPostings, getJobSearchPagination, getTotalJobPostings, getJobSearchErrors, getLastJobSearchQuery } from '../../reducers';
+import { Search } from '../../actions/job-search.actions';
+import { getJobTiles, getJobPostings, getTotalJobPostings, getJobSearchErrors, getLastJobSearchQuery } from '../../reducers';
 import { JobTitle } from '../../models/JobTitle';
 import { Observable, of, Subject, combineLatest } from 'rxjs';
 import { JobPosting } from '../../models/JobPosting';
-import { Pagination } from '../../models/Pagination';
 import { map, concat, take, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { JobSearchService } from '../../services/job-search.service';
 import { AddJobTitles } from '../../actions/personnel-actions';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { JobSearchQuery } from '../../models/JobSearchQuery';
+import { Pagination } from 'src/app/models/Pagination';
+import { Paginate } from 'src/app/actions/actions';
+import { getPagination } from 'src/app/reducers';
 
 @Component({
   selector: 'app-job-search-page',
@@ -37,7 +39,7 @@ export class JobSearchPageComponent implements OnInit {
     );
 
     this.pagination$ = this.store.pipe(
-      select(getJobSearchPagination)
+      select(getPagination('job_search'))
     );
 
     this.lastSearchQuery$ = this.store.pipe(
@@ -74,6 +76,6 @@ export class JobSearchPageComponent implements OnInit {
       limit: event.rows,
       offset: event.first
     };
-    this.store.dispatch(new Paginate({pagination: pagination}));
+    this.store.dispatch(new Paginate({key: 'job_search', pagination: pagination}));
   }
 }

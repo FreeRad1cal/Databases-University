@@ -21,6 +21,6 @@ export class JwtHelper {
     static getRoles(jwt: string) : string[] {
         // Returns an array when no rol claims are present or when only one rol claim is present
         let decoded = jwt_decode<any>(jwt);
-        return [].concat(decoded.Role)
+        return [].concat(decoded.role)
     }
 }

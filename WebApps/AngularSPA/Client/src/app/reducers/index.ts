@@ -36,4 +36,9 @@ export const metaReducers: MetaReducer<State>[] = !environment.production
 export const getGlobalBusy = createSelector(
   (state: State) => state.root,
   fromRoot.selectGlobalBusy
-)
+);
+
+export const getPagination = (key: string) => createSelector(
+  (state: State) => state.root,
+  fromRoot.selectPagination(key)
+);

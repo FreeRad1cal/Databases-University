@@ -8,7 +8,7 @@ export type JobApplicationActionDescriptor = {
 }
 export interface State {
     errors: string[];
-    lastJobApplicationAction: JobApplicationActionDescriptor
+    lastJobApplicationAction: JobApplicationActionDescriptor;
 }
 
 export const initialState: State = {

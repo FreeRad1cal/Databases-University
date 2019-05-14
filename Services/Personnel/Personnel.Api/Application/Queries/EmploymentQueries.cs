@@ -89,10 +89,10 @@ namespace Personnel.Api.Application.Queries
 
         public async Task<ArrayResponse<JobApplicationDto>> GetJobApplicationsByApplicantIdAsync(int applicantId)
         {
-            return await GetJobApplications(applicantId, null);
+            return await GetJobApplications(Pagination.Default, applicantId, null);
         }
 
-        public async Task<ArrayResponse<JobApplicationDto>> GetJobApplications(int? applicantId, int? jobPostingId)
+        public async Task<ArrayResponse<JobApplicationDto>> GetJobApplications(Pagination pagination, int? applicantId, int? jobPostingId)
         {
             var applicantFilter = applicantId is null
                 ? @"TRUE"
@@ -105,7 +105,8 @@ namespace Personnel.Api.Application.Queries
             var sql = $@"SELECT * FROM JobApplications
                         JOIN JobPostings ON JobApplications.JobPostingId = JobPostings.Id
                         JOIN JobTitles ON JobPostings.JobTitleName = JobTitles.Name
-                        WHERE {applicantFilter} AND {jobTitleFilter}";
+                        WHERE {applicantFilter} AND {jobTitleFilter}
+                        LIMIT @Limit OFFSET @Offset";
 
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
@@ -116,7 +117,7 @@ namespace Personnel.Api.Application.Queries
                         jobApplication.JobPosting = jobPosting;
                         return jobApplication;
                     },
-                    new { applicantId, jobPostingId },
+                    new { applicantId, jobPostingId, pagination.Limit, pagination.Offset },
                     splitOn:"Id,Id,Name");
                 var total = await conn.QueryFirstOrDefaultAsync<int>(@"SELECT COUNT(*) AS total FROM JobApplications");
 

@@ -81,11 +81,6 @@ export const selectJobSearch = createSelector(
     (state: PersonnelState) => state.jobSearch
 )
 
-export const getJobSearchPagination = createSelector(
-    selectJobSearch,
-    fromJobSearch.selectPagination
-)
-
 export const getJobSearchErrors = createSelector(
     selectJobSearch,
     fromJobSearch.selectErrors

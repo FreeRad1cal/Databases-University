@@ -16,7 +16,6 @@ import { JobPosting } from '../../models/JobPosting';
 })
 export class MyJobApplicationsComponent implements OnInit {
   myJobApplications$: Observable<JobApplication[]>;
-  lastJobApplicationAction$: Observable<JobApplicationActionDescriptor>;
   myJobPostings$: Observable<JobPosting[]>;
   
   constructor(private store: Store<any>) { }
@@ -37,7 +36,6 @@ export class MyJobApplicationsComponent implements OnInit {
         //map(postings => postings.filter(posting => appls.map(appl => appl.jobPosting).includes(posting.id)))
       ))
     );
-    this.lastJobApplicationAction$ = this.store.select(getLastApplicationAction);
   }
 
   onOpenResume(id: string) {

@@ -51,7 +51,7 @@ namespace AuthApi.Infrastructure.Services
                     credentials.UserName
                 });
 
-                return result != null && SaltedHashHelper.VerifyPasswordAgainstSaltedHash(credentials.Password, result.Hash, result.Salt);
+                return result != null && SaltedHashHelper.VerifyPasswordAgainstSaltedHash(credentials.Password, result.PasswordHash, result.PasswordSalt);
             }
         }
 

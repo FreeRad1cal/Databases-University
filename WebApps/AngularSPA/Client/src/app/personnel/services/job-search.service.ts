@@ -3,12 +3,12 @@ import { environment } from 'src/environments/environment';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { JobTitle, jobTitleListSchema } from '../models/JobTitle';
 import { throwError } from 'rxjs';
-import { Pagination } from '../models/Pagination';
 import { jobApplicationSchema } from '../models/JobApplication';
 import { ArrayResult } from '../models/ArrayResult';
 import { JobPosting, jobPostingSchema, jobPostingListSchema } from '../models/JobPosting';
 import { map, catchError } from 'rxjs/operators';
 import { normalize } from 'normalizr';
+import { Pagination } from 'src/app/models/Pagination';
 
 @Injectable({
     providedIn: 'root'

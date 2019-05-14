@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
@@ -13,14 +15,12 @@ namespace Personnel.Api.Infrastructure.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public int GetUserIdentity()
-        {
-            return int.Parse(_context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        }
+        public IEnumerable<string> GetRoles() => 
+            _context.HttpContext.User.Claims
+                .Where(claim => claim.Type == ClaimTypes.Role)
+                .Select(claim => claim.Value);
 
-        public string GetUserName()
-        {
-            return _context.HttpContext.User.Identity.Name;
-        }
+        public int GetUserIdentity() => 
+            int.Parse(_context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
     }
 }

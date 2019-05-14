@@ -7,6 +7,7 @@ import { ArrayResult } from '../models/ArrayResult';
 import { map, catchError } from 'rxjs/operators';
 import { normalize } from 'normalizr';
 import { JobPosting } from '../models/JobPosting';
+import { Pagination } from 'src/app/models/Pagination';
 
 @Injectable({
     providedIn: 'root'
@@ -33,9 +34,12 @@ export class JobApplicationService {
         );
     }
 
-    getJobApplications(params: {applicantId?: string, jobPostingId?: string}) {
+    getJobApplications(params: {pagination?: Pagination, applicantId?: string, jobPostingId?: string}) {
         const url = `${this.personnelApi}/employment/job-applications`;
-        return this.httpClient.get<ArrayResult<any>>(url, {observe: 'response', params: params}).pipe(
+        if (!params.pagination) {
+            params.pagination = Pagination.Default
+        }
+        return this.httpClient.get<ArrayResult<any>>(url, {observe: 'response', params: {applicantId: params.applicantId, jobPostingId: params.jobPostingId}}).pipe(
           map(res => {
             let jobApplications: JobApplication[] = [];
             let jobPostings: JobPosting[] = [];

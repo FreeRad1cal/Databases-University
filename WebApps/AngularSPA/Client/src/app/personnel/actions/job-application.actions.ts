@@ -1,7 +1,4 @@
 import { Action } from '@ngrx/store';
-import { JobTitle } from '../models/JobTitle';
-import { JobPosting } from '../models/JobPosting';
-import { Pagination } from '../models/Pagination';
 import { JobApplication } from '../models/JobApplication';
 import { JobApplicationActionDescriptor } from '../reducers/job-application.reducer';
 
@@ -12,6 +9,7 @@ export enum PersonnelApplicationActionTypes {
     SubmitJobApplicationAction = "[PersonnelJobApplication] SubmitJobApplicationAction",
     JobApplicationActionSuccess = "[PersonnelJobApplication] JobApplicationActionSuccess",
     LoadMyJobApplications = '[PersonnelJobApplication] LoadMyJobApplications',
+    LoadJobApplications = '[PersonnelJobApplication] LoadJobApplications',
     OpenResume = '[PersonnelJobApplication] OpenResume'
 }
 
@@ -47,6 +45,10 @@ export class JobApplicationActionSuccess implements Action {
 
 export class LoadMyJobApplications implements Action {
     readonly type = PersonnelApplicationActionTypes.LoadMyJobApplications;
+}
+
+export class LoadJobApplications implements Action {
+    readonly type = PersonnelApplicationActionTypes.LoadJobApplications;
 }
 
 export class OpenResume implements Action {

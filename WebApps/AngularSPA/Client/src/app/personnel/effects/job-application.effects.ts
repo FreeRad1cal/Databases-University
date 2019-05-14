@@ -11,6 +11,7 @@ import { getSignedInUser } from 'src/app/auth/reducers';
 import { SubmitJobApplication, PersonnelApplicationActionTypes, JobApplicationSubmissionSuccess, JobApplicationSubmissionFailure, OpenResume, LoadMyJobApplications, SubmitJobApplicationAction, JobApplicationActionSuccess } from '../actions/job-application.actions';
 import { AddJobApplications, AddJobPostings } from '../actions/personnel-actions';
 import { JobApplicationService } from '../services/job-application.service';
+import { getPagination } from 'src/app/reducers';
 
 @Injectable()
 export class JobApplicationEffects {
@@ -52,6 +53,23 @@ export class JobApplicationEffects {
                     return of(new SetGlobalBusy({value: false}));
                 })
         ))
+    );
+
+    @Effect()
+    loadJobApplications$ = this.actions$.pipe(                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+        ofType<LoadMyJobApplications>(PersonnelApplicationActionTypes.LoadJobApplications),
+        withLatestFrom(this.store.select(getPagination('job_applications'))),
+        switchMap(([action, pagination]) => this.jobApplicationService.getJobApplications({pagination}).pipe(
+                mergeMap(res => [
+                    new AddJobPostings({jobPostings: res.items.jobPostings}),
+                    new AddJobApplications({jobApplications: res.items.jobApplications, total: res.total}),
+                    new SetGlobalBusy({value: false})
+                ]),
+                catchError(errors => {
+                    this.router.navigate(['/error'], {queryParams: {errors: JSON.stringify(errors)}});
+                    return of(new SetGlobalBusy({value: false}));
+                })
+        ))
     )
 
     @Effect({dispatch: false})
@@ -67,7 +85,7 @@ export class JobApplicationEffects {
     )
 
     @Effect()
-    actOnJobApplication$ = this.actions$.pipe(
+    submitJobApplicationAction$ = this.actions$.pipe(
         ofType<SubmitJobApplicationAction>(PersonnelApplicationActionTypes.SubmitJobApplicationAction),
         tap(() => this.store.dispatch(new SetGlobalBusy({value: true}))),
         switchMap(action => {
