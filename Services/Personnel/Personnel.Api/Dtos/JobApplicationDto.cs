@@ -15,5 +15,7 @@ namespace Personnel.Api.Dtos
         public string ApplicantId { get; set; }
 
         public DateTime Time { get; set; }
+
+        public JobApplicationDecisionDto Decision { get; set; }
     }
 }

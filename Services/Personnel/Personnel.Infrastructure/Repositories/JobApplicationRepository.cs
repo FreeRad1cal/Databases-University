@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Dapper;
 using MediatR;
 using Personnel.Domain.AggregateModel.JobApplicationAggregate;
@@ -18,12 +20,18 @@ namespace Personnel.Infrastructure.Repositories
 
         private readonly IDbConnectionFactory _dbConnectionFactory;
         private readonly IResumePersisterService _resumePersisterService;
+        private readonly IMapper _mapper;
 
-        public JobApplicationRepository(IUnitOfWork unitOfWork, IDbConnectionFactory dbConnectionFactory, IResumePersisterService resumePersisterService)
+        public JobApplicationRepository(
+            IUnitOfWork unitOfWork, 
+            IDbConnectionFactory dbConnectionFactory, 
+            IResumePersisterService resumePersisterService,
+            IMapper mapper)
         {
             UnitOfWork = unitOfWork;
             _dbConnectionFactory = dbConnectionFactory;
             _resumePersisterService = resumePersisterService;
+            _mapper = mapper;
         }
 
         public JobApplication Add(JobApplication jobApplication, byte[] resume)
@@ -51,17 +59,25 @@ namespace Personnel.Infrastructure.Repositories
 
         public void Update(JobApplication jobApplication)
         {
-            throw new NotImplementedException();
+            InsertJobApplicationDecision(jobApplication.Id, jobApplication.Decision);
         }
 
         public async Task<JobApplication> GetAsync(int id)
         {
             var sql = $@"SELECT * FROM JobApplications
-                        WHERE JobApplications.Id=@{nameof(id)}";
+                        JOIN JobApplicationDecisions ON JobApplicationDecisions.JobApplicationId = JobApplications.Id
+                        WHERE JobApplications.Id = @{nameof(id)}";
 
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
-                return await conn.QueryFirstAsync<JobApplication>(sql, new {id});
+                var resultSet = await conn.QueryAsync<dynamic, JobApplicationDecision, JobApplication>(sql,
+                    (app, dec) =>
+                    {
+                        app.Decision = dec;
+                        return app as JobApplication;
+                    },
+                    new {id}, splitOn: "JobApplicationId");
+                return resultSet.FirstOrDefault();
             }
         }
 
@@ -73,6 +89,22 @@ namespace Personnel.Infrastructure.Repositories
             {
                 await connection.ExecuteAsync(sql, new {jobApplication.Id});
                 _resumePersisterService.DeleteResume(jobApplication.ResumeFileName);
+            });
+        }
+
+        private void InsertJobApplicationDecision(int jobApplicationId, JobApplicationDecision decision)
+        {
+            var sql = $@"INSERT INTO JobApplicationDecisions (JobApplicationId, Decision, DeciderId, DecisionDate)
+                        VALUES (@{nameof(jobApplicationId)}, @{nameof(decision.Decision)}, @{nameof(decision.DeciderId)}, @{nameof(decision.DecisionDate)});";
+            UnitOfWork.AddOperation(decision, async conn =>
+            {
+                await conn.ExecuteAsync(sql, new
+                {
+                    jobApplicationId,
+                    decision.Decision,
+                    decision.DeciderId,
+                    decision.DecisionDate
+                });
             });
         }
     }

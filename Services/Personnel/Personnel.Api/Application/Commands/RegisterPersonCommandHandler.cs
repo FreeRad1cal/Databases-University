@@ -52,13 +52,13 @@ namespace Personnel.Api.Application.Commands
                 _mapper.Map<Address>(request.HomeAddress),
                 _mapper.Map<Address>(request.MailingAddress));
 
-            _logger.LogInformation("----- Creating Person - Person: {@Person}", person);
+            _logger.LogInformation("----- Creating Person - UserName: {@UserName}", person.UserName);
 
             var result = _personRepository.Add(person);
 
             await _personRepository.UnitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation("----- Created Person - Person: {@Person}", person);
+            _logger.LogInformation("----- Created Person - UserName: {@UserName}", person.UserName);
 
             _eventBus.Publish(new PersonRegisteredIntegrationEvent(result.Id, request.Password, result.UserName));
 

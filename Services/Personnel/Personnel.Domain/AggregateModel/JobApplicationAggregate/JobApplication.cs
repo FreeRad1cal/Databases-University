@@ -19,6 +19,8 @@ namespace Personnel.Domain.AggregateModel.JobApplicationAggregate
 
         public DateTime Time { get; private set; }
 
+        public JobApplicationDecision Decision { get; private set; }
+
         private JobApplication() { }
 
         public JobApplication(int jobPostingId, int applicantId, string resumeFileName = null)
@@ -27,6 +29,18 @@ namespace Personnel.Domain.AggregateModel.JobApplicationAggregate
             ApplicantId = applicantId;
             Time = DateTime.Now;
             ResumeFileName = resumeFileName;
+        }
+
+        public void MakeDecision(string decision, int deciderId)
+        {
+            if (Decision != null)
+            {
+                throw new PersonnelDomainException("Invalid operation", new[] {"Job application decision already made"});
+            }
+
+            Decision = new JobApplicationDecision(decision, deciderId);
+
+            AddDomainEvent(new JobApplicationDecisionMadeDomainEvent(this));
         }
     }
 }

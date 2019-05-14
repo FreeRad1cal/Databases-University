@@ -23,6 +23,8 @@ namespace Personnel.Api.Application.Queries
 
         Task<JobTitleDto> GetJobTitleByNameAsync(string name);
 
-        Task<byte[]> GetResumeByApplicationId(int id);
+        Task<JobApplicationDto> GetJobApplicationByIdAsync(int id);
+
+        Task<byte[]> GetResumeByJobApplicationIdAsync(int id);
     }
 }

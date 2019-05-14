@@ -44,9 +44,14 @@ namespace Personnel.Api.Application.Commands
             }
 
             var person = await _personRepository.GetAsync(request.PersonId);
+
+            _logger.LogInformation($"Hiring person {request.PersonId} to job title {request.JobTitle.Name}");
+
             person.Hire(_mapper.Map<JobTitle>(request.JobTitle));
             _personRepository.Update(person);
             await _personRepository.UnitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation($"Hired person {request.PersonId} to job title {request.JobTitle.Name}");
         }
     }
 }

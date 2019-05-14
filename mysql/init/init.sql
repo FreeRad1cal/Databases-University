@@ -120,10 +120,11 @@ CREATE TABLE IF NOT EXISTS JobApplications (
 		ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS JobApplicationDecision (
+CREATE TABLE IF NOT EXISTS JobApplicationDecisions (
 	JobApplicationId INT NOT NULL,
-	Decision BOOLEAN NOT NULL,
+	Decision VARCHAR(255) NOT NULL,
 	DeciderId INT,
+	DecisionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	Time DATE NOT NULL,
 	PRIMARY KEY (JobApplicationId),
 	FOREIGN KEY (JobApplicationId)
@@ -160,8 +161,9 @@ CREATE TABLE IF NOT EXISTS Applications (
 
 CREATE TABLE IF NOT EXISTS ApplicationDecisions (
 	ApplicationId INT NOT NULL,
-	Decision BOOLEAN NOT NULL,
+	Decision VARCHAR(255) NOT NULL,
 	DeciderId INT,
+	DecisionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (ApplicationId),
 	FOREIGN KEY (ApplicationId)
 		REFERENCES Applications (Id)

@@ -90,10 +90,22 @@ namespace Personnel.Api.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpGet("resumes/{id}")]
-        public async Task<ActionResult> GetResumeByApplicationid([FromRoute] int id)
+        [HttpPost("job-applications/{id}/decision", Name = nameof(MakeJobApplicationDecision))]
+        public async Task<ActionResult> MakeJobApplicationDecision(MakeJobApplicationDecisionCommand command)
         {
-            var resume = await _employmentQueries.GetResumeByApplicationId(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ErrorResponse(ModelState));
+            }
+
+            var jobApplication = await _mediator.Send(command);
+            return Ok(jobApplication);
+        }
+         
+        [HttpGet("resumes/{id}", Name = nameof(GetResumeByJobApplicationId))]
+        public async Task<ActionResult> GetResumeByJobApplicationId([FromRoute] int id)
+        {
+            var resume = await _employmentQueries.GetResumeByJobApplicationIdAsync(id);
             return File(resume, "application/pdf");
         }
 

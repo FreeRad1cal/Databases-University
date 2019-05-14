@@ -156,7 +156,20 @@ namespace Personnel.Api.Application.Queries
             }
         }
 
-        public async Task<byte[]> GetResumeByApplicationId(int id)
+        public async Task<JobApplicationDto> GetJobApplicationByIdAsync(int id)
+        {
+            var sql = $@"SELECT * FROM JobApplications
+                        JOIN JobPostings ON JobApplications.JobPostingId = JobPostings.Id
+                        JOIN JobTitles ON JobPostings.JobTitleName = JobTitles.Name
+                        WHERE JobApplications.Id = @{nameof(id)}";
+
+            using (var conn = await _dbConnectionFactory.GetConnectionAsync())
+            {
+                return await conn.QueryFirstOrDefaultAsync<JobApplicationDto>(sql, new { id });
+            }
+        }
+
+        public async Task<byte[]> GetResumeByJobApplicationIdAsync(int id)
         {
             var sql = $@"SELECT ResumeFileName
                         FROM JobApplications
