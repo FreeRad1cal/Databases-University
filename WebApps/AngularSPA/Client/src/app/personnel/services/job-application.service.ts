@@ -13,6 +13,7 @@ import { Pagination } from 'src/app/models/Pagination';
     providedIn: 'root'
 })
 export class JobApplicationService {
+
     private personnelApi = environment.personnelApi;
 
     constructor(private httpClient: HttpClient) {}
@@ -70,6 +71,21 @@ export class JobApplicationService {
     deleteJobApplicationById(id: string) {
         const url = `${this.personnelApi}/employment/job-applications/${id}`;
         return this.httpClient.delete(url, {observe: 'response'}).pipe(
+            map(_ => true),
+            catchError(res => throwError(this.resolveErrors(res)))
+        );
+    }
+
+    makeJobApplicationDecision(id: string, decision: string): Observable<any> {
+        const url = `${this.personnelApi}/employment/job-applications/${id}/decision`;
+        return this.httpClient.post<any>(url, {applicationId: id, decision: decision}, {observe: 'response'}).pipe(
+            map(res => {
+              const normalized = normalize(res.body, jobApplicationSchema);
+              return {
+                jobApplication: Object.values(normalized.entities.jobApplications)[0] as JobApplication,
+                jobPosting: Object.values(normalized.entities.jobPostings)[0] as JobPosting
+              };
+            }),
             catchError(res => throwError(this.resolveErrors(res)))
         );
     }

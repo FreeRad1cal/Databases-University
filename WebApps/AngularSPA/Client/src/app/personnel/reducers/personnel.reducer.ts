@@ -3,6 +3,7 @@ import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { JobTitle } from '../models/JobTitle';
 import { PersonnelActionsUnion, PersonnelActionTypes } from '../actions/personnel-actions';
 import { JobApplication } from '../models/JobApplication';
+import { AuthActionsUnion, AuthActionTypes } from 'src/app/auth/actions/auth.actions';
 
 interface JobTitleState extends EntityState<JobTitle> {
     total: number;
@@ -32,7 +33,7 @@ export const initialState: State = {
     jobApplications: jobApplicationsAdapter.getInitialState({total: null})
 };
 
-export function reducer(state = initialState, action: PersonnelActionsUnion): State {
+export function reducer(state = initialState, action: PersonnelActionsUnion | AuthActionsUnion): State {
     switch (action.type) {
         case PersonnelActionTypes.AddJobTitles:
         {
@@ -62,6 +63,10 @@ export function reducer(state = initialState, action: PersonnelActionsUnion): St
                 newState.jobApplications.total = action.payload.total;
             }
             return newState;
+        }
+        case AuthActionTypes.SignOut:
+        {
+            return {...initialState};
         }
         default: {
             return state;

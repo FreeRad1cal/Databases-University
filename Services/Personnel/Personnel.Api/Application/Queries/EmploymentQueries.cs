@@ -105,20 +105,25 @@ namespace Personnel.Api.Application.Queries
             var sql = $@"SELECT * FROM JobApplications
                         JOIN JobPostings ON JobApplications.JobPostingId = JobPostings.Id
                         JOIN JobTitles ON JobPostings.JobTitleName = JobTitles.Name
+                        LEFT JOIN JobApplicationDecisions ON JobApplicationDecisions.JobApplicationId = JobApplications.Id
                         WHERE {applicantFilter} AND {jobTitleFilter}
                         LIMIT @Limit OFFSET @Offset";
 
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
                 var result = await conn.QueryAsync(sql,
-                    (JobApplicationDto jobApplication, JobPostingDto jobPosting, JobTitleDto jobTitle) =>
+                    (JobApplicationDto jobApplication, JobPostingDto jobPosting, JobTitleDto jobTitle, JobApplicationDecisionDto decision) =>
                     {
                         jobPosting.JobTitle = jobTitle;
                         jobApplication.JobPosting = jobPosting;
+                        if (decision.Decision != null)
+                        {
+                            jobApplication.Decision = decision;
+                        }
                         return jobApplication;
                     },
                     new { applicantId, jobPostingId, pagination.Limit, pagination.Offset },
-                    splitOn:"Id,Id,Name");
+                    splitOn: "Id,Id,Name,JobApplicationId");
                 var total = await conn.QueryFirstOrDefaultAsync<int>(@"SELECT COUNT(*) AS total FROM JobApplications");
 
                 return new ArrayResponse<JobApplicationDto>()
@@ -158,14 +163,31 @@ namespace Personnel.Api.Application.Queries
 
         public async Task<JobApplicationDto> GetJobApplicationByIdAsync(int id)
         {
+
             var sql = $@"SELECT * FROM JobApplications
                         JOIN JobPostings ON JobApplications.JobPostingId = JobPostings.Id
                         JOIN JobTitles ON JobPostings.JobTitleName = JobTitles.Name
+                        LEFT JOIN JobApplicationDecisions ON JobApplicationDecisions.JobApplicationId = JobApplications.Id
                         WHERE JobApplications.Id = @{nameof(id)}";
 
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
             {
-                return await conn.QueryFirstOrDefaultAsync<JobApplicationDto>(sql, new { id });
+                var resultSet = await conn.QueryAsync(sql,
+                    (JobApplicationDto jobApplication, JobPostingDto jobPosting, JobTitleDto jobTitle, JobApplicationDecisionDto decision) =>
+                    {
+                        jobPosting.JobTitle = jobTitle;
+                        jobApplication.JobPosting = jobPosting;
+                        if (decision.Decision != null)
+                        {
+                            jobApplication.Decision = decision;
+                        }
+                        
+                        return jobApplication;
+                    },
+                    new { id },
+                    splitOn: "Id,Id,Name,JobApplicationId");
+
+                return resultSet.FirstOrDefault();
             }
         }
 

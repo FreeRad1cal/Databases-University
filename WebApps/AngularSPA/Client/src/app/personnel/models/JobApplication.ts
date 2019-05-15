@@ -1,5 +1,6 @@
 import { schema } from 'normalizr';
 import { jobPostingSchema } from './JobPosting';
+import { JobApplicationDecision } from './JobApplicationDecision';
 
 export const jobApplicationSchema = new schema.Entity('jobApplications', {
     jobPosting: jobPostingSchema
@@ -12,4 +13,5 @@ export interface JobApplication {
     jobPosting: string;
     time: Date;
     applicantId: string;
+    decision?: JobApplicationDecision;
 }

@@ -39,6 +39,7 @@ using SecureChat.Common.Events.EventBus;
 using SecureChat.Common.Events.EventBus.Abstractions;
 using SecureChat.Common.Events.EventBusRabbitMQ;
 using SecureChat.Common.Events.EventBusRabbitMQ.Extensions;
+using Personnel.Api.Application.Commands;
 
 namespace Personnel.Api
 {
@@ -79,8 +80,6 @@ namespace Personnel.Api
             services.Configure<PersonnelApiSettings>(Configuration);
             services.Configure<DbConnectionInfo>(Configuration);
 
-            services.AddMediatR(typeof(Startup).Assembly);
-
             services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
 
             services.AddScoped<IDbConnectionFactory, MySqlConnectionFactory>();
@@ -98,6 +97,8 @@ namespace Personnel.Api
             services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
 
             services.AddScoped<DatabaseSeed>();
+
+            services.AddMediatR(typeof(Startup).Assembly);
 
             services.AddAutoMapper(cfg =>
             {

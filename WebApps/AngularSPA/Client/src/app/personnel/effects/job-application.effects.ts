@@ -3,7 +3,7 @@ import { Actions, ofType, Effect, OnInitEffects } from '@ngrx/effects';
 import { Store, Action } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { switchMap, map, catchError, withLatestFrom, filter, tap, mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { SetGlobalBusy } from 'src/app/actions/actions';
 import { HttpErrorResponse } from '@angular/common/http';
 import { JobSearchService } from '../services/job-search.service';
@@ -35,7 +35,7 @@ export class JobApplicationEffects {
     @Effect({dispatch: false})
     applicationSubmissionSuccess$ = this.actions$.pipe(
         ofType<JobApplicationSubmissionSuccess>(PersonnelApplicationActionTypes.JobApplicationSubmissionSuccess),
-        tap((action) => this.router.navigate(["personnel", "job-search", "apply", "confirmation"], {queryParams: {referenceNumber: action.payload.jobApplication.id}}))
+        tap((action) => this.router.navigate(["personnel", "employment", "apply", "confirmation"], {queryParams: {referenceNumber: action.payload.jobApplication.id}}))
     )
 
     @Effect()
@@ -89,16 +89,20 @@ export class JobApplicationEffects {
         ofType<SubmitJobApplicationAction>(PersonnelApplicationActionTypes.SubmitJobApplicationAction),
         tap(() => this.store.dispatch(new SetGlobalBusy({value: true}))),
         switchMap(action => {
+            let result: Observable<any>;
             switch(action.payload.jobApplicationAction.action) {
-                case 'withdraw':
-                    return this.jobApplicationService.deleteJobApplicationById(action.payload.jobApplicationAction.id).pipe(
-                        mergeMap(res => [new JobApplicationActionSuccess({jobApplicationAction: action.payload.jobApplicationAction}), new SetGlobalBusy({value: false})]),
-                        catchError(errors => {
-                            this.router.navigate(['/error'], {queryParams: {errors: JSON.stringify(errors)}});
-                            return of(new SetGlobalBusy({value: false}));
-                        })
-                    )
+                case 'Withdraw':
+                    result = this.jobApplicationService.deleteJobApplicationById(action.payload.jobApplicationAction.id);
+                default:
+                    result = this.jobApplicationService.makeJobApplicationDecision(action.payload.jobApplicationAction.id, action.payload.jobApplicationAction.action);
             }
+            return result.pipe(
+                mergeMap(res => [new JobApplicationActionSuccess({jobApplicationAction: action.payload.jobApplicationAction}), new SetGlobalBusy({value: false})]),
+                catchError(errors => {
+                    this.router.navigate(['/error'], {queryParams: {errors: JSON.stringify(errors)}});
+                    return of(new SetGlobalBusy({value: false}));
+                })
+            )
         })
     )
 

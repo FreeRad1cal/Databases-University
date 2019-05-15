@@ -124,8 +124,7 @@ CREATE TABLE IF NOT EXISTS JobApplicationDecisions (
 	JobApplicationId INT NOT NULL,
 	Decision VARCHAR(255) NOT NULL,
 	DeciderId INT,
-	DecisionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-	Time DATE NOT NULL,
+	DecisionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (JobApplicationId),
 	FOREIGN KEY (JobApplicationId)
 		REFERENCES JobApplications (Id)

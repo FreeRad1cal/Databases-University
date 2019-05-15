@@ -15,6 +15,11 @@ namespace Personnel.Domain.AggregateModel.JobApplicationAggregate
 
         public DateTime DecisionDate { get; private set; }
 
+        private JobApplicationDecision()
+        {
+            
+        }
+
         public JobApplicationDecision(string decision, int deciderId)
         {
             Decision = decision;

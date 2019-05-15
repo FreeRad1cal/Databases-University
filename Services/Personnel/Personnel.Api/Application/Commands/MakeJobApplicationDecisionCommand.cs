@@ -13,7 +13,7 @@ namespace Personnel.Api.Application.Commands
         [Required]
         public int ApplicationId { get; set; }
 
-        [Required, RegularExpression("\b(Hire)|(Reject)\b")]
+        [Required]//, RegularExpression("\b(Hire)|(Reject)\b")]
         public string Decision { get; set; }
     }
 }

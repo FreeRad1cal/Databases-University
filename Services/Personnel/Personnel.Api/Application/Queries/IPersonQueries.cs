@@ -7,5 +7,6 @@ namespace Personnel.Api.Application.Queries
     {
         Task<bool> UserNameOrEmailExists(string userName, string email);
         Task<PersonDto> GetPersonByIdAsync(int id);
+        Task<bool> HasJobTitle(int personId, string titleName);
     }
 }

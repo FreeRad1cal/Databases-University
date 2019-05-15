@@ -1,7 +1,7 @@
 import { PersonnelApplicationActionsUnion, PersonnelApplicationActionTypes } from '../actions/job-application.actions';
 import { JobApplication } from '../models/JobApplication';
 
-export type JobApplicationAction = 'withdraw' | 'hire' | 'reject';
+export type JobApplicationAction = 'Withdraw' | 'Hire' | 'Reject';
 export type JobApplicationActionDescriptor = {
   action: JobApplicationAction;
   id: string

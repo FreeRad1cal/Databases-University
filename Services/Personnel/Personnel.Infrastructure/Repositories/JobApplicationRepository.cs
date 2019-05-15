@@ -65,7 +65,7 @@ namespace Personnel.Infrastructure.Repositories
         public async Task<JobApplication> GetAsync(int id)
         {
             var sql = $@"SELECT * FROM JobApplications
-                        JOIN JobApplicationDecisions ON JobApplicationDecisions.JobApplicationId = JobApplications.Id
+                        LEFT JOIN JobApplicationDecisions ON JobApplicationDecisions.JobApplicationId = JobApplications.Id
                         WHERE JobApplications.Id = @{nameof(id)}";
 
             using (var conn = await _dbConnectionFactory.GetConnectionAsync())
@@ -73,8 +73,11 @@ namespace Personnel.Infrastructure.Repositories
                 var resultSet = await conn.QueryAsync<dynamic, JobApplicationDecision, JobApplication>(sql,
                     (app, dec) =>
                     {
-                        app.Decision = dec;
-                        return app as JobApplication;
+                        if (dec.Decision != null)
+                        {
+                            app.Decision = dec;
+                        } 
+                        return _mapper.Map<JobApplication>(app);
                     },
                     new {id}, splitOn: "JobApplicationId");
                 return resultSet.FirstOrDefault();

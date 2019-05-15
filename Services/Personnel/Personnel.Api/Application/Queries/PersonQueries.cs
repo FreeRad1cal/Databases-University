@@ -70,5 +70,10 @@ namespace Personnel.Api.Application.Queries
                 return person;
             }
         }
+
+        public Task<bool> HasJobTitle(int personId, string titleName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

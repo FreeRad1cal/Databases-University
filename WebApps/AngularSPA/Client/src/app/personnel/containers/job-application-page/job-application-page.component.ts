@@ -32,7 +32,9 @@ export class JobApplicationPageComponent implements OnInit {
     )
   }
 
-  onSubmit(jobPostingId: string, resume: File) {
+  onSubmit($event: any) {
+    let jobPostingId = $event.jobPostingId;
+    let resume = $event.resume;
     this.store.dispatch(new SubmitJobApplication({jobPostingId, resume}));
   }
 

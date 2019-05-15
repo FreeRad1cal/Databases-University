@@ -30,12 +30,12 @@ export class JobApplicationsResultComponent implements OnInit {
 
   ngOnInit() {
     this.actions = [
-      {label: 'Withdraw', action: 'withdraw'}
+      {label: 'Withdraw', action: 'Withdraw'}
     ];
     if (this.canHire) {
-      this.actions.concat([
-        {label: 'Hire', action: 'hire'},
-        {label: 'Reject', action: 'reject'}
+      this.actions = this.actions.concat([
+        {label: 'Hire', action: 'Hire'},
+        {label: 'Reject', action: 'Reject'}
       ])
     }
   }

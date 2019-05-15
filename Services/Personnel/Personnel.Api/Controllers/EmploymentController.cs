@@ -91,15 +91,15 @@ namespace Personnel.Api.Controllers
         }
 
         [HttpPost("job-applications/{id}/decision", Name = nameof(MakeJobApplicationDecision))]
-        public async Task<ActionResult> MakeJobApplicationDecision(MakeJobApplicationDecisionCommand command)
+        public async Task<ActionResult> MakeJobApplicationDecision([FromBody] MakeJobApplicationDecisionCommand command)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ErrorResponse(ModelState));
             }
 
-            var jobApplication = await _mediator.Send(command);
-            return Ok(jobApplication);
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
          
         [HttpGet("resumes/{id}", Name = nameof(GetResumeByJobApplicationId))]
@@ -114,11 +114,6 @@ namespace Personnel.Api.Controllers
         {
             await _mediator.Publish(new DeleteJobApplicationCommand(id));
             return NoContent();
-        }
-
-        public async Task<ActionResult> HirePerson([FromBody] HirePersonCommand command)
-        {
-            throw new NotImplementedException();
         }
     }
 }

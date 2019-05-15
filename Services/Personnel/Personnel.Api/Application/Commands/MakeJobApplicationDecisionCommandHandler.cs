@@ -8,19 +8,23 @@ using Microsoft.Extensions.Logging;
 using Personnel.Api.Application.Queries;
 using Personnel.Api.Dtos;
 using Personnel.Api.Infrastructure.Services;
+using Personnel.Domain.AggregateModel.JobApplicationAggregate;
+using Personnel.Domain.AggregateModel.JobPostingAggregate;
+using Personnel.Domain.AggregateModel.PersonAggregate;
+using Personnel.Domain.Exceptions;
 using Personnel.Infrastructure.Repositories;
 
 namespace Personnel.Api.Application.Commands
 {
     public class MakeJobApplicationDecisionCommandHandler : IRequestHandler<MakeJobApplicationDecisionCommand, JobApplicationDto>
     {
-        private readonly JobApplicationRepository _jobApplicationRepository;
+        private readonly IJobApplicationRepository _jobApplicationRepository;
         private readonly ILogger<MakeJobApplicationDecisionCommandHandler> _logger;
         private readonly IEmploymentQueries _employmentQueries;
         private readonly IIdentityService _identityService;
 
         public MakeJobApplicationDecisionCommandHandler(
-            JobApplicationRepository jobApplicationRepository,
+            IJobApplicationRepository jobApplicationRepository,
             ILogger<MakeJobApplicationDecisionCommandHandler> logger,
             IEmploymentQueries employmentQueries,
             IIdentityService identityService)
@@ -33,7 +37,9 @@ namespace Personnel.Api.Application.Commands
 
         public async Task<JobApplicationDto> Handle(MakeJobApplicationDecisionCommand request, CancellationToken cancellationToken)
         {
-            var jobApplication = await _jobApplicationRepository.GetAsync(request.ApplicationId);
+            var jobApplication = await _jobApplicationRepository.GetAsync(request.ApplicationId)
+                ?? throw new PersonnelDomainException("Could not submit job application decision", new[] { $"Job application with id {request.ApplicationId} does not exist" });
+
             var myId = _identityService.GetUserIdentity();
 
             jobApplication.MakeDecision(request.Decision, myId);
